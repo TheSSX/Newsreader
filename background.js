@@ -27,7 +27,12 @@ function callSport()
 
             const links = Array.from(new Set(linksarr));
 
-            const randomlink = "https://www.theguardian.com/sport/" + links[Math.floor(Math.random()*links.length)];
+            let randomlink = "https://www.theguardian.com/sport/" + links[Math.floor(Math.random()*links.length)];
+            while (randomlink.startsWith("https://www.theguardian.com/sport/video/"))
+            {
+                randomlink = "https://www.theguardian.com/sport/" + links[Math.floor(Math.random()*links.length)];
+            }
+
             extractArticle(randomlink);
         },
         error: function(error)
@@ -41,19 +46,25 @@ function extractArticle(theurl)
 {
     $.ajax({ url: theurl, success: function(data)
         {
-            const headline = data.split('<h1 class="content__headline " itemprop="headline">')[1].split('</h1>')[0];
+            let headline = data.split('<h1 class="content__headline " itemprop="headline">')[1].split('</h1>')[0];
+            if (headline === undefined)
+            {
+                headline = data.split('<span class="content__headline--interview-wrapper">')[1].split('</span>')[0];
+            }
             console.log(headline);
 
             data = data.replace(/<figcaption [^|]+<\/figcaption>/g, '');
             data = data.replace(/<aside [^|]+<\/aside>/g, '');
             data = data.replace(/<figure [^|]+<\/figure>/g, '');
+            data = data.replace(/<div data-twitter-event[^|]+<\/div>/g, '');
 
             let articletext = $("<p>").html(data).text();
             articletext = articletext.split('Share via Email')[1];
             articletext = articletext.replace(/\r?\n|\r/g, "");
             articletext = articletext.split('.').join('. ');
+
             console.log(articletext);
-            var msg = new SpeechSynthesisUtterance(articletext);
+            const msg = new SpeechSynthesisUtterance(articletext);
             window.speechSynthesis.speak(msg);
         },
         error: function(error)
