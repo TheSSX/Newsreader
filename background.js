@@ -77,11 +77,18 @@ function extractArticle(theurl)
             articletext = articletext.replace(/\r?\n|\r/g, "");
             articletext = articletext.split('undefined')[0];
             articletext = articletext.split('Topics')[0];
-            articletext = articletext.split('.').join('. ');        //has issues with decimal numnbers
+            articletext = articletext.split(/[\.\!]+(?!\d)\s*|\n+\s*/).join('. ');  //split by '.' but ignoring decimal numbers
 
             console.log(articletext);
-            const msg = new SpeechSynthesisUtterance(articletext);
-            window.speechSynthesis.speak(msg);
+            const sentences = articletext.split('. ');
+
+            // Currently splitting into sentences for speech synthesis, as window.speechSynthesis cuts out with
+            // sentences that are too long
+            for (let i=0; i<sentences.length; i++)
+            {
+                const msg = new SpeechSynthesisUtterance(sentences[i]);
+                window.speechSynthesis.speak(msg);
+            }
         },
         error: function(error)
         {
