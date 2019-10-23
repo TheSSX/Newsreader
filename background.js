@@ -54,7 +54,7 @@ function callSport()
 
                 }
             }
-            while (result == false);
+            while (result === false);
 
             return true;
         },
