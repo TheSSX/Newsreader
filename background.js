@@ -79,9 +79,10 @@ function extractText(data)
     const headlinemsg = new SpeechSynthesisUtterance(headline);
     window.speechSynthesis.speak(headlinemsg);
 
-    data = data.replace(/<figcaption [^|]+<\/figcaption>/g, '');
+    data = data.replace(/<figcaption [^|]+<\/figcaption>/g, '');    //removes caption under article image
     data = data.replace(/<figure [^|]+<\/figure>/g, '');
     data = data.replace(/<twitter-widget [^|]+<\/twitter-widget>/g, '');
+    data = data.replace(/<em>[^|]+<\/em>/g, '');    //removes italicised text not directly related to article
 
     /**
     This has been the bane of my life. Most other HTML elements can seemingly be removed
