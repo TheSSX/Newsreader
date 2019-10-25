@@ -15,55 +15,53 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 //Gets sport news
 function callSport()
 {
-    // Send a message to the active tab
     $.ajax({ url: 'https://www.theguardian.com/sport/3019/dec/31/', success: async function(data)
+    {
+        const all = data.split('<a href="https://www.theguardian.com/sport/');
+
+        let linksarr = [];
+        for (let i=1; i<all.length; i+=1)
         {
-            const all = data.split('<a href="https://www.theguardian.com/sport/');
+            linksarr.push(all[i].split('"')[0]);
+        }
 
-            let linksarr = [];
-            for (let i=1; i<all.length; i+=1)
-            {
-                linksarr.push(all[i].split('"')[0]);
-            }
+        const links = Array.from(new Set(linksarr));
 
-            const links = Array.from(new Set(linksarr));
+        const publication = new SpeechSynthesisUtterance("The Guardian");
+        const topic = new SpeechSynthesisUtterance("Sport");
+        window.speechSynthesis.speak(publication);
+        window.speechSynthesis.speak(topic);
 
-            const publication = new SpeechSynthesisUtterance("The Guardian");
-            const topic = new SpeechSynthesisUtterance("Sport");
-            window.speechSynthesis.speak(publication);
-            window.speechSynthesis.speak(topic);
+        let randomlink;
+        let result = false;
 
-            let randomlink;
-            let result = false;
-
+        do
+        {
             do
             {
-                do
-                {
-                    randomlink = "https://www.theguardian.com/sport/" + links[Math.floor(Math.random()*links.length)];
-                }
-                while (randomlink.startsWith("https://www.theguardian.com/sport/video/"));
-
-                try
-                {
-                    const data = await extractArticle(randomlink);
-                    result = extractText(data);
-                }
-                catch(ajaxError)
-                {
-
-                }
+                randomlink = "https://www.theguardian.com/sport/" + links[Math.floor(Math.random()*links.length)];
             }
-            while (result === false);
+            while (randomlink.startsWith("https://www.theguardian.com/sport/video/"));
 
-            return true;
-        },
-        error: function(error)
-        {
-            console.log(error);
-            return false;
+            try
+            {
+                const data = await extractArticle(randomlink);
+                result = extractText(data);
+            }
+            catch(ajaxError)
+            {
+
+            }
         }
-    });
+        while (result === false);
+
+        return true;
+    },
+    error: function(error)
+    {
+        console.log(error);
+        return false;
+    }});
 }
 
 function extractText(data)
