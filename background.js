@@ -1,16 +1,23 @@
+// const script = document.createElement('script');
+// script.src = 'jquery.js';
+// script.type = 'text/javascript';
+// document.getElementsByTagName('head')[0].appendChild(script);
+
+// Called when the user clicks on the browser action.
+// chrome.browserAction.onClicked.addListener(function(tab) {
+//     window.speechSynthesis.cancel();
+//     callSport();
+// });
+
+const start = document.createElement('script');
+start.src = "./start";
+start.type = "module";
+document.getElementsByTagName('head')[0].appendChild(start);
+
 const script = document.createElement('script');
 script.src = 'jquery.js';
 script.type = 'text/javascript';
 document.getElementsByTagName('head')[0].appendChild(script);
-
-// Called when the user clicks on the browser action.
-chrome.browserAction.onClicked.addListener(function(tab) {
-    window.speechSynthesis.cancel();
-    callSport();
-});
-
-
-
 
 //Gets sport news
 function callSport()

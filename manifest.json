@@ -15,6 +15,6 @@
     "default_icon": "icon.png"
   },
   "background": {
-    "scripts": ["background.js"]
+    "page": "start.html"
   }
 }

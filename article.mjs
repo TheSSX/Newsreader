@@ -12,7 +12,7 @@ export class Article
         this.link = link;
     }
 
-    speak(sentences)
+    read(sentences)
     {
         window.speechSynthesis.speak(new SpeechSynthesisUtterance(this.publisher));
         window.speechSynthesis.speak(new SpeechSynthesisUtterance(this.topic));
