@@ -1,3 +1,7 @@
+/**
+ * The starting script which triggers when the user clicks the extension icon
+ */
+
 import {Bulletin} from "./bulletin.mjs";
 
 const script = document.createElement('script');

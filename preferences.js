@@ -1,3 +1,8 @@
+/**
+ * Contains the user preferences, specifically which sources to query, which topics to hear from and the number of
+ * sentences they want each article to be summarised down to
+ */
+
 export let sources = [
     "The Guardian"];
 
