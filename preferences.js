@@ -12,3 +12,5 @@ export let topics = [
     "business",
     "world"
 ];
+
+export let sentences = 4;

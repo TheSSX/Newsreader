@@ -3,18 +3,19 @@
  */
 
 import {Article} from "./article.mjs";
+import {Summarise} from "./summarise.mjs";
 
 export class PageParser
 {
-    static getArticle(source, topic)
+    static getArticle(source, topic, sentences)
     {
         if (source === "The Guardian")
-            return PageParser.extractGuardian(topic);
+            return PageParser.extractGuardian(topic, sentences);
         //else if (source === "BBC")
             //return this.extractBBC(topic);
     }
 
-    static async extractGuardian(topic)
+    static async extractGuardian(topic, sentences)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -67,14 +68,18 @@ export class PageParser
 
         const data = await PageParser.extractPageData(randomlink);
 
-        if (data.includes('<p><strong>'))
+        if (data.includes('<p><strong>') || data.includes('<h2><strong>'))
         {
             console.log(randomlink + " has <strong>");
             return undefined;
         }
 
-        const headline = data.split('<title>')[1].split('|')[0];
-        return new Article("The Guardian", topic, headline, randomlink);
+        //const headline = data.split('<title>')[1].split('|')[0];
+        const smmrydata = await Summarise.summarise(randomlink, sentences);
+        const headline = smmrydata['sm_api_title'];
+        const text = smmrydata['sm_api_content'];
+
+        return new Article("The Guardian", topic, headline, randomlink, text);
     }
 
     static extractPageData(theurl)

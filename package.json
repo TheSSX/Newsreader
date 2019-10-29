@@ -1,9 +1,0 @@
-{
-  "name": "newsreader",
-  "version": "1.0",
-  "dependencies": {
-    "ajax": "0.0.4",
-    "jquery": "^3.4.1",
-    "underscore": "^1.9.1"
-  }
-}

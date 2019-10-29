@@ -3,26 +3,25 @@
  */
 
 import {PageParser} from "./pageparser.mjs";
-import {sources} from "./preferences.mjs";
-import {topics} from "./preferences.mjs";
+import {sources, topics, sentences} from "./preferences.js";
 
 export class Bulletin
 {
     static fetchNews()
     {
-        for (let i=0; i<topics.length; i++)
+        for (let i=0; i<2; i++)
         {
             let data;
 
             do
             {
                 const source = sources[Math.floor(Math.random()*sources.length)];  //get random source to contact
-                data = PageParser.getArticle(source, topics[i]);
+                data = PageParser.getArticle(source, topics[i], sentences);
             }
             while (data === undefined);
 
             data.then(article => {
-                article.read(4);
+                article.read();
             })
         }
     }
