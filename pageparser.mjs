@@ -65,7 +65,7 @@ export class PageParser
 
         let headline;
         let text;
-
+        return new Article("The Guardian", topic, "Sport headline", randomlink, "This works!");
         const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
