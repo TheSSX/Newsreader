@@ -2,7 +2,7 @@
  * The starting script which triggers when the user clicks the extension icon
  */
 
-import {Bulletin} from "./bulletin.mjs";
+//import {Bulletin} from "./bulletin.mjs";
 
 window.onload=function(){
     const playButton = document.getElementById('playBtn');
@@ -36,8 +36,8 @@ function starter()
     // chrome.runtime.getBackgroundPage(function(backgroundPage){
     //     backgroundPage.fetchNews()
     // });
-
-    Bulletin.fetchNews();
+    chrome.extension.getBackgroundPage();
+    //Bulletin.fetchNews();
 }
 
 function stopper()
