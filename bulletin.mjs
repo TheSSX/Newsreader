@@ -17,6 +17,7 @@ import {sources, topics, sentences} from "./preferences.js";
 //     })
 // }
 //
+
 /**
  Class for object to query random sources for each topic
  */
@@ -49,4 +50,11 @@ export class Bulletin
     }
 }
 
-Bulletin.fetchNews();
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if (request.greeting === "play")
+            Bulletin.fetchNews();
+        else if (request.greeting === "play"){
+            window.speechSynthesis.cancel();
+            console.log("Fired");}
+    });

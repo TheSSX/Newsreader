@@ -36,11 +36,13 @@ function starter()
     // chrome.runtime.getBackgroundPage(function(backgroundPage){
     //     backgroundPage.fetchNews()
     // });
-    chrome.extension.getBackgroundPage();
+    //chrome.extension.getBackgroundPage();
     //Bulletin.fetchNews();
+
+    chrome.runtime.sendMessage({greeting: "play"});
 }
 
 function stopper()
 {
-    window.speechSynthesis.cancel();
+    chrome.runtime.sendMessage({greeting: "stop"});
 }

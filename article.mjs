@@ -18,10 +18,6 @@ export class Article
         this.title = title;
         this.link = link;
         this.text = text;
-        console.log(publisher);
-        console.log(topic);
-        console.log(title);
-        console.log(text);
     }
 
     /**
