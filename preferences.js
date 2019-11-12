@@ -24,6 +24,9 @@ export let topics = [
     "world"
 ];
 
+/**
+ * User preferences for speech and article size
+ */
 export let sentences = 4;
 export let language_choice = 'English GB';
 export let pitch = 1;
