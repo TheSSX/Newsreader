@@ -63,11 +63,10 @@ export class PageParser
             return undefined;
         }
 
-        let smmrydata;
         let headline;
         let text;
-
-        smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        return new Article("The Guardian", topic, "Sport headline", randomlink, "This works!");
+        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -78,6 +77,11 @@ export class PageParser
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
+        }
+
+        if (headline === undefined || text === undefined)
+        {
+            return undefined;
         }
 
         return new Article("The Guardian", topic, headline, randomlink, text);
