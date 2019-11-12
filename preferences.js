@@ -3,10 +3,9 @@
  * sentences they want each article to be summarised down to
  */
 
-export let languages = [
-    'English GB',
-    'English US'
-];
+import {languages} from "./language_config.js";
+
+export let languagedropdown = Object.keys(languages);
 
 export let sources = [
     "The Guardian"
