@@ -1,3 +1,5 @@
+import {Speech} from "./speech.mjs";
+
 /**
  Class for an article object
  */
@@ -25,9 +27,9 @@ export class Article
      */
     read()
     {
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(this.publisher));
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(this.topic));
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(this.title));
-        window.speechSynthesis.speak(new SpeechSynthesisUtterance(this.text));
+        new Speech(this.publisher).speak();
+        new Speech(this.topic).speak();
+        new Speech(this.title).speak();
+        new Speech(this.text).speak();
     }
 }

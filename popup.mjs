@@ -6,11 +6,23 @@
 
 window.onload=function(){
     const playButton = document.getElementById('playBtn');
+    const pauseButton = document.getElementById('pauseBtn');
+    const resumeButton = document.getElementById('resumeBtn');
     const stopButton = document.getElementById('stopBtn');
 
     if (playButton)
     {
         playButton.addEventListener('click', starter);
+    }
+
+    if (pauseButton)
+    {
+        pauseButton.addEventListener('click', pauser);
+    }
+
+    if (resumeButton)
+    {
+        resumeButton.addEventListener('click', resumer);
     }
 
     if (stopButton)
@@ -40,6 +52,16 @@ function starter()
     //Bulletin.fetchNews();
 
     chrome.runtime.sendMessage({greeting: "play"});
+}
+
+function pauser()
+{
+    chrome.runtime.sendMessage({greeting: "pause"});
+}
+
+function resumer()
+{
+    chrome.runtime.sendMessage({greeting: "resume"});
 }
 
 function stopper()
