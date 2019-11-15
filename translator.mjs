@@ -34,7 +34,7 @@ export class Translator
      */
     static constructyandexurl(text, targetlang)
     {
-        return `${yandexurl}?key=${apikey}&text=${text}&lang=${targetlang}&options=1`;
+        return `${yandexurl}?key=${apikey}&text=${text}&lang=${targetlang}`;
     }
 
     /**
