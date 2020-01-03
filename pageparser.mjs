@@ -1,5 +1,10 @@
 import {Article} from "./article.mjs";
 import {Summarise} from "./summarise.mjs";
+import {Translator} from "./translator.mjs";
+import {language_choice} from "./preferences.js";
+import {languages, translation_unavailable} from "./language_config.js";
+import {sources} from "./preferences.js";
+import {Speech} from "./speech.mjs";
 
 /**
  Class for object to parse source article pages
@@ -33,8 +38,10 @@ export class PageParser
          * GETTING RANDOM LINK FOR TOPIC
          */
 
+        let publisher = "The Guardian";
+
         let linkdata = await PageParser.extractGuardianLinks(topic);
-        linkdata = linkdata.split('<a href="https://www.theguardian.com/' + topic + '/');
+        linkdata = linkdata.split('<a href="' + sources[publisher] + '' + topic + '/');
 
         let linksarr = [];
         for (let i=1; i<linkdata.length; i+=1)
@@ -48,9 +55,9 @@ export class PageParser
 
         do
         {
-            randomlink = 'https://www.theguardian.com/' + topic + '/' + links[Math.floor(Math.random()*links.length)];  //select a random article
+            randomlink = sources[publisher] + topic + '/' + links[Math.floor(Math.random()*links.length)];  //select a random article
         }
-        while (randomlink.startsWith('https://www.theguardian.com/' + topic + '/video/'));  //articles devoted to a video are no good
+        while (randomlink.startsWith(sources[publisher] + topic + '/video/'));  //articles devoted to a video are no good
 
         /**
          * Extracting article from article page
@@ -63,9 +70,13 @@ export class PageParser
             return undefined;
         }
 
-        let headline;
-        let text;
-        return new Article("The Guardian", topic, "Sport headline", randomlink, "This works!");
+        let headline = "Random headline";
+        let text = "The topic of " + topic + " works!";
+
+        /**
+         * SUMMARISING
+         */
+
         const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
@@ -84,7 +95,36 @@ export class PageParser
             return undefined;
         }
 
-        return new Article("The Guardian", topic, headline, randomlink, text);
+        /**
+         * TRANSLATING
+         */
+
+        if (language_choice !== "English")
+        {
+            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
+            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
+            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
+            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+
+            //If translation API not available
+            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            {
+                new Speech(translation_unavailable[language_choice]).speak();
+            }
+            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            {
+                new Speech(translation_unavailable[language_choice]).speak();
+            }
+            else
+            {
+                publisher = publishertranslatedata['text'];
+                topic = topictranslatedata['text'];
+                headline = headlinetranslatedata['text'];
+                text = texttranslatedata['text'];
+            }
+        }
+
+        return new Article(publisher, topic, headline, randomlink, text);
     }
 
     /**

@@ -1,11 +1,11 @@
 /**
- * Map of languages to speechSynthesis-recognised strings
+ * Map of dialects to speechSynthesis-recognised strings
+ * Map of languages to Yandex-recognised country codes
  */
 
-export const languages =
+export const dialects =
     {
-        'English GB': 'en-GB',
-        'English US': 'en-US',
+        'English': 'en-US',
         'German': 'de-DE',
         'Italian': 'it-IT',
         'French': 'fr-FR',
@@ -15,6 +15,34 @@ export const languages =
         'Chinese': 'zh-CN',
         'Russian': 'ru-RU',
         'Dutch': 'nl-NL'
+    };
+
+export const languages =
+    {
+            'English': 'en',
+            'German': 'de',
+            'Italian': 'it',
+            'French': 'fr',
+            'Spanish': 'es',
+            'Korean': 'ko',
+            'Japanese': 'ja',
+            'Chinese': 'zh',
+            'Russian': 'ru',
+            'Dutch': 'nl'
+    };
+
+export const translation_unavailable =
+    {
+        'English': 'Translation unavailable',
+        'German': 'Übersetzung nicht verfügbar',
+        'Italian': 'Traduzione non disponibile',
+        'French': 'Traduction indisponible',
+        'Spanish': 'Traducción no disponible',
+        'Korean': '번역 불가',
+        'Japanese': '翻訳を使用できません',
+        'Chinese': '翻譯不可用',
+        'Russian': 'Перевод недоступен',
+        'Dutch': 'Vertaling niet beschikbaar'
     };
 
 /**

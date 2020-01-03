@@ -1,5 +1,5 @@
 import {rate, volume, language_choice, pitch} from "./preferences.js";
-import {languages} from "./language_config.js";
+import {dialects} from "./language_config.js";
 
 /**
  Class for a speech object
@@ -14,7 +14,7 @@ export class Speech
     constructor(text)
     {
         this.speech = new SpeechSynthesisUtterance(text);
-        this.speech.lang = languages[language_choice];
+        this.speech.lang = dialects[language_choice];
         this.speech.volume = volume;
         this.speech.rate = rate;
         this.speech.pitch = pitch;
