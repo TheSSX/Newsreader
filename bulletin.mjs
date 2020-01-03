@@ -15,7 +15,7 @@ export class Bulletin
      */
     static fetchNews()
     {
-        for (let i=0; i<1; i++)     // change i< to prevent unnecessary credits being used up
+        for (let i=0; i<topics.length; i++)     // change i< to prevent unnecessary credits being used up
         {
             let data;
             do
