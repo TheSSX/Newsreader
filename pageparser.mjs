@@ -141,31 +141,36 @@ export class PageParser
         let publisher = "BBC";
 
         let linkdata = await PageParser.extractPageData(topiclink);
+		linkdata = linkdata.split('<div role="region"')[0];		//Removes articles that are "featured" or unrelated to subject
         linkdata = linkdata.split('href="/news/');
 
         let linksarr = [];
         for (let i=1; i<linkdata.length; i+=1)
         {
-			const currentlink = linkdata[i].split('"')[0]);		//TODO parse links here. Must not contain slashes, require at least one dash, require a large integer at the end 
+			const currentlink = linkdata[i].split('"')[0];		
             linksarr.push(currentlink);
         }
 		
-		return new Article(publisher, topic, "This headline works", "hi there", "This is an empty article");
+		//Parsing links we've found
+		let articlelinks = [];
+		for (let i=0; i<linksarr.length; i+=1)
+		{
+			const current = linksarr[i];
+			if (!current.includes('/') && current.includes('-') && !isNaN(current[current.length-1]))
+			{
+				articlelinks.push(sources[publisher] + 'news/' + current);
+			}
+		}
 
-        const links = Array.from(new Set(linksarr));    //array of URLs for articles
+        const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        let randomlink;
-
-        do
-        {
-            randomlink = sources[publisher] + topic + '/' + links[Math.floor(Math.random()*links.length)];  //select a random article
-        }
-        while (randomlink.startsWith(sources[publisher] + topic + '/video/'));  //articles devoted to a video are no good
+        const randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
 
         /**
          * Extracting article from article page
          */
 
+		//TODO predict if headline is a Q&A article
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
         if (data.includes('<p><strong>') || data.includes('<h2><strong>'))      //indicates a Q&A article

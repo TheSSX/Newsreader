@@ -9,7 +9,7 @@ export let languagesdropdown = Object.keys(languages);
 
 export let sources = {
     "The Guardian": "https://www.theguardian.com/",
-	"BBC": "https://www.bbc.com/news/"
+	"BBC": "https://www.bbc.com/"
 };
 
 export let topics = {
@@ -54,7 +54,7 @@ export let topics = {
 /**
  * User preferences for speech and article size
  */
-export let sentences = 4;
+export let sentences = 3;
 export let language_choice = "English";
 export let pitch = 1;
 export let volume = 1;
