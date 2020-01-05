@@ -81,7 +81,7 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split('|')[0];      //get headline from article data
-            text = Summarise.extractText(data);                              //extract article text from article data
+            text = Summarise.extractGuardianText(data);                              //extract article text from article data
         }
         else    //SMMRY API working fine
         {
@@ -89,7 +89,7 @@ export class PageParser
             text = smmrydata['sm_api_content'];       //summarised article returned
         }
 
-        if (headline === undefined || text === undefined)		//TODO or if headline contains a question mark
+        if (headline === undefined || text === undefined || headline.includes('?'))
         {
             return undefined;
         }
@@ -170,7 +170,6 @@ export class PageParser
          * Extracting article from article page
          */
 
-		//TODO predict if headline is a Q&A article
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
         if (data.includes('<p><strong>') || data.includes('<h2><strong>'))      //indicates a Q&A article
@@ -189,8 +188,8 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = data.split('<title>')[1].split('|')[0];      //get headline from article data
-            text = Summarise.extractText(data);                              //extract article text from article data
+            headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
+            text = Summarise.extractBBCText(data);                              //extract article text from article data
         }
         else    //SMMRY API working fine
         {
@@ -198,7 +197,7 @@ export class PageParser
             text = smmrydata['sm_api_content'];       //summarised article returned
         }
 
-        if (headline === undefined || text === undefined)
+        if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
         {
             return undefined;
         }

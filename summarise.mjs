@@ -48,11 +48,11 @@ export class Summarise
     }
 
     /**
-     * Backup function to extract article text ourselves due to SMMRY not being available
+     * Backup function to extract Guardian article text ourselves due to SMMRY not being available
      * @param data - the data from the article page
      * @returns {string|undefined} - the string of the article text, undefined if not available
      */
-    static extractText(data)
+    static extractGuardianText(data)
     {
         if (data.includes('<p><strong>') || data.includes('<h2><strong>'))
         {
@@ -85,6 +85,47 @@ export class Summarise
         articletext = articletext.split('Topics')[0];
         articletext = articletext.split(/[\.\!]+(?!\d)\s*|\n+\s*/).join('. ');  //split by '.' but ignoring decimal numbers
         articletext = articletext.slice(0, -1);     //removes a final quote that sometimes appears. Doesn't affect text without the quote.
+
+        return articletext;
+    }
+	
+	/**
+     * Backup function to extract BBC article text ourselves due to SMMRY not being available
+     * @param data - the data from the article page
+     * @returns {string|undefined} - the string of the article text, undefined if not available
+     */
+    static extractBBCText(data)
+    {		
+		data = data.split('<p class="story-body__introduction">')[1];
+		
+		let copy = true;
+		let articletext = "";
+		let counter = 0;
+
+		/**
+		This still needs to deal with links leftover in the text. They take the following form:
+		while union bosses <a href="https://www.google.com" class="example_class">are unhappy with the outcome</a> they still need to address
+		*/
+		while (counter < data.length-3)
+		{			
+			if (data[counter] == '<' && data[counter+1] == '/' && data[counter+2] == 'p')
+			{
+				copy = false;
+			}
+			else if (data[counter] == '>' && data[counter-1] == 'p' && data[counter-2] == '<')
+			{
+				articletext += " ";
+				counter += 1;
+				copy = true;
+			}
+			
+			if (copy)
+			{
+				articletext += data[counter];
+			}
+			
+			counter += 1;
+		}
 
         return articletext;
     }
