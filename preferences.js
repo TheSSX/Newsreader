@@ -27,7 +27,7 @@ export let topics = {
     "uk": {
 		"The Guardian": 'https://www.theguardian.com/uk-news/3019/dec/31/', 
 		"BBC": 'https://www.bbc.com/news/uk/',
-		"Reuters": "https://uk.reuters.com/news/uk"
+		"Reuters": "https://uk.reuters.com/news/uk/"
 		},
     "science": {
 		"The Guardian": 'https://www.theguardian.com/science/3019/dec/31/', 

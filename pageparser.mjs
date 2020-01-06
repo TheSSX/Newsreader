@@ -39,6 +39,13 @@ export class PageParser
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
+		 
+		 //This ain't too good. Maybe need to have another map where standard understood topics like UK can map to
+		 //their website equivalents, e.g. UK maps to uk-news for the Guardian
+		 if (topic === "uk")
+		 {
+			 topic = "uk-news";
+		 }
 
         let publisher = "The Guardian";
         let linkdata = await PageParser.extractPageData(topiclink);
@@ -250,9 +257,8 @@ export class PageParser
 
         let publisher = "Reuters";
 
-        let linkdata = await PageParser.extractPageData(topiclink);
-		//linkdata = linkdata.split('<div role="region"')[0];		//Removes articles that are "featured" or unrelated to subject
-        linkdata = linkdata.split('<a href="' + sources[publisher] + 'article/');
+        const permadata = await PageParser.extractPageData(topiclink);
+        let linkdata = permadata.split('<a href="' + sources[publisher] + 'article/');
 
         let linksarr = [];
         for (let i=1; i<linkdata.length; i+=1)
@@ -261,20 +267,29 @@ export class PageParser
             linksarr.push(currentlink);
         }
 		
+		if (!linksarr.length)
+		{
+			linkdata = permadata.split('<a href="/article/');
+
+			for (let i=1; i<linkdata.length; i+=1)
+			{
+				const currentlink = linkdata[i].split('"')[0];		
+				linksarr.push(currentlink);
+			}
+		}
+		
 		//Parsing links we've found
 		let articlelinks = [];
 		for (let i=0; i<linksarr.length; i+=1)
 		{
 			const current = linksarr[i];
-			if (!current.includes('/') && current.includes('-') && !isNaN(current[current.length-1]))
+			if (current.includes('/') && current.includes('-'))
 			{
-				articlelinks.push(sources[publisher] + 'news/' + current);
+				articlelinks.push('https://uk.reuters.com/article/' + current);		//Removes the issue (seemingly) where some articles are geographically unavailable. Hard-code is annoying but works right now.
 			}
 		}
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
-		console.log("Linksarr is " + linksarr);
-		return new Article(publisher, topic, "hi", "hello", "hey");
 
         const randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
 
@@ -284,7 +299,7 @@ export class PageParser
 
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
-        if (data.includes('<p><strong>') || data.includes('<h2><strong>'))      //indicates a Q&A article
+        if (data.includes('<h3'))      //indicates a Q&A article
         {
             return undefined;
         }
@@ -301,12 +316,20 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
-            text = Summarise.extractBBCText(data);                              //extract article text from article data
+            text = Summarise.extractReutersText(data);                              //extract article text from article data
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
+			/**
+			Can maybe perform a split on the returned text here to remove the place of publishing and publisher that appears at the
+			start of every Reuters article, e.g.
+			TURIN, Italy (Reuters) - Cristiano Ronaldo scored a second-half hat-trick
+			Could split at the dash that always appears
+			Effect a little jarring to hear but not absolutely essential
+			Shouldn't be too hard to remove.
+			*/
         }
 
         if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works

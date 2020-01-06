@@ -129,4 +129,61 @@ export class Summarise
 
         return articletext;
     }
+
+    /**
+     * Backup function to extract BBC article text ourselves due to SMMRY not being available
+     * @param data - the data from the article page
+     * @returns {string|undefined} - the string of the article text, undefined if not available
+     */
+    static extractReutersText(data)
+    {
+		data = data.split('<div class="StandardArticleBody_body">')[1];
+		/**
+		Could instead split at the start of the article where it mention the place of publishing and the publisher, e.g.
+		TURIN, Italy (Reuters) - Cristiano Ronaldo scored a second-half hat-trick
+		Could split at the dash that always appears.
+		*/
+		
+		let copy = true;
+		let articletext = "";
+		let counter = 0;
+
+		/**
+		This still needs to deal with links leftover in the text. They take the following form:
+		while union bosses <a href="https://www.google.com" class="example_class">are unhappy with the outcome</a> they still need to address
+		*/
+		while (counter < data.length-3)
+		{			
+			if (data[counter] == '<' && data[counter+1] == '/' && data[counter+2] == 'p')
+			{
+				copy = false;
+			}
+			else if (data[counter] == '>' && data[counter-1] == 'p' && data[counter-2] == '<')
+			{
+				articletext += " ";
+				counter += 1;
+				copy = true;
+			}
+			
+			if (copy)
+			{
+				articletext += data[counter];
+			}
+			
+			counter += 1;
+		}
+
+		//console.log("Text is " + articletext);
+        return articletext;
+    }
+
+	/**
+     * Queries SMMRY and returns JSON data
+     * @param url - the GET request to SMMRY
+     * @returns {*} - actually returns the JSON response from SMMRY
+     */
+    static contactsmmry(url)
+    {
+        return $.ajax({ url: url}).done(function(data){}).fail(function(ajaxError){});      //same here
+    }
 }

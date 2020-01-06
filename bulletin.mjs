@@ -29,7 +29,12 @@ export class Bulletin
             while (data === undefined);     //returns undefined if chosen article is no good, i.e. a Q&A article on the Guardian
 
             data.then(article => {      //returned in form of promise with value of article
-                article.read();
+                article.read();			//Getting common error here
+				/**
+				Uncaught (in promise) TypeError: Cannot read property 'read' of undefined
+				Can probably use try-catch but need to call for another article to be retrieved
+				More importantly, why is the article undefined?
+				*/
             })
         }
     }
