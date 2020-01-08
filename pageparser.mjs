@@ -73,13 +73,15 @@ export class PageParser
 
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
-        if (data.includes('<p><strong>') || data.includes('<h2><strong>'))      //indicates a Q&A article
+        if (data.includes('<p><strong>') || data.includes('<h2>'))      //indicates a Q&A article
         {
             return undefined;
         }
 
         let headline = "Random headline";
         let text = "The topic of " + topic + " works!";
+        text = Summarise.extractGuardianText(data);  
+		console.log("Link is " + randomlink);
 
         /**
          * SUMMARISING
@@ -181,7 +183,7 @@ export class PageParser
 
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
-        if (data.includes('<p><strong>') || data.includes('<h2><strong>'))      //indicates a Q&A article
+        if (data.includes('<p><strong>') || data.includes('<h2>'))      //indicates a Q&A article
         {
             return undefined;
         }
@@ -291,13 +293,26 @@ export class PageParser
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        const randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
 
         /**
          * Extracting article from article page
          */
 
-        const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
+        let data = await PageParser.extractPageData(randomlink);  //fetch data from article page
+		let timeout = 0;
+		
+		while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
+		{
+			randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+			data = await PageParser.extractPageData(randomlink);  //fetch data from article page
+			timeout += 1;
+			
+			if (data === undefined && timeout === 3)
+			{
+				return undefined;
+			}
+		}
 
         if (data.includes('<h3'))      //indicates a Q&A article
         {
