@@ -15,18 +15,26 @@ export class Bulletin
      */
     static fetchNews()
     {
-        for (let i=0; i<topics.length; i++)     // change i< to prevent unnecessary credits being used up
+        for (let i=0; i<Object.keys(topics).length; i++)     // change i< to prevent unnecessary credits being used up
+		//for (let i=0; i<1; i++)     // change i< to prevent unnecessary credits being used up
         {
             let data;
             do
             {
                 const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
-                data = PageParser.getArticle(source, topics[i], sentences);          //send source, topic and number of sentences to summarise to
+				const topic = Object.keys(topics)[i];
+				const topiclink = topics[topic][source];
+				data = PageParser.getArticle(source, topic, topiclink, sentences);          //send source, topic and number of sentences to summarise to
             }
             while (data === undefined);     //returns undefined if chosen article is no good, i.e. a Q&A article on the Guardian
 
             data.then(article => {      //returned in form of promise with value of article
-                article.read();
+                article.read();			//Getting common error here
+				/**
+				Uncaught (in promise) TypeError: Cannot read property 'read' of undefined
+				Can probably use try-catch but need to call for another article to be retrieved
+				More importantly, why is the article undefined?
+				*/
             })
         }
     }
