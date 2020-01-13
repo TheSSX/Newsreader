@@ -60,6 +60,10 @@ export class Summarise
         }
 		
 		data = data.split('<div class="content__article-body from-content-api js-article__body" itemprop="articleBody" data-test-id="article-review-body">')[1];
+		if (data === undefined)
+		{
+			return undefined;
+		}
 		
 		/**data = data.replace(/<figcaption [^|]+<\/figcaption>/g, '');    //removes caption under article image
         data = data.replace(/<figure [^|]+<\/figure>/g, '');
@@ -71,14 +75,19 @@ export class Summarise
 		let counter = 2;
 
 		while (counter < data.length-3)
-		{		
-			if (data[counter] === '>' && data[counter-1] === 'p' && data[counter-2] === '<')
+		{
+			const startoftext = data[counter] === '>' && data[counter-1] === 'p' && data[counter-2] === '<';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+			//const startoflink = data[counter] === '<' && data[counter+1] === 'a';
+			//const endoflink = data[counter] === '>' && data[counter-1] === 'a' && data[counter-2] === '/' && data[counter-3] === '<';
+
+			if (startoftext) // || endoflink
 			{
 				articletext += " ";
 				counter += 1;
 				copy = true;
 			}
-			else if (data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>')
+			else if (endoftext) // || startoflink
 			{
 				copy = false;
 			}
@@ -135,7 +144,7 @@ export class Summarise
         articletext = articletext.split(/[\.\!]+(?!\d)\s*|\n+\s).join('. ');  //split by '.' but ignoring decimal numbers
         //articletext = articletext.slice(0, -1);     //removes a final quote that sometimes appears. Doesn't affect text without the quote.
 		*/
-		console.log("Text is " + articletext);
+
         return articletext;
     }
 	
@@ -147,6 +156,10 @@ export class Summarise
     static extractBBCText(data)
     {		
 		data = data.split('<p class="story-body__introduction">')[1];
+		if (data === undefined)
+		{
+			return undefined;
+		}
 		
 		let copy = true;
 		let articletext = "";
@@ -157,16 +170,21 @@ export class Summarise
 		while union bosses <a href="https://www.google.com" class="example_class">are unhappy with the outcome</a> they still need to address
 		*/
 		while (counter < data.length-3)
-		{			
-			if (data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p')
-			{
-				copy = false;
-			}
-			else if (data[counter] === '>' && data[counter-1] === 'p' && data[counter-2] === '<')
+		{
+			const startoftext = data[counter] === '>' && data[counter-1] === 'p' && data[counter-2] === '<';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+			//const startoflink = data[counter] === '<' && data[counter+1] === 'a';
+			//const endoflink = data[counter] === '>' && data[counter-1] === 'a' && data[counter-2] === '/' && data[counter-3] === '<';
+
+			if (startoftext) // || endoflink
 			{
 				articletext += " ";
 				counter += 1;
 				copy = true;
+			}
+			else if (endoftext) // || startoflink
+			{
+				copy = false;
 			}
 			
 			if (copy)
@@ -186,24 +204,26 @@ export class Summarise
      * @returns {string|undefined} - the string of the article text, undefined if not available
      */
     static extractReutersText(data)
-    {	
+    {
 		let copy = false;
 		let articletext = "";
 		let counter = 2;
 
 		while (counter < data.length-3)
-		{		
-			if (data[counter] === '>' && data[counter-1] === 'p' && data[counter-2] === '<')
+		{
+			const startoftext = data[counter] === '>' && data[counter-1] === 'p' && data[counter-2] === '<';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+
+			if (startoftext)
 			{
-				//articletext += " ";
 				counter += 1;
 				copy = true;
 			}
-			else if (data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>')
+			else if (endoftext)
 			{
 				copy = false;
 			}
-			
+
 			if (copy)
 			{
 				articletext += data[counter];
@@ -223,15 +243,5 @@ export class Summarise
 		articletext = articletext.split(' - ')[1];
 
         return articletext;
-    }
-
-	/**
-     * Queries SMMRY and returns JSON data
-     * @param url - the GET request to SMMRY
-     * @returns {*} - actually returns the JSON response from SMMRY
-     */
-    static contactsmmry(url)
-    {
-        return $.ajax({ url: url}).done(function(data){}).fail(function(ajaxError){});      //same here
     }
 }

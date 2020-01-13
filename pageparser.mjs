@@ -32,6 +32,7 @@ export class PageParser
      * Queries a topic page on the Guardian website and selects a random article from it
      * @param topic - the news topic
      * @param sentences - the number of sentences to summarise down to
+     * @param topiclink - the link to that topic on the specified website
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractGuardian(topic, topiclink, sentences)
@@ -78,10 +79,12 @@ export class PageParser
             return undefined;
         }
 
-        let headline = "Random headline";
-        let text = "The topic of " + topic + " works!";
-        text = Summarise.extractGuardianText(data);  
-		console.log("Link is " + randomlink);
+        let headline;
+        let text = Summarise.extractGuardianText(data);
+        if (text === undefined)     //Link couldn't be established as article
+        {
+            return undefined;
+        }
 
         /**
          * SUMMARISING
@@ -92,7 +95,6 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split('|')[0];      //get headline from article data
-            text = Summarise.extractGuardianText(data);                              //extract article text from article data
         }
         else    //SMMRY API working fine
         {
@@ -183,13 +185,12 @@ export class PageParser
 
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
-        if (data.includes('<p><strong>') || data.includes('<h2>'))      //indicates a Q&A article
+        let headline;
+        let text = Summarise.extractBBCText(data);
+        if (text === undefined)
         {
-            return undefined;
+            return undefined;       // Link could not be established as article
         }
-
-        let headline = "Random headline";
-        let text = "The topic of " + topic + " works!";
 
         /**
          * SUMMARISING
@@ -200,7 +201,6 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
-            text = Summarise.extractBBCText(data);                              //extract article text from article data
         }
         else    //SMMRY API working fine
         {
@@ -288,6 +288,7 @@ export class PageParser
 			if (current.includes('/') && current.includes('-'))
 			{
 				articlelinks.push('https://uk.reuters.com/article/' + current);		//Removes the issue (seemingly) where some articles are geographically unavailable. Hard-code is annoying but works right now.
+                articlelinks.push('https://www.reuters.com/article/' + current);
 			}
 		}
 
@@ -319,8 +320,13 @@ export class PageParser
             return undefined;
         }
 
-        let headline = "Random headline";
-        let text = "The topic of " + topic + " works!";
+        let headline;
+
+        let text = Summarise.extractReutersText(data);
+        if (text === undefined)
+        {
+            return undefined;       // Link could not be established as article
+        }
 
         /**
          * SUMMARISING
@@ -331,20 +337,16 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
-            text = Summarise.extractReutersText(data);                              //extract article text from article data
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
-			/**
-			Can maybe perform a split on the returned text here to remove the place of publishing and publisher that appears at the
-			start of every Reuters article, e.g.
-			TURIN, Italy (Reuters) - Cristiano Ronaldo scored a second-half hat-trick
-			Could split at the dash that always appears
-			Effect a little jarring to hear but not absolutely essential
-			Shouldn't be too hard to remove.
-			*/
+            text = text.split(' - ')[1];
+            if (text === undefined)
+            {
+                text = smmrydata['sm_api_content'];
+            }
         }
 
         if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
