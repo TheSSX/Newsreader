@@ -291,4 +291,49 @@ export class Summarise
 
 		return articletext;
 	}
+
+	/**
+	 * Backup function to extract Associated Press article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractAPText(data)
+	{
+		let copy = false;
+		let articletext = "";
+		let counter = 2;
+
+		data = data.split('<div class="Article" data-key="article">')[1];
+		data = data.split('<div class="bellow-article">')[0];
+
+		while (counter < data.length-3)
+		{
+			const startoftext = data[counter] === '<' && data[counter+1] === 'p';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+
+			if (startoftext)
+			{
+				copy = true;
+			}
+			else if (endoftext)
+			{
+				articletext += " ";
+				copy = false;
+			}
+
+			if (copy)
+			{
+				articletext += data[counter];
+			}
+
+			counter += 1;
+		}
+
+		//TODO this needs figuring out. Classes for the <p> tags are messing this up.
+		articletext = articletext.replace(/<a.+>/g, '');
+		articletext = articletext.replace(/<\/a>/g, '');
+		//articletext = articletext.replace(/<p class="Component-root.+">/g, '');
+
+		return articletext;
+	}
 }

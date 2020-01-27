@@ -21,8 +21,9 @@ export class Bulletin
             let data;
             do
             {
-                const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
-				const topic = Object.keys(topics)[i];
+                //const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
+				const source = "Associated Press";
+                const topic = Object.keys(topics)[i];
 				const topiclink = topics[topic][source];
 				data = PageParser.getArticle(source, topic, topiclink, sentences);          //send source, topic and number of sentences to summarise to
             }
