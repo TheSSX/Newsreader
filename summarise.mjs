@@ -199,7 +199,7 @@ export class Summarise
     }
 
     /**
-     * Backup function to extract BBC article text ourselves due to SMMRY not being available
+     * Backup function to extract Reuters article text ourselves due to SMMRY not being available
      * @param data - the data from the article page
      * @returns {string|undefined} - the string of the article text, undefined if not available
      */
@@ -228,7 +228,7 @@ export class Summarise
 			{
 				articletext += data[counter];
 			}
-			
+
 			counter += 1;
 		}
 
@@ -237,11 +237,58 @@ export class Summarise
 		articletext = articletext.replace(/\&ldquo\;/g, '"');
 		articletext = articletext.replace(/\&rdquo\;/g, '"');
 		articletext = articletext.replace(/<span.+>/g, '');
-		articletext = articletext.replace(/<\/span>/g, '');		
+		articletext = articletext.replace(/<\/span>/g, '');
 		articletext = articletext.replace(/<a.+>/g, '');
 		articletext = articletext.replace(/<\/a>/g, '');
 		articletext = articletext.split(' - ')[1];
 
         return articletext;
     }
+
+	/**
+	 * Backup function to extract Sky News article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractSkyText(data)
+	{
+		let copy = false;
+		let articletext = "";
+		let counter = 2;
+
+		while (counter < data.length-3)
+		{
+			const startoftext = data[counter] === '>' && data[counter-1] === 'p' && data[counter-2] === '<';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+
+			if (startoftext)
+			{
+				counter += 1;
+				copy = true;
+			}
+			else if (endoftext)
+			{
+				articletext += " ";
+				copy = false;
+			}
+
+			if (copy)
+			{
+				articletext += data[counter];
+			}
+
+			counter += 1;
+		}
+
+		articletext = articletext.replace(/<strong>/g, '');
+		articletext = articletext.replace(/<\/strong>/g, '');
+		articletext = articletext.replace(/<a.+>/g, '');
+		articletext = articletext.replace(/<\/a>/g, '');
+		while (articletext.startsWith(" "))
+		{
+			articletext = articletext.substr(1);
+		}
+
+		return articletext;
+	}
 }
