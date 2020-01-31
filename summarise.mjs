@@ -99,12 +99,13 @@ export class Summarise
 			
 			counter += 1;
 		}
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
 
-		articletext = articletext.replace(/<\/a>/g, '');
+		/*articletext = articletext.replace(/<\/a>/g, '');
 		//articletext = articletext.replace(/<a href=".+">/g, '');	This line here is really fucking me up. It behaves differently every time.
 		//Sometimes, it deletes all text up to another later link. Sometimes it just replaces the following text with a space. Who fucking knows.
 		articletext = articletext.replace(/<span.*>/g, '');
-		articletext = articletext.replace(/<\/span>/g, '');				
+		articletext = articletext.replace(/<\/span>/g, '');		*/
 		
 		
 		
@@ -195,6 +196,8 @@ export class Summarise
 			counter += 1;
 		}
 
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+
         return articletext;
     }
 
@@ -236,11 +239,14 @@ export class Summarise
 		articletext = articletext.replace(/\&lsquo\;/g, "'");
 		articletext = articletext.replace(/\&ldquo\;/g, '"');
 		articletext = articletext.replace(/\&rdquo\;/g, '"');
-		articletext = articletext.replace(/<span.+>/g, '');
+		/*articletext = articletext.replace(/<span.+>/g, '');
 		articletext = articletext.replace(/<\/span>/g, '');
 		articletext = articletext.replace(/<a.+>/g, '');
-		articletext = articletext.replace(/<\/a>/g, '');
+		articletext = articletext.replace(/<\/a>/g, '');*/
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
 		articletext = articletext.split(' - ')[1];
+
+		//TODO text is ending with "All quotes delayed a minimum... All rights reserved"
 
         return articletext;
     }
@@ -280,10 +286,12 @@ export class Summarise
 			counter += 1;
 		}
 
-		articletext = articletext.replace(/<strong>/g, '');
+		/*articletext = articletext.replace(/<strong>/g, '');
 		articletext = articletext.replace(/<\/strong>/g, '');
 		articletext = articletext.replace(/<a.+>/g, '');
-		articletext = articletext.replace(/<\/a>/g, '');
+		articletext = articletext.replace(/<\/a>/g, '');*/
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+		articletext = articletext.replace('&#163;', '£');
 		while (articletext.startsWith(" "))
 		{
 			articletext = articletext.substr(1);
@@ -301,7 +309,7 @@ export class Summarise
 	{
 		let copy = false;
 		let articletext = "";
-		let counter = 2;
+		let counter = 0;
 
 		data = data.split('<div class="Article" data-key="article">')[1];
 		data = data.split('<div class="bellow-article">')[0];
@@ -329,10 +337,12 @@ export class Summarise
 			counter += 1;
 		}
 
-		//TODO this needs figuring out. Classes for the <p> tags are messing this up.
-		articletext = articletext.replace(/<a.+>/g, '');
-		articletext = articletext.replace(/<\/a>/g, '');
-		//articletext = articletext.replace(/<p class="Component-root.+">/g, '');
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+
+		if (articletext.split('(AP) — ')[1])
+		{
+			articletext = articletext.split('(AP) — ')[1];
+		}
 
 		return articletext;
 	}
