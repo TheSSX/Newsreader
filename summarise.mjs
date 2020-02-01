@@ -239,12 +239,13 @@ export class Summarise
 		articletext = articletext.replace(/\&lsquo\;/g, "'");
 		articletext = articletext.replace(/\&ldquo\;/g, '"');
 		articletext = articletext.replace(/\&rdquo\;/g, '"');
-		/*articletext = articletext.replace(/<span.+>/g, '');
-		articletext = articletext.replace(/<\/span>/g, '');
-		articletext = articletext.replace(/<a.+>/g, '');
-		articletext = articletext.replace(/<\/a>/g, '');*/
+		articletext = articletext.replace(/<footer.+\/footer>/g, '');
 		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
 		articletext = articletext.split(' - ')[1];
+		if (articletext.split('All quotes delayed a minimum of ')[0])
+		{
+			articletext = articletext.split('All quotes delayed a minimum of ')[0];
+		}
 
 		//TODO text is ending with "All quotes delayed a minimum... All rights reserved"
 
@@ -292,6 +293,7 @@ export class Summarise
 		articletext = articletext.replace(/<\/a>/g, '');*/
 		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
 		articletext = articletext.replace('&#163;', '£');
+		articletext = articletext.replace('&#8364;', '€');
 		while (articletext.startsWith(" "))
 		{
 			articletext = articletext.substr(1);

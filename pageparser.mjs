@@ -147,6 +147,7 @@ export class PageParser
 	/**
      * Queries a topic page on the BBC website and selects a random article from it
      * @param topic - the news topic
+     * @param topiclink - the link to that topic on the specified website
      * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
@@ -253,6 +254,7 @@ export class PageParser
 	/**
      * Queries a topic page on the Reuters website and selects a random article from it
      * @param topic - the news topic
+     * @param topiclink - the link to that topic on the specified website
      * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
@@ -341,7 +343,7 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
+            headline = data.split('<title>')[1].split(' - Reuters')[0];      //get headline from article data
         }
         else    //SMMRY API working fine
         {
@@ -505,20 +507,25 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
+            headline = data.split('<title>')[1].split(' |')[0];      //get headline from article data
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
-            text = text.split(' - ')[1];
-            if (text === undefined)
+            if (text.split(' - ')[1])
             {
-                text = smmrydata['sm_api_content'];
+                text = text.split(' - ')[1];
             }
         }
 
         if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
+        {
+            return undefined;
+        }
+
+        //Checking of a live coverage article. Might need to rejig this to have a technique for a bunch of articles
+        if (headline.includes("LIVE") || headline.includes("Live"))
         {
             return undefined;
         }
@@ -623,9 +630,6 @@ export class PageParser
         let headline;
 
         let text = Summarise.extractAPText(data);
-        console.log("Link is " + randomlink);
-        console.log("Topic is " + topic);
-        console.log("Text is " + text);
         if (text === undefined)
         {
             return undefined;       // Link could not be established as article
@@ -639,16 +643,15 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
+            headline = data.split('<title>')[1];      //get headline from article data
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
-            text = text.split(' - ')[1];
-            if (text === undefined)
+            if (text.split(' - ')[1])
             {
-                text = smmrydata['sm_api_content'];
+                text = text.split(' - ')[1];
             }
         }
 
