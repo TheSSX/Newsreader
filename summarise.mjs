@@ -99,12 +99,13 @@ export class Summarise
 			
 			counter += 1;
 		}
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
 
-		articletext = articletext.replace(/<\/a>/g, '');
+		/*articletext = articletext.replace(/<\/a>/g, '');
 		//articletext = articletext.replace(/<a href=".+">/g, '');	This line here is really fucking me up. It behaves differently every time.
 		//Sometimes, it deletes all text up to another later link. Sometimes it just replaces the following text with a space. Who fucking knows.
 		articletext = articletext.replace(/<span.*>/g, '');
-		articletext = articletext.replace(/<\/span>/g, '');				
+		articletext = articletext.replace(/<\/span>/g, '');		*/
 		
 		
 		
@@ -195,6 +196,8 @@ export class Summarise
 			counter += 1;
 		}
 
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+
         return articletext;
     }
 
@@ -236,11 +239,15 @@ export class Summarise
 		articletext = articletext.replace(/\&lsquo\;/g, "'");
 		articletext = articletext.replace(/\&ldquo\;/g, '"');
 		articletext = articletext.replace(/\&rdquo\;/g, '"');
-		articletext = articletext.replace(/<span.+>/g, '');
-		articletext = articletext.replace(/<\/span>/g, '');
-		articletext = articletext.replace(/<a.+>/g, '');
-		articletext = articletext.replace(/<\/a>/g, '');
+		articletext = articletext.replace(/<footer.+\/footer>/g, '');
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
 		articletext = articletext.split(' - ')[1];
+		if (articletext.split('All quotes delayed a minimum of ')[0])
+		{
+			articletext = articletext.split('All quotes delayed a minimum of ')[0];
+		}
+
+		//TODO text is ending with "All quotes delayed a minimum... All rights reserved"
 
         return articletext;
     }
@@ -280,13 +287,63 @@ export class Summarise
 			counter += 1;
 		}
 
-		articletext = articletext.replace(/<strong>/g, '');
+		/*articletext = articletext.replace(/<strong>/g, '');
 		articletext = articletext.replace(/<\/strong>/g, '');
 		articletext = articletext.replace(/<a.+>/g, '');
-		articletext = articletext.replace(/<\/a>/g, '');
+		articletext = articletext.replace(/<\/a>/g, '');*/
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+		articletext = articletext.replace('&#163;', '£');
+		articletext = articletext.replace('&#8364;', '€');
 		while (articletext.startsWith(" "))
 		{
 			articletext = articletext.substr(1);
+		}
+
+		return articletext;
+	}
+
+	/**
+	 * Backup function to extract Associated Press article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractAPText(data)
+	{
+		let copy = false;
+		let articletext = "";
+		let counter = 0;
+
+		data = data.split('<div class="Article" data-key="article">')[1];
+		data = data.split('<div class="bellow-article">')[0];
+
+		while (counter < data.length-3)
+		{
+			const startoftext = data[counter] === '<' && data[counter+1] === 'p';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+
+			if (startoftext)
+			{
+				copy = true;
+			}
+			else if (endoftext)
+			{
+				articletext += " ";
+				copy = false;
+			}
+
+			if (copy)
+			{
+				articletext += data[counter];
+			}
+
+			counter += 1;
+		}
+
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+
+		if (articletext.split('(AP) — ')[1])
+		{
+			articletext = articletext.split('(AP) — ')[1];
 		}
 
 		return articletext;
