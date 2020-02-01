@@ -348,4 +348,50 @@ export class Summarise
 
 		return articletext;
 	}
+
+	/**
+	 * Backup function to extract Evening Standard article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractEveningStandardText(data)
+	{
+		let copy = false;
+		let articletext = "";
+		let counter = 0;
+
+		data = data.split('Update newsletter preferences')[1];		//Not ideal buuuuuut...
+		data = data.split('<aside class="tags">')[0];
+
+		while (counter < data.length-3)
+		{
+			const startoftext = data[counter] === '<' && data[counter+1] === 'p';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+
+			if (startoftext)
+			{
+				copy = true;
+			}
+			else if (endoftext)
+			{
+				articletext += " ";
+				copy = false;
+			}
+
+			if (copy)
+			{
+				articletext += data[counter];
+			}
+
+			counter += 1;
+		}
+
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+		articletext = articletext.replace(/<figure .+>/g, '');
+		articletext = articletext.replace(/<\/figure>/g, '');
+		articletext = articletext.replace('&amp;', '&');
+		articletext = articletext.replace('&nbsp;', ' ');
+
+		return articletext;
+	}
 }
