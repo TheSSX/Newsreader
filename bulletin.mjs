@@ -21,20 +21,24 @@ export class Bulletin
             let data;
             do
             {
-                //const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
-                const source = "Evening Standard";
+                const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
+                //const source = "Evening Standard";
                 const topic = Object.keys(topics)[i];
 				const topiclink = topics[topic][source];
 				data = PageParser.getArticle(source, topic, topiclink, sentences);          //send source, topic and number of sentences to summarise to
             }
             while (data === undefined);     //returns undefined if chosen article is no good, i.e. a Q&A article on the Guardian
 
+            //TODO there's something going on here where the do loop isn't working if data is undefined
+            //so topics that aren't getting an article aren't being run again
+            //fix this and include a timeout of maybe 5 as well in case it really does go tits up
+
             data.then(article => {      //returned in form of promise with value of article
                 article.read();			//Getting common error here
 				/**
-				Uncaught (in promise) TypeError: Cannot read property 'read' of undefined
+				Uncaught (in promise) TypeError: Cannot read property 'read' of undefined (in this case, the article)
 				Can probably use try-catch but need to call for another article to be retrieved
-				More importantly, why is the article undefined?
+				More importantly, why is the article undefined? If it is, how is it being read aloud?
 				*/
             })
         }

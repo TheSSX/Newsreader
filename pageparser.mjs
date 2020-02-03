@@ -86,12 +86,7 @@ export class PageParser
             return undefined;
         }
 
-        let headline;
-        let text = Summarise.extractGuardianText(data);
-        if (text === undefined)     //Link couldn't be established as article
-        {
-            return undefined;
-        }
+        let headline, text;
 
         /**
          * SUMMARISING
@@ -102,11 +97,37 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split('|')[0];      //get headline from article data
+            text = Summarise.extractGuardianText(data);
+            if (text !== undefined)
+            {
+                if (text.split(' - ')[1])
+                {
+                    text = text.split(' - ')[1];
+                }
+
+                text = "Not enough summary credits! " + text;
+            }
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
+            const error = smmrydata['sm_api_error'];    //detecting presence of error code
+
+            if (error === 2)
+            {
+                headline = data.split('<title>')[1].split('|')[0];      //get headline from article data
+                text = Summarise.extractGuardianText(data);
+                if (text !== undefined)
+                {
+                    if (text.split(' - ')[1])
+                    {
+                        text = text.split(' - ')[1];
+                    }
+
+                    text = "Not enough summary credits! " + text;
+                }
+            }
         }
 
         if (headline === undefined || text === undefined || headline.includes('?'))
@@ -193,12 +214,7 @@ export class PageParser
 
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
-        let headline;
-        let text = Summarise.extractBBCText(data);
-        if (text === undefined)
-        {
-            return undefined;       // Link could not be established as article
-        }
+        let headline, text;
 
         /**
          * SUMMARISING
@@ -209,11 +225,37 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
+            text = Summarise.extractBBCText(data);
+            if (text !== undefined)
+            {
+                if (text.split(' - ')[1])
+                {
+                    text = text.split(' - ')[1];
+                }
+
+                text = "Not enough summary credits! " + text;
+            }
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
+            const error = smmrydata['sm_api_error'];    //detecting presence of error code
+
+            if (error === 2)
+            {
+                headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
+                text = Summarise.extractBBCText(data);
+                if (text !== undefined)
+                {
+                    if (text.split(' - ')[1])
+                    {
+                        text = text.split(' - ')[1];
+                    }
+
+                    text = "Not enough summary credits! " + text;
+                }
+            }
         }
 
         if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
@@ -329,13 +371,7 @@ export class PageParser
             return undefined;
         }
 
-        let headline;
-
-        let text = Summarise.extractReutersText(data);
-        if (text === undefined)
-        {
-            return undefined;       // Link could not be established as article
-        }
+        let headline, text;
 
         /**
          * SUMMARISING
@@ -346,15 +382,36 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split(' - Reuters')[0];      //get headline from article data
+            text = Summarise.extractReutersText(data);
+            if (text !== undefined)
+            {
+                if (text.split(' - ')[1])
+                {
+                    text = text.split(' - ')[1];
+                }
+
+                text = "Not enough summary credits! " + text;
+            }
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
-            text = text.split(' - ')[1];
-            if (text === undefined)
+            const error = smmrydata['sm_api_error'];    //detecting presence of error code
+
+            if (error === 2)
             {
-                text = smmrydata['sm_api_content'];
+                headline = data.split('<title>')[1].split(' - Reuters')[0];      //get headline from article data
+                text = Summarise.extractReutersText(data);
+                if (text !== undefined)
+                {
+                    if (text.split(' - ')[1])
+                    {
+                        text = text.split(' - ')[1];
+                    }
+
+                    text = "Not enough summary credits! " + text;
+                }
             }
         }
 
@@ -493,13 +550,7 @@ export class PageParser
             return undefined;
         }*/
 
-        let headline;
-
-        let text = Summarise.extractSkyText(data);
-        if (text === undefined)
-        {
-            return undefined;       // Link could not be established as article
-        }
+        let headline, text;
 
         /**
          * SUMMARISING
@@ -510,14 +561,36 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split(' |')[0];      //get headline from article data
+            text = Summarise.extractSkyText(data);
+            if (text !== undefined)
+            {
+                if (text.split(' - ')[1])
+                {
+                    text = text.split(' - ')[1];
+                }
+
+                text = "Not enough summary credits! " + text;
+            }
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
-            if (text.split(' - ')[1])
+            const error = smmrydata['sm_api_error'];    //detecting presence of error code
+
+            if (error === 2)
             {
-                text = text.split(' - ')[1];
+                headline = data.split('<title>')[1].split(' |')[0];      //get headline from article data
+                text = Summarise.extractSkyText(data);
+                if (text !== undefined)
+                {
+                    if (text.split(' - ')[1])
+                    {
+                        text = text.split(' - ')[1];
+                    }
+
+                    text = "Not enough summary credits! " + text;
+                }
             }
         }
 
@@ -629,13 +702,7 @@ export class PageParser
             return undefined;
         }*/
 
-        let headline;
-
-        let text = Summarise.extractAPText(data);
-        if (text === undefined)
-        {
-            return undefined;       // Link could not be established as article
-        }
+        let headline, text;
 
         /**
          * SUMMARISING
@@ -646,14 +713,36 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1];      //get headline from article data
+            text = Summarise.extractAPText(data);
+            if (text !== undefined)
+            {
+                if (text.split(' - ')[1])
+                {
+                    text = text.split(' - ')[1];
+                }
+
+                text = "Not enough summary credits! " + text;
+            }
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
-            if (text.split(' - ')[1])
+            const error = smmrydata['sm_api_error'];    //detecting presence of error code
+
+            if (error === 2)
             {
-                text = text.split(' - ')[1];
+                headline = data.split('<title>')[1];      //get headline from article data
+                text = Summarise.extractAPText(data);
+                if (text !== undefined)
+                {
+                    if (text.split(' - ')[1])
+                    {
+                        text = text.split(' - ')[1];
+                    }
+
+                    text = "Not enough summary credits! " + text;
+                }
             }
         }
 
@@ -725,7 +814,7 @@ export class PageParser
         {
             const current = linksarr[i];
             //if (current.matches("/^[a-z0-9]+$/"))
-            if (current.includes('-') && (current.includes('news/') || current.includes('sport/')) && current.endsWith(".html"))
+            if (current.includes('-') && (current.includes('news/') || current.includes('sport/') || current.includes('tech/')) && current.endsWith(".html"))
             {
                 articlelinks.push('https://www.standard.co.uk/' + current);
             }
@@ -748,7 +837,7 @@ export class PageParser
             data = await PageParser.extractPageData(randomlink);  //fetch data from article page
             timeout += 1;
 
-            if (data === undefined && timeout === 3)
+            if (data === undefined && timeout === 3 || (randomlink === undefined && timeout === 3))
             {
                 return undefined;
             }
@@ -759,16 +848,7 @@ export class PageParser
             return undefined;
         }*/
 
-        let headline;
-
-        let text = Summarise.extractEveningStandardText(data);
-        console.log("Link is " + randomlink);
-        console.log("Topic is " + topic);
-        console.log("Text is " + text);
-        if (text === undefined)
-        {
-            return undefined;       // Link could not be established as article
-        }
+        let headline, text;
 
         /**
          * SUMMARISING
@@ -778,12 +858,28 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = data.split('<title>')[1];      //get headline from article data
+            headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
+            text = Summarise.extractEveningStandardText(data);
+            if (text !== undefined)
+            {
+                text = "Not enough summary credits! " + text;
+            }
         }
         else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
+            const error = smmrydata['sm_api_error'];    //detecting presence of error code
+
+            if (error === 2)
+            {
+                headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
+                text = Summarise.extractEveningStandardText(data);
+                if (text !== undefined)
+                {
+                    text = "Not enough summary credits! " + text;
+                }
+            }
         }
 
         if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
