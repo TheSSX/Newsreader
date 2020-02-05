@@ -300,6 +300,13 @@ export class Summarise
 		return articletext;
 	}
 
+	static extractAPHeadline(data)
+	{
+		data = data.split('<div class="CardHeadline">')[1];
+		data = data.split('<div class="Component-signature-')[0];
+		return data.replace(/(<([^>]+)>)/ig,"");
+	}
+
 	/**
 	 * Backup function to extract Associated Press article text ourselves due to SMMRY not being available
 	 * @param data - the data from the article page

@@ -712,7 +712,7 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = data.split('<title>')[1];      //get headline from article data
+            headline = Summarise.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
             text = Summarise.extractAPText(data);
             if (text !== undefined)
             {
@@ -726,19 +726,18 @@ export class PageParser
         }
         else    //SMMRY API working fine
         {
-            headline = smmrydata['sm_api_title'];     //article headline returned
+            headline = Summarise.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
             text = smmrydata['sm_api_content'];       //summarised article returned
             const error = smmrydata['sm_api_error'];    //detecting presence of error code
 
             if (error === 2)
             {
-                headline = data.split('<title>')[1];      //get headline from article data
                 text = Summarise.extractAPText(data);
                 if (text !== undefined)
                 {
-                    if (text.split(' - ')[1])
+                    if (text.split(' — ')[1])
                     {
-                        text = text.split(' - ')[1];
+                        text = text.split(' — ')[1];
                     }
 
                     text = "Not enough summary credits! " + text;

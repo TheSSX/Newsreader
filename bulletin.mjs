@@ -18,30 +18,47 @@ export class Bulletin
         for (let i=0; i<Object.keys(topics).length; i++)     // change i< to prevent unnecessary credits being used up
 		//for (let i=0; i<1; i++)     // change i< to prevent unnecessary credits being used up
         {
-            let data;
-            do
-            {
-                const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
-                //const source = "Evening Standard";
-                const topic = Object.keys(topics)[i];
-				const topiclink = topics[topic][source];
-				data = PageParser.getArticle(source, topic, topiclink, sentences);          //send source, topic and number of sentences to summarise to
-            }
-            while (data === undefined);     //returns undefined if chosen article is no good, i.e. a Q&A article on the Guardian
-
-            //TODO there's something going on here where the do loop isn't working if data is undefined
-            //so topics that aren't getting an article aren't being run again
-            //fix this and include a timeout of maybe 5 as well in case it really does go tits up
+            const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
+            const topic = Object.keys(topics)[i];
+            const topiclink = topics[topic][source];
+            const data = PageParser.getArticle(source, topic, topiclink, sentences);          //send source, topic and number of sentences to summarise to
 
             data.then(article => {      //returned in form of promise with value of article
-                article.read();			//Getting common error here
-				/**
-				Uncaught (in promise) TypeError: Cannot read property 'read' of undefined (in this case, the article)
-				Can probably use try-catch but need to call for another article to be retrieved
-				More importantly, why is the article undefined? If it is, how is it being read aloud?
-				*/
+                try
+                {
+                    article.read();
+                }
+                catch(TypeError)
+                {
+                    Bulletin.retryTopic(topic, 2);
+                }
             })
         }
+    }
+
+    static retryTopic(topic, attempt)
+    {
+        const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
+        const topiclink = topics[topic][source];
+        const data = PageParser.getArticle(source, topic, topiclink, sentences);          //send source, topic and number of sentences to summarise to
+
+        data.then(article => {      //returned in form of promise with value of article
+            try
+            {
+                article.read();
+            }
+            catch(TypeError)
+            {
+                if (attempt === 10)
+                {
+                    console.log("Failed on topic " + topic);
+                }
+                else
+                {
+                    Bulletin.retryTopic(topic, ++attempt);
+                }
+            }
+        })
     }
 }
 
