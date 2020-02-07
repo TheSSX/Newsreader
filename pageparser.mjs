@@ -33,6 +33,8 @@ export class PageParser
             return PageParser.extractAP(topic, topiclink, sentences);
         else if (source === "Evening Standard")
             return PageParser.extractEveningStandard(topic, topiclink, sentences);
+        else if (source === "The Independent")
+            return PageParser.extractIndependent(topic, topiclink, sentences);
     }
 
     /**
@@ -874,6 +876,148 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
                 text = Summarise.extractEveningStandardText(data);
+                if (text !== undefined)
+                {
+                    text = "Not enough summary credits! " + text;
+                }
+            }
+        }
+
+        if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
+        {
+            return undefined;
+        }
+
+        /**
+         * TRANSLATING
+         */
+
+        if (language_choice !== "English")
+        {
+            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
+            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
+            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
+            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+
+            //If translation API not available
+            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            {
+                new Speech(translation_unavailable[language_choice]).speak();
+            }
+            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            {
+                new Speech(translation_unavailable[language_choice]).speak();
+            }
+            else
+            {
+                publisher = publishertranslatedata['text'];
+                topic = topictranslatedata['text'];
+                headline = headlinetranslatedata['text'];
+                text = texttranslatedata['text'];
+            }
+        }
+
+        return new Article(publisher, topic, headline, randomlink, text);
+    }
+
+    /**
+     * Queries a topic page on the Independent website and selects a random article from it
+     * @param topic - the news topic
+     * @param topiclink - the link to that topic on the specified website
+     * @param sentences - the number of sentences to summarise down to
+     * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
+     */
+    static async extractIndependent(topic, topiclink, sentences)
+    {
+        /**
+         * GETTING RANDOM LINK FOR TOPIC
+         */
+
+        let publisher = "The Independent";
+
+        const permadata = await PageParser.extractPageData(topiclink);
+        let linkdata = permadata.split('href="/');
+
+        let linksarr = [];
+        for (let i=1; i<linkdata.length; i+=1)
+        {
+            const currentlink = linkdata[i].split('"')[0];
+            linksarr.push(currentlink);
+        }
+
+        //Parsing links we've found
+        let articlelinks = [];
+        for (let i=0; i<linksarr.length; i+=1)
+        {
+            const current = linksarr[i];
+            //if (current.matches("/^[a-z0-9]+$/"))
+            if (current.includes('-') && current.endsWith(".html") && !current.includes('service/') && !current.includes('independentpremium/'))
+            {
+                articlelinks.push(sources[publisher] + current);
+            }
+        }
+
+        const links = Array.from(new Set(articlelinks));    //array of URLs for articles
+
+        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+
+        /**
+         * Extracting article from article page
+         */
+
+        let data = await PageParser.extractPageData(randomlink);  //fetch data from article page
+        let timeout = 0;
+
+        while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
+        {
+            randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+            data = await PageParser.extractPageData(randomlink);  //fetch data from article page
+            timeout += 1;
+
+            if (data === undefined && timeout === 3 || (randomlink === undefined && timeout === 3))
+            {
+                return undefined;
+            }
+        }
+
+        if (data.includes('<p><strong>'))
+        {
+            return undefined;
+        }
+
+        let headline, text;
+        headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
+        text = Summarise.extractIndependentText(data);
+        console.log("Link is " + randomlink);
+        console.log("Topic is " + topic);
+        console.log("Headline is " + headline);
+        console.log("Text is " + text);
+
+        /**
+         * SUMMARISING
+         */
+
+        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+
+        if (smmrydata === undefined)    //SMMRY API unavailable
+        {
+            headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
+            text = Summarise.extractIndependentText(data);
+            if (text !== undefined)
+            {
+                text = "Not enough summary credits! " + text;
+            }
+        }
+        else    //SMMRY API working fine
+        {
+            headline = smmrydata['sm_api_title'];     //article headline returned
+            text = smmrydata['sm_api_content'];       //summarised article returned
+            const error = smmrydata['sm_api_error'];    //detecting presence of error code
+
+            if (error === 2)
+            {
+                headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
+                text = Summarise.extractIndependentText(data);
                 if (text !== undefined)
                 {
                     text = "Not enough summary credits! " + text;
