@@ -247,8 +247,6 @@ export class Summarise
 			articletext = articletext.split('All quotes delayed a minimum of ')[0];
 		}
 
-		//TODO text is ending with "All quotes delayed a minimum... All rights reserved"
-
         return articletext;
     }
 
@@ -302,6 +300,13 @@ export class Summarise
 		return articletext;
 	}
 
+	static extractAPHeadline(data)
+	{
+		data = data.split('<div class="CardHeadline">')[1];
+		data = data.split('<div class="Component-signature-')[0];
+		return data.replace(/(<([^>]+)>)/ig,"");
+	}
+
 	/**
 	 * Backup function to extract Associated Press article text ourselves due to SMMRY not being available
 	 * @param data - the data from the article page
@@ -345,6 +350,96 @@ export class Summarise
 		{
 			articletext = articletext.split('(AP) — ')[1];
 		}
+
+		return articletext;
+	}
+
+	/**
+	 * Backup function to extract Evening Standard article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractEveningStandardText(data)
+	{
+		let copy = false;
+		let articletext = "";
+		let counter = 0;
+
+		if (data.split('Update newsletter preferences')[1])
+		{
+			data = data.split('Update newsletter preferences')[1];
+		}
+		else if (data.split('<div class="body-content">')[1])
+		{
+			data = data.split('<div class="body-content">')[1];
+		}
+		else
+		{
+			return undefined;
+		}
+
+		if (data === undefined)
+		{
+			return undefined;
+		}
+
+		if (data.split('<aside class="tags">')[0])
+		{
+			data = data.split('<aside class="tags">')[0];
+		}
+		else if (data.split('<div class="share-bar-syndication">')[0])
+		{
+			data = data.split('<div class="share-bar-syndication">')[0];
+		}
+		else
+		{
+			return undefined;
+		}
+
+		//data = data.replace(/<figure.+>.+<\/figure>/ig, '');
+		data = data.replace(/<span.+>.+<\/span>/ig, '');
+		// data = data.replace('&nbsp;', ' ');
+		// data = data.replace(/<figure .+>/g, '');
+		// data = data.replace(/<\/figure>/g, '');
+		// data = data.replace(/<figure[^.+]*>/g,"");
+		// data = data.split(/<figure.+>.+<\/figure>/g).join('');
+		// data = data.split(/<figure[^.+]*>/g).join('');
+		// data = data.split(/<\/figure>/g).join('');
+
+		//console.log(data);
+
+		while (counter < data.length-3)
+		{
+			const startoftext = data[counter] === '<' && data[counter+1] === 'p';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+
+			if (startoftext)
+			{
+				copy = true;
+			}
+			else if (endoftext)
+			{
+				articletext += " ";
+				copy = false;
+			}
+
+			if (copy)
+			{
+				articletext += data[counter];
+			}
+
+			counter += 1;
+		}
+
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+		articletext = articletext.replace(/<figure .+>/g, '');
+		articletext = articletext.replace(/<\/figure>/g, '');
+		articletext = articletext.replace(/<figure[^.+]*>/g,"");
+		articletext = articletext.replace(/<\/figure>/g,"");
+		articletext = articletext.replace('&amp;', '&');
+		articletext = articletext.replace('&nbsp;', ' ');
+		articletext = articletext.split('&nbsp;').join(" ");
+		articletext = articletext.split('&amp;').join("&");
 
 		return articletext;
 	}
