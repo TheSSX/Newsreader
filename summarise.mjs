@@ -479,6 +479,7 @@ export class Summarise
 		data = data.replace(/<\/figure>/g, '');
 		data = data.replace(/<figure[^.+]*>/g,"");
 		data = data.split(/<figure.+>.+<\/figure>/g).join('');
+		data = data.split(/<p><em>.+<\/em><\/p>/g).join('');
 		data = data.split(/<figure[^.+]*>/g).join('');
 		data = data.split(/<\/figure>/g).join('');
 
@@ -486,8 +487,13 @@ export class Summarise
 		{
 			const startoftext = data[counter-1] === '>' && data[counter-2] === 'p' && data[counter-3] === '<';
 			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+			let startofspecialtext = false;
+			if (counter >= 12)
+			{
+				startofspecialtext = data.substring(counter-13, counter) === '<p dir="ltr">';
+			}
 
-			if (startoftext)
+			if (startoftext || startofspecialtext)
 			{
 				copy = true;
 			}
@@ -514,6 +520,7 @@ export class Summarise
 		articletext = articletext.replace('&nbsp;', ' ');
 		articletext = articletext.split('&nbsp;').join(" ");
 		articletext = articletext.split('&amp;').join("&");
+		articletext.replace("Sharing the full story, not just the headlines", " ");
 
 		return articletext;
 	}

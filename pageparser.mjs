@@ -951,7 +951,7 @@ export class PageParser
         {
             const current = linksarr[i];
             //if (current.matches("/^[a-z0-9]+$/"))
-            if (current.includes('-') && current.endsWith(".html") && !current.includes('service/') && !current.includes('independentpremium/'))
+            if (current.includes('-') && current.endsWith(".html") && !current.includes('service/') && !current.includes('independentpremium/') && !current.includes('long_reads/') && !current.includes('extras/') && !current.includes('food-and-drink/recipes/'))
             {
                 articlelinks.push(sources[publisher] + current);
             }
@@ -980,18 +980,12 @@ export class PageParser
             }
         }
 
-        if (data.includes('<p><strong>'))
+        if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
         {
             return undefined;
         }
 
         let headline, text;
-        headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
-        text = Summarise.extractIndependentText(data);
-        console.log("Link is " + randomlink);
-        console.log("Topic is " + topic);
-        console.log("Headline is " + headline);
-        console.log("Text is " + text);
 
         /**
          * SUMMARISING
@@ -1001,7 +995,16 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
+            if (data.split('<title>')[1].split(' | ')[0])
+            {
+                headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
+            }
+            else
+            {
+                headline = data.split('<title>')[1].split('</title>')[0];      //got an article which had an inconsistent headline scheme once
+            }
+            headline = headline.replace('&amp;', '&');
+
             text = Summarise.extractIndependentText(data);
             if (text !== undefined)
             {
