@@ -300,6 +300,10 @@ export class Summarise
 		return articletext;
 	}
 
+	//TODO the second line returned an error at one point
+	//Uncaught (in promise) TypeError: Cannot read property 'split' of undefined
+	//     at Function.extractAPHeadline (summarise.mjs:306)
+	//     at Function.extractAP (pageparser.mjs:733)
 	static extractAPHeadline(data)
 	{
 		data = data.split('<div class="CardHeadline">')[1];
