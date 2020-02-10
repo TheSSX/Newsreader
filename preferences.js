@@ -13,7 +13,8 @@ export let sources = {
 	"Reuters": "https://www.reuters.com/",
 	"Sky News": "https://www.news.sky.com/",
 	"Associated Press": "https://apnews.com/",
-	"Evening Standard": "https://www.standard.co.uk/"
+	"Evening Standard": "https://www.standard.co.uk/",
+	"The Independent": "https://www.independent.co.uk/"
 };
 //TODO these are now inconsistent, some have slashes at the end and some don't
 export let topics = {
@@ -23,7 +24,8 @@ export let topics = {
 		"Reuters": "https://www.reuters.com/news/sports/",
 		"Sky News": "https://www.skysports.com/news-wire",
 		"Associated Press": "https://apnews.com/apf-sports",
-		"Evening Standard": "https://www.standard.co.uk/sport"
+		"Evening Standard": "https://www.standard.co.uk/sport",
+		"The Independent": "https://www.independent.co.uk/sport"
 		},
     "politics": {
 		"The Guardian": 'https://www.theguardian.com/politics/3019/dec/31/',
@@ -31,7 +33,8 @@ export let topics = {
 		"Reuters": "https://www.reuters.com/politics/",
 		"Sky News": "https://news.sky.com/politics",
 		"Associated Press": "https://apnews.com/apf-politics",
-		"Evening Standard": "https://www.standard.co.uk/news/politics"
+		"Evening Standard": "https://www.standard.co.uk/news/politics",
+		"The Independent": "https://www.independent.co.uk/politics"
 		},
     "uk": {
 		"The Guardian": 'https://www.theguardian.com/uk-news/3019/dec/31/',
@@ -39,7 +42,8 @@ export let topics = {
 		"Reuters": "https://uk.reuters.com/news/uk/",
 		"Sky News": "https://news.sky.com/uk",
 		"Associated Press": "https://apnews.com/UnitedKingdom",
-		"Evening Standard": "https://www.standard.co.uk/news/uk"
+		"Evening Standard": "https://www.standard.co.uk/news/uk",
+		"The Independent": "https://www.independent.co.uk/news/uk"
 		},
     "science": {
 		"The Guardian": 'https://www.theguardian.com/science/3019/dec/31/',
@@ -47,7 +51,8 @@ export let topics = {
 		"Reuters": "https://www.reuters.com/news/science/",
 		"Sky News": "https://news.sky.com/technology",
 		"Associated Press": "https://apnews.com/apf-science",
-		"Evening Standard": "https://www.standard.co.uk/topic/science"
+		"Evening Standard": "https://www.standard.co.uk/topic/science",
+		"The Independent": "https://www.independent.co.uk/news/science"
 		},
     "technology": {
 		"The Guardian": 'https://www.theguardian.com/technology/3019/dec/31/',
@@ -55,7 +60,8 @@ export let topics = {
 		"Reuters": "https://www.reuters.com/news/technology/",
 		"Sky News": "https://news.sky.com/technology",
 		"Associated Press": "https://apnews.com/apf-technology",
-		"Evening Standard": "https://www.standard.co.uk/tech"
+		"Evening Standard": "https://www.standard.co.uk/tech",
+		"The Independent": "https://www.independent.co.uk/life-style/gadgets-and-tech"
 		},
     "environment": {
 		"The Guardian": 'https://www.theguardian.com/environment/3019/dec/31/',
@@ -63,7 +69,8 @@ export let topics = {
 		"Reuters": "https://uk.reuters.com/news/environment/",
 		"Sky News" : "https://news.sky.com/climate",
 		"Associated Press": "https://apnews.com/Environment",
-		"Evening Standard": "https://www.standard.co.uk/topic/environment"
+		"Evening Standard": "https://www.standard.co.uk/topic/environment",
+		"The Independent": "https://www.independent.co.uk/environment"
 		},
     "society": {
 		"The Guardian": 'https://www.theguardian.com/society/3019/dec/31/',
@@ -71,7 +78,8 @@ export let topics = {
 		"Reuters": "https://www.reuters.com/news/lifestyle/",
 		"Sky News" : "https://news.sky.com/strangenews",
 		"Associated Press": "https://apnews.com/apf-lifestyle",
-		"Evening Standard": "https://www.standard.co.uk/lifestyle"
+		"Evening Standard": "https://www.standard.co.uk/lifestyle",
+		"The Independent": "https://www.independent.co.uk/life-style"
 		},
     "business": {
 		"The Guardian": 'https://www.theguardian.com/business/3019/dec/31/',
@@ -79,7 +87,8 @@ export let topics = {
 		"Reuters": "https://www.reuters.com/finance/",
 		"Sky News": "https://news.sky.com/business",
 		"Associated Press": "https://apnews.com/apf-business",
-		"Evening Standard": "https://www.standard.co.uk/business"
+		"Evening Standard": "https://www.standard.co.uk/business",
+		"The Independent": "https://www.independent.co.uk/business"
 		},
     "world": {
 		"The Guardian": 'https://www.theguardian.com/world/3019/dec/31/',
@@ -87,7 +96,8 @@ export let topics = {
 		"Reuters": "https://www.reuters.com/news/world/",
 		"Sky News": "https://news.sky.com/world",
 		"Associated Press": "https://apnews.com/apf-intlnews",
-		"Evening Standard": "https://www.standard.co.uk/news/world"
+		"Evening Standard": "https://www.standard.co.uk/news/world",
+		"The Independent": "https://www.independent.co.uk/news/world"
 		}
 };
 
