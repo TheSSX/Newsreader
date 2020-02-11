@@ -38,8 +38,7 @@ export class Bulletin
 
     static retryTopic(topic, attempt)
     {
-        //const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
-        const source = "The Independent";
+        const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
 
         const topiclink = topics[topic][source];
         const data = PageParser.getArticle(source, topic, topiclink, sentences);          //send source, topic and number of sentences to summarise to
