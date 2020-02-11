@@ -609,4 +609,85 @@ export class Summarise
 
 		return articletext;
 	}
+
+	/**
+	 * Backup function to extract News.com.au article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractNewsAUText(data)
+	{
+		let copy = false;
+		let articletext = "";
+		let counter = 0;
+
+		if (data.split('<article id="story">')[1])
+		{
+			data = data.split('<article id="story">')[1];
+		}
+		else
+		{
+			return undefined;
+		}
+
+		if (data === undefined)
+		{
+			return undefined;
+		}
+
+		if (data.split('<div id="share-and-comment">')[0])
+		{
+			data = data.split('<div id="share-and-comment">')[0];
+		}
+		else
+		{
+			return undefined;
+		}
+
+		data = data.replace(/<figure.+>.+<\/figure>/ig, '');
+		data = data.replace(/<span.+>.+<\/span>/ig, '');
+		data = data.replace('&nbsp;', ' ');
+		data = data.replace(/<figure .+>/g, '');
+		data = data.replace(/<\/figure>/g, '');
+		data = data.replace(/<figure[^.+]*>/g,"");
+		data = data.split(/<figure.+>.+<\/figure>/g).join('');
+		data = data.split(/<p><em>.+<\/em><\/p>/g).join('');
+		data = data.split(/<figure[^.+]*>/g).join('');
+		data = data.split(/<\/figure>/g).join('');
+
+		while (counter < data.length-3)
+		{
+			const startoftext = data[counter-1] === '>' && data[counter-2] === 'p' && data[counter-3] === '<';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+
+			if (startoftext)
+			{
+				copy = true;
+			}
+			else if (endoftext)
+			{
+				articletext += " ";
+				copy = false;
+			}
+
+			if (copy)
+			{
+				articletext += data[counter];
+			}
+
+			counter += 1;
+		}
+
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+		articletext = articletext.replace(/<figure .+>/g, '');
+		articletext = articletext.replace(/<\/figure>/g, '');
+		articletext = articletext.replace(/<figure[^.+]*>/g,"");
+		articletext = articletext.replace(/<\/figure>/g,"");
+		articletext = articletext.replace('&#39;', ("'"));					//not as convinced this is doing anything, honest to God
+		articletext = articletext.replace('&quot;', ('"'));
+		articletext = articletext.split('&#39;').join("'");
+		articletext = articletext.split('&quot;').join('"');
+
+		return articletext;
+	}
 }

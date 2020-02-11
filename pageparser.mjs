@@ -37,6 +37,8 @@ export class PageParser
             return PageParser.extractIndependent(topic, topiclink, sentences);
         else if (source === "ITV News")
             return PageParser.extractITV(topic, topiclink, sentences);
+        else if (source === "News.com.au")
+            return PageParser.extractNewsAU(topic, topiclink, sentences);
     }
 
     /**
@@ -1068,6 +1070,201 @@ export class PageParser
     }
 
     /**
+     * Queries a topic page on the News.com.au website and selects a random article from it
+     * @param topic - the news topic
+     * @param topiclink - the link to that topic on the specified website
+     * @param sentences - the number of sentences to summarise down to
+     * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
+     */
+    static async extractNewsAU(topic, topiclink, sentences)
+    {
+        /**
+         * GETTING RANDOM LINK FOR TOPIC
+         */
+
+        let publisher = "News.com.au";
+
+        const permadata = await PageParser.extractPageData(topiclink);
+        let linkdata = permadata.split('href="https://www.news.com.au/');
+
+        let linksarr = [];
+        for (let i=1; i<linkdata.length; i+=1)
+        {
+            const currentlink = linkdata[i].split('"')[0];
+            linksarr.push(currentlink);
+        }
+
+        //Parsing links we've found
+        let articlelinks = [];
+        for (let i=0; i<linksarr.length; i+=1)
+        {
+            const current = linksarr[i];
+            //if (current.matches("/^[a-z0-9]+$/"))
+            if (current.includes('-') && current.includes("/news-story/"))
+            {
+                articlelinks.push(sources[publisher] + current);
+            }
+        }
+
+        const links = Array.from(new Set(articlelinks));    //array of URLs for articles
+
+        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+
+        /**
+         * Extracting article from article page
+         */
+
+        let data = await PageParser.extractPageData(randomlink);  //fetch data from article page
+        let timeout = 0;
+
+        while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
+        {
+            randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+            data = await PageParser.extractPageData(randomlink);  //fetch data from article page
+            timeout += 1;
+
+            if (data === undefined && timeout === 3 || (randomlink === undefined && timeout === 3))
+            {
+                return undefined;
+            }
+        }
+
+        /**if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
+        {
+            return undefined;
+        }*/
+
+        let headline, text;
+        if (data.split('<title>')[1])
+        {
+            headline = data.split('<title>')[1];
+            if (headline.split('</title>')[0])
+            {
+                headline = headline.split('</title>')[0];      //get headline from article data
+            }
+            else
+            {
+                return undefined;
+            }
+        }
+        else
+        {
+            return undefined;
+        }
+        text = Summarise.extractNewsAUText(data);
+        console.log("Link is " + randomlink);
+        console.log("Topic is " + topic);
+        console.log("Headline is " + headline);
+        console.log("Text is " + text);
+
+
+        /**
+         * SUMMARISING
+         */
+
+        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+
+        if (smmrydata === undefined)    //SMMRY API unavailable
+        {
+            if (data.split('<title>')[1])
+            {
+                headline = data.split('<title>')[1];
+                if (headline.split('</title>')[0])
+                {
+                    headline = headline.split('</title>')[0];      //get headline from article data
+                }
+                else
+                {
+                    return undefined;
+                }
+            }
+            else
+            {
+                return undefined;
+            }
+
+            text = Summarise.extractNewsAUText(data);
+            if (text !== undefined)
+            {
+                text = "Not enough summary credits! " + text;
+            }
+        }
+        else    //SMMRY API working fine
+        {
+            headline = smmrydata['sm_api_title'];     //article headline returned
+            text = smmrydata['sm_api_content'];       //summarised article returned
+            const error = smmrydata['sm_api_error'];    //detecting presence of error code
+
+            if (error === 2)
+            {
+                if (data.split('<title>')[1])
+                {
+                    headline = data.split('<title>')[1];
+                    if (headline.split('</title>')[0])
+                    {
+                        headline = headline.split('</title>')[0];      //get headline from article data
+                    }
+                    else
+                    {
+                        return undefined;
+                    }
+                }
+                else
+                {
+                    return undefined;
+                }
+
+                text = Summarise.extractNewsAUText(data);
+                if (text !== undefined)
+                {
+                    text = "Not enough summary credits! " + text;
+                }
+            }
+        }
+
+        if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
+        {
+            return undefined;
+        }
+
+        headline = headline.replace('&#39;', ("'"));
+        headline = headline.replace('&quot;', ('"'));
+        headline = headline.split('&#39;').join("'");
+        headline = headline.split('&quot;').join('"');
+
+        /**
+         * TRANSLATING
+         */
+
+        if (language_choice !== "English")
+        {
+            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
+            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
+            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
+            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+
+            //If translation API not available
+            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            {
+                new Speech(translation_unavailable[language_choice]).speak();
+            }
+            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            {
+                new Speech(translation_unavailable[language_choice]).speak();
+            }
+            else
+            {
+                publisher = publishertranslatedata['text'];
+                topic = topictranslatedata['text'];
+                headline = headlinetranslatedata['text'];
+                text = texttranslatedata['text'];
+            }
+        }
+
+        return new Article(publisher, topic, headline, randomlink, text);
+    }
+
+    /**
      * Queries a topic page on the ITV News website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
@@ -1128,7 +1325,7 @@ export class PageParser
         }
 
         /**if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
-        {
+         {
             return undefined;
         }*/
 

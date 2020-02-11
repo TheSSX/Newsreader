@@ -18,8 +18,15 @@ export class Bulletin
         for (let i=0; i<Object.keys(topics).length; i++)     // change i< to prevent unnecessary credits being used up
 		//for (let i=0; i<1; i++)     // change i< to prevent unnecessary credits being used up
         {
-            const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
+            //const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
+            const source = "News.com.au";
             const topic = Object.keys(topics)[i];
+
+            if (topic === "uk" && source === "News.com.au")
+            {
+                continue;
+            }
+
             const topiclink = topics[topic][source];
             const data = PageParser.getArticle(source, topic, topiclink, sentences);          //send source, topic and number of sentences to summarise to
 
@@ -38,7 +45,8 @@ export class Bulletin
 
     static retryTopic(topic, attempt)
     {
-        const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
+        //const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
+        const source = "News.com.au";
 
         const topiclink = topics[topic][source];
         const data = PageParser.getArticle(source, topic, topiclink, sentences);          //send source, topic and number of sentences to summarise to
