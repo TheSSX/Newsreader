@@ -15,7 +15,8 @@ export let sources = {
 	"Associated Press": "https://apnews.com/",
 	"Evening Standard": "https://www.standard.co.uk/",
 	"The Independent": "https://www.independent.co.uk/",
-	"ITV News": "https://www.itv.com/"
+	"ITV News": "https://www.itv.com/",
+	"News.com.au": "https://www.news.com.au/"
 };
 //TODO these are now inconsistent, some have slashes at the end and some don't
 export let topics = {
@@ -27,7 +28,8 @@ export let topics = {
 		"Associated Press": "https://apnews.com/apf-sports",
 		"Evening Standard": "https://www.standard.co.uk/sport",
 		"The Independent": "https://www.independent.co.uk/sport",
-		"ITV News": "https://www.itv.com/news/sport"
+		"ITV News": "https://www.itv.com/news/sport",
+		"News.com.au": "https://www.news.com.au/sport"
 		},
     "politics": {
 		"The Guardian": 'https://www.theguardian.com/politics/3019/dec/31/',
@@ -37,7 +39,8 @@ export let topics = {
 		"Associated Press": "https://apnews.com/apf-politics",
 		"Evening Standard": "https://www.standard.co.uk/news/politics",
 		"The Independent": "https://www.independent.co.uk/politics",
-		"ITV News": "https://www.itv.com/news/politics"
+		"ITV News": "https://www.itv.com/news/politics",
+		"News.com.au": "https://www.news.com.au/national/politics"
 		},
     "uk": {
 		"The Guardian": 'https://www.theguardian.com/uk-news/3019/dec/31/',
@@ -57,7 +60,8 @@ export let topics = {
 		"Associated Press": "https://apnews.com/apf-science",
 		"Evening Standard": "https://www.standard.co.uk/topic/science",
 		"The Independent": "https://www.independent.co.uk/news/science",
-		"ITV News": "https://www.itv.com/news/science"
+		"ITV News": "https://www.itv.com/news/science",
+		"News.com.au": "https://www.news.com.au/technology/science"
 		},
     "technology": {
 		"The Guardian": 'https://www.theguardian.com/technology/3019/dec/31/',
@@ -67,7 +71,8 @@ export let topics = {
 		"Associated Press": "https://apnews.com/apf-technology",
 		"Evening Standard": "https://www.standard.co.uk/tech",
 		"The Independent": "https://www.independent.co.uk/life-style/gadgets-and-tech",
-		"ITV News": "https://www.itv.com/news/technology"
+		"ITV News": "https://www.itv.com/news/technology",
+		"News.com.au": "https://www.news.com.au/technology"
 		},
     "environment": {
 		"The Guardian": 'https://www.theguardian.com/environment/3019/dec/31/',
@@ -77,7 +82,8 @@ export let topics = {
 		"Associated Press": "https://apnews.com/Environment",
 		"Evening Standard": "https://www.standard.co.uk/topic/environment",
 		"The Independent": "https://www.independent.co.uk/environment",
-		"ITV News": "https://www.itv.com/news/environment"
+		"ITV News": "https://www.itv.com/news/environment",
+		"News.com.au": "https://www.news.com.au/technology/environment"
 		},
     "society": {
 		"The Guardian": 'https://www.theguardian.com/society/3019/dec/31/',
@@ -87,7 +93,8 @@ export let topics = {
 		"Associated Press": "https://apnews.com/apf-lifestyle",
 		"Evening Standard": "https://www.standard.co.uk/lifestyle",
 		"The Independent": "https://www.independent.co.uk/life-style",
-		"ITV News": "https://www.itv.com/news/consumer"
+		"ITV News": "https://www.itv.com/news/consumer",
+		"News.com.au": "https://www.news.com.au/lifestyle"
 		},
     "business": {
 		"The Guardian": 'https://www.theguardian.com/business/3019/dec/31/',
@@ -97,7 +104,8 @@ export let topics = {
 		"Associated Press": "https://apnews.com/apf-business",
 		"Evening Standard": "https://www.standard.co.uk/business",
 		"The Independent": "https://www.independent.co.uk/business",
-		"ITV News": "https://www.itv.com/news/business"
+		"ITV News": "https://www.itv.com/news/business",
+		"News.com.au": "https://www.news.com.au/finance"
 		},
     "world": {
 		"The Guardian": 'https://www.theguardian.com/world/3019/dec/31/',
@@ -107,7 +115,8 @@ export let topics = {
 		"Associated Press": "https://apnews.com/apf-intlnews",
 		"Evening Standard": "https://www.standard.co.uk/news/world",
 		"The Independent": "https://www.independent.co.uk/news/world",
-		"ITV News": "https://www.itv.com/news/world"
+		"ITV News": "https://www.itv.com/news/world",
+		"News.com.au": "https://www.news.com.au/world"
 		}
 };
 
