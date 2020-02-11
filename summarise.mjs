@@ -300,6 +300,10 @@ export class Summarise
 		return articletext;
 	}
 
+	//TODO the second line returned an error at one point
+	//Uncaught (in promise) TypeError: Cannot read property 'split' of undefined
+	//     at Function.extractAPHeadline (summarise.mjs:306)
+	//     at Function.extractAP (pageparser.mjs:733)
 	static extractAPHeadline(data)
 	{
 		data = data.split('<div class="CardHeadline">')[1];
@@ -521,6 +525,87 @@ export class Summarise
 		articletext = articletext.split('&nbsp;').join(" ");
 		articletext = articletext.split('&amp;').join("&");
 		articletext.replace("Sharing the full story, not just the headlines", " ");
+
+		return articletext;
+	}
+
+	/**
+	 * Backup function to extract ITV News article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractITVText(data)
+	{
+		let copy = false;
+		let articletext = "";
+		let counter = 0;
+
+		if (data.split('<article class="update">')[1])
+		{
+			data = data.split('<article class="update">')[1];
+		}
+		else
+		{
+			return undefined;
+		}
+
+		if (data === undefined)
+		{
+			return undefined;
+		}
+
+		if (data.split('<div className="update__share">')[0])
+		{
+			data = data.split('<div className="update__share">')[0];
+		}
+		else
+		{
+			return undefined;
+		}
+
+		data = data.replace(/<figure.+>.+<\/figure>/ig, '');
+		data = data.replace(/<span.+>.+<\/span>/ig, '');
+		data = data.replace('&nbsp;', ' ');
+		data = data.replace(/<figure .+>/g, '');
+		data = data.replace(/<\/figure>/g, '');
+		data = data.replace(/<figure[^.+]*>/g,"");
+		data = data.split(/<figure.+>.+<\/figure>/g).join('');
+		data = data.split(/<p><em>.+<\/em><\/p>/g).join('');
+		data = data.split(/<figure[^.+]*>/g).join('');
+		data = data.split(/<\/figure>/g).join('');
+
+		while (counter < data.length-3)
+		{
+			const startoftext = data[counter-1] === '>' && data[counter-2] === 'p' && data[counter-3] === '<';
+			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+
+			if (startoftext)
+			{
+				copy = true;
+			}
+			else if (endoftext)
+			{
+				articletext += " ";
+				copy = false;
+			}
+
+			if (copy)
+			{
+				articletext += data[counter];
+			}
+
+			counter += 1;
+		}
+
+		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
+		articletext = articletext.replace(/<figure .+>/g, '');
+		articletext = articletext.replace(/<\/figure>/g, '');
+		articletext = articletext.replace(/<figure[^.+]*>/g,"");
+		articletext = articletext.replace(/<\/figure>/g,"");
+		articletext = articletext.replace('&#39;', ("'"));					//not as convinced this is doing anything, honest to God
+		articletext = articletext.replace('&quot;', ('"'));
+		articletext = articletext.split('&#39;').join("'");
+		articletext = articletext.split('&quot;').join('"');
 
 		return articletext;
 	}
