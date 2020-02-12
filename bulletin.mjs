@@ -18,13 +18,12 @@ export class Bulletin
         for (let i=0; i<Object.keys(topics).length; i++)     // change i< to prevent unnecessary credits being used up
 		//for (let i=0; i<1; i++)     // change i< to prevent unnecessary credits being used up
         {
-            //const source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
-            const source = "News.com.au";
+            let source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];  //get random source to contact
             const topic = Object.keys(topics)[i];
 
-            if (topic === "uk" && source === "News.com.au")
+            while (topic === "uk" && source === "News.com.au")
             {
-                continue;
+                source = Object.keys(sources)[Math.floor(Math.random()*Object.keys(sources).length)];
             }
 
             const topiclink = topics[topic][source];

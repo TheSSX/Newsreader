@@ -6,70 +6,70 @@ import {apikey, smmryurl} from "./smmry.js";
  */
 export class Summarise
 {
-    /**
-     * Receives a URL to an article and the number of sentences to summarise down to
-     * @param articleurl - the article URL
-     * @param sentences - the number of sentences to summarise down to
-     * @returns {Promise<void>} - the JSON response from SMMRY
-     */
-    static async summarise(articleurl, sentences)
-    {
-        const url = this.constructsmmryurl(articleurl, sentences);
+	/**
+	 * Receives a URL to an article and the number of sentences to summarise down to
+	 * @param articleurl - the article URL
+	 * @param sentences - the number of sentences to summarise down to
+	 * @returns {Promise<void>} - the JSON response from SMMRY
+	 */
+	static async summarise(articleurl, sentences)
+	{
+		const url = this.constructsmmryurl(articleurl, sentences);
 
-        try
-        {
-            return await this.contactsmmry(url);
-        }
-        catch
-        {
-            return undefined;
-        }
-    }
+		try
+		{
+			return await this.contactsmmry(url);
+		}
+		catch
+		{
+			return undefined;
+		}
+	}
 
-    /**
-     * Inserts given parameters into a URL through which to query SMMRY over HTTP
-     * @param articleurl - the article URL
-     * @param sentences - the number of sentences to summarise down to
-     * @returns {string} - the exact HTTP URL to send
-     */
-    static constructsmmryurl(articleurl, sentences)
-    {
-        return `${smmryurl}&SM_API_KEY=${apikey}&SM_LENGTH=${sentences}&SM_QUESTION_AVOID&SM_EXCLAMATION_AVOID&SM_URL=${articleurl}`;
-    }
+	/**
+	 * Inserts given parameters into a URL through which to query SMMRY over HTTP
+	 * @param articleurl - the article URL
+	 * @param sentences - the number of sentences to summarise down to
+	 * @returns {string} - the exact HTTP URL to send
+	 */
+	static constructsmmryurl(articleurl, sentences)
+	{
+		return `${smmryurl}&SM_API_KEY=${apikey}&SM_LENGTH=${sentences}&SM_QUESTION_AVOID&SM_EXCLAMATION_AVOID&SM_URL=${articleurl}`;
+	}
 
-    /**
-     * Queries SMMRY and returns JSON data
-     * @param url - the GET request to SMMRY
-     * @returns {*} - actually returns the JSON response from SMMRY
-     */
-    static contactsmmry(url)
-    {
-        return $.ajax({ url: url}).done(function(data){}).fail(function(ajaxError){});      //same here
-    }
+	/**
+	 * Queries SMMRY and returns JSON data
+	 * @param url - the GET request to SMMRY
+	 * @returns {*} - actually returns the JSON response from SMMRY
+	 */
+	static contactsmmry(url)
+	{
+		return $.ajax({ url: url}).done(function(data){}).fail(function(ajaxError){});      //same here
+	}
 
-    /**
-     * Backup function to extract Guardian article text ourselves due to SMMRY not being available
-     * @param data - the data from the article page
-     * @returns {string|undefined} - the string of the article text, undefined if not available
-     */
-    static extractGuardianText(data)
-    {
+	/**
+	 * Backup function to extract Guardian article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractGuardianText(data)
+	{
 		if (data.includes('<p><strong>') || data.includes('<h2>'))
-        {
-            return undefined;
-        }
-		
+		{
+			return undefined;
+		}
+
 		data = data.split('<div class="content__article-body from-content-api js-article__body" itemprop="articleBody" data-test-id="article-review-body">')[1];
 		if (data === undefined)
 		{
 			return undefined;
 		}
-		
+
 		/**data = data.replace(/<figcaption [^|]+<\/figcaption>/g, '');    //removes caption under article image
-        data = data.replace(/<figure [^|]+<\/figure>/g, '');
-        data = data.replace(/<twitter-widget [^|]+<\/twitter-widget>/g, '');
-        data = data.replace(/<em>[^|]+<\/em>/g, '');    //removes italicised text not directly related to article*/
-		
+		 data = data.replace(/<figure [^|]+<\/figure>/g, '');
+		 data = data.replace(/<twitter-widget [^|]+<\/twitter-widget>/g, '');
+		 data = data.replace(/<em>[^|]+<\/em>/g, '');    //removes italicised text not directly related to article*/
+
 		let copy = false;
 		let articletext = "";
 		let counter = 2;
@@ -91,12 +91,12 @@ export class Summarise
 			{
 				copy = false;
 			}
-			
+
 			if (copy)
 			{
 				articletext += data[counter];
 			}
-			
+
 			counter += 1;
 		}
 		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
@@ -106,70 +106,70 @@ export class Summarise
 		//Sometimes, it deletes all text up to another later link. Sometimes it just replaces the following text with a space. Who fucking knows.
 		articletext = articletext.replace(/<span.*>/g, '');
 		articletext = articletext.replace(/<\/span>/g, '');		*/
-		
-		
-		
-		
-		
-		
-        /**if (data.includes('<p><strong>') || data.includes('<h2><strong>'))
-        {
+
+
+
+
+
+
+		/**if (data.includes('<p><strong>') || data.includes('<h2><strong>'))
+		 {
             return undefined;
         }
 
-        /** Remove unneccesary things from article page 
-        data = data.replace(/<figcaption [^|]+<\/figcaption>/g, '');    //removes caption under article image
-        data = data.replace(/<figure [^|]+<\/figure>/g, '');
-        data = data.replace(/<twitter-widget [^|]+<\/twitter-widget>/g, '');
-        data = data.replace(/<em>[^|]+<\/em>/g, '');    //removes italicised text not directly related to article
+		 /** Remove unneccesary things from article page
+		 data = data.replace(/<figcaption [^|]+<\/figcaption>/g, '');    //removes caption under article image
+		 data = data.replace(/<figure [^|]+<\/figure>/g, '');
+		 data = data.replace(/<twitter-widget [^|]+<\/twitter-widget>/g, '');
+		 data = data.replace(/<em>[^|]+<\/em>/g, '');    //removes italicised text not directly related to article
 
-        /**
-         This has been the bane of my life. Most other HTML elements can seemingly be removed
-         but <aside> can't. I have tried all I can to remove this and its containing text
-         from the data and the result is below. THIS NEEDS IMPROVING
-         */
-        //data = data.replace(/<aside [^|]+<\/aside>/g, '');
-        //data = data.replace('<aside .*?</aside>', '');
-/**
-        for (let i=0; i<3; i++)
-        {
+		 /**
+		 This has been the bane of my life. Most other HTML elements can seemingly be removed
+		 but <aside> can't. I have tried all I can to remove this and its containing text
+		 from the data and the result is below. THIS NEEDS IMPROVING
+		 */
+		//data = data.replace(/<aside [^|]+<\/aside>/g, '');
+		//data = data.replace('<aside .*?</aside>', '');
+		/**
+		 for (let i=0; i<3; i++)
+		 {
             data = data.split('<aside ')[0] + data.split('</aside>')[1];
         }
 
-        let articletext = $("<p>").html(data).text();
-        articletext = articletext.split('Share via Email')[1];
-        articletext = articletext.replace(/\r?\n|\r/g, "");
-        articletext = articletext.split('undefined')[0];
-        articletext = articletext.split('Topics')[0];
-		
-        articletext = articletext.split(/[\.\!]+(?!\d)\s*|\n+\s).join('. ');  //split by '.' but ignoring decimal numbers
-        //articletext = articletext.slice(0, -1);     //removes a final quote that sometimes appears. Doesn't affect text without the quote.
-		*/
+		 let articletext = $("<p>").html(data).text();
+		 articletext = articletext.split('Share via Email')[1];
+		 articletext = articletext.replace(/\r?\n|\r/g, "");
+		 articletext = articletext.split('undefined')[0];
+		 articletext = articletext.split('Topics')[0];
 
-        return articletext;
-    }
-	
+		 articletext = articletext.split(/[\.\!]+(?!\d)\s*|\n+\s).join('. ');  //split by '.' but ignoring decimal numbers
+		 //articletext = articletext.slice(0, -1);     //removes a final quote that sometimes appears. Doesn't affect text without the quote.
+		 */
+
+		return articletext;
+	}
+
 	/**
-     * Backup function to extract BBC article text ourselves due to SMMRY not being available
-     * @param data - the data from the article page
-     * @returns {string|undefined} - the string of the article text, undefined if not available
-     */
-    static extractBBCText(data)
-    {		
+	 * Backup function to extract BBC article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractBBCText(data)
+	{
 		data = data.split('<p class="story-body__introduction">')[1];
 		if (data === undefined)
 		{
 			return undefined;
 		}
-		
+
 		let copy = true;
 		let articletext = "";
 		let counter = 0;
 
 		/**
-		This still needs to deal with links leftover in the text. They take the following form:
-		while union bosses <a href="https://www.google.com" class="example_class">are unhappy with the outcome</a> they still need to address
-		*/
+		 This still needs to deal with links leftover in the text. They take the following form:
+		 while union bosses <a href="https://www.google.com" class="example_class">are unhappy with the outcome</a> they still need to address
+		 */
 		while (counter < data.length-3)
 		{
 			const startoftext = data[counter] === '>' && data[counter-1] === 'p' && data[counter-2] === '<';
@@ -187,27 +187,27 @@ export class Summarise
 			{
 				copy = false;
 			}
-			
+
 			if (copy)
 			{
 				articletext += data[counter];
 			}
-			
+
 			counter += 1;
 		}
 
 		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
 
-        return articletext;
-    }
+		return articletext;
+	}
 
-    /**
-     * Backup function to extract Reuters article text ourselves due to SMMRY not being available
-     * @param data - the data from the article page
-     * @returns {string|undefined} - the string of the article text, undefined if not available
-     */
-    static extractReutersText(data)
-    {
+	/**
+	 * Backup function to extract Reuters article text ourselves due to SMMRY not being available
+	 * @param data - the data from the article page
+	 * @returns {string|undefined} - the string of the article text, undefined if not available
+	 */
+	static extractReutersText(data)
+	{
 		let copy = false;
 		let articletext = "";
 		let counter = 2;
@@ -247,8 +247,8 @@ export class Summarise
 			articletext = articletext.split('All quotes delayed a minimum of ')[0];
 		}
 
-        return articletext;
-    }
+		return articletext;
+	}
 
 	/**
 	 * Backup function to extract Sky News article text ourselves due to SMMRY not being available
@@ -617,22 +617,36 @@ export class Summarise
 	 */
 	static extractNewsAUText(data)
 	{
-		let copy = false;
-		let articletext = "";
-		let counter = 0;
-
-		if (data.split('<article id="story">')[1])
-		{
-			data = data.split('<article id="story">')[1];
-		}
-		else
-		{
-			return undefined;
-		}
-
 		if (data === undefined)
 		{
 			return undefined;
+		}
+
+		return this.extractAUStart(data) + " " +  this.extractAUEnd(data);
+	}
+
+	static extractAUStart(data)
+	{
+		if (data.split('<p class="description">')[1].split('</p>')[0])
+		{
+			return data.split('<p class="description">')[1].split('</p>')[0];
+		}
+
+		return "";
+	}
+
+	static extractAUEnd(data)
+	{
+		let copy = false;
+		let articletext = "";
+
+		if (data.split('<div class="story-content">')[1])
+		{
+			data = data.split('<div class="story-content">')[1];
+		}
+		else
+		{
+			return "";
 		}
 
 		if (data.split('<div id="share-and-comment">')[0])
@@ -641,26 +655,24 @@ export class Summarise
 		}
 		else
 		{
-			return undefined;
+			return "";
 		}
 
-		data = data.replace(/<figure.+>.+<\/figure>/ig, '');
-		data = data.replace(/<span.+>.+<\/span>/ig, '');
-		data = data.replace('&nbsp;', ' ');
-		data = data.replace(/<figure .+>/g, '');
-		data = data.replace(/<\/figure>/g, '');
-		data = data.replace(/<figure[^.+]*>/g,"");
-		data = data.split(/<figure.+>.+<\/figure>/g).join('');
-		data = data.split(/<p><em>.+<\/em><\/p>/g).join('');
-		data = data.split(/<figure[^.+]*>/g).join('');
-		data = data.split(/<\/figure>/g).join('');
+		data = data.split(/<div[^.+]*>/g).join('');
+
+		let counter = 0;
 
 		while (counter < data.length-3)
 		{
-			const startoftext = data[counter-1] === '>' && data[counter-2] === 'p' && data[counter-3] === '<';
+			const startoftext = data[counter-1] === '>' && data[counter-2] === 'p' && data[counter-3] === '<' && data[counter] !== '<';
 			const endoftext = data[counter] === '<' && data[counter+1] === '/' && data[counter+2] === 'p' && data[counter+3] === '>';
+			let startofspecialtext = false;
+			if (counter >= 30)
+			{
+				startofspecialtext = data.substring(counter-30, counter) === '<p class="standfirst-content">';
+			}
 
-			if (startoftext)
+			if (startoftext || startofspecialtext)
 			{
 				copy = true;
 			}
@@ -679,14 +691,17 @@ export class Summarise
 		}
 
 		articletext = articletext.replace(/(<([^>]+)>)/ig,"");
-		articletext = articletext.replace(/<figure .+>/g, '');
-		articletext = articletext.replace(/<\/figure>/g, '');
-		articletext = articletext.replace(/<figure[^.+]*>/g,"");
-		articletext = articletext.replace(/<\/figure>/g,"");
-		articletext = articletext.replace('&#39;', ("'"));					//not as convinced this is doing anything, honest to God
-		articletext = articletext.replace('&quot;', ('"'));
-		articletext = articletext.split('&#39;').join("'");
-		articletext = articletext.split('&quot;').join('"');
+		articletext = articletext.split('&#x2013;').join("-");
+		articletext = articletext.split('&#x201D;').join('"');
+		articletext = articletext.split('&#x2018;').join('"');
+		articletext = articletext.split('&#x2019;').join("'");
+		articletext = articletext.split('&#x201C;').join('"');
+		articletext = articletext.split('&amp;').join('&');
+		articletext = articletext.split('&#x2026;').join('...');
+		articletext = articletext.split('&#x2022;').join('•');
+		articletext = articletext.split('&#x200B;').join('');
+		articletext = articletext.split('&#x2014;').join('-');
+		articletext = articletext.split('&#xF3;').join('ó');
 
 		return articletext;
 	}

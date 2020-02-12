@@ -1100,7 +1100,7 @@ export class PageParser
         {
             const current = linksarr[i];
             //if (current.matches("/^[a-z0-9]+$/"))
-            if (current.includes('-') && current.includes("/news-story/"))
+            if (current.includes('-') && current.includes("/news-story/") && !current.includes('/game-reviews/'))
             {
                 articlelinks.push(sources[publisher] + current);
             }
@@ -1135,28 +1135,6 @@ export class PageParser
         }*/
 
         let headline, text;
-        if (data.split('<title>')[1])
-        {
-            headline = data.split('<title>')[1];
-            if (headline.split('</title>')[0])
-            {
-                headline = headline.split('</title>')[0];      //get headline from article data
-            }
-            else
-            {
-                return undefined;
-            }
-        }
-        else
-        {
-            return undefined;
-        }
-        text = Summarise.extractNewsAUText(data);
-        console.log("Link is " + randomlink);
-        console.log("Topic is " + topic);
-        console.log("Headline is " + headline);
-        console.log("Text is " + text);
-
 
         /**
          * SUMMARISING
