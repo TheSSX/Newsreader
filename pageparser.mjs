@@ -1205,10 +1205,14 @@ export class PageParser
             return undefined;
         }
 
-        headline = headline.replace('&#39;', ("'"));
-        headline = headline.replace('&quot;', ('"'));
-        headline = headline.split('&#39;').join("'");
-        headline = headline.split('&quot;').join('"');
+        headline = headline.split('&#x2013;').join("-");
+        headline = headline.split('&#x201D;').join('"');
+        headline = headline.split('&#x2018;').join('"');
+        headline = headline.split('&#x2019;').join("'");
+        headline = headline.split('&#x201C;').join('"');
+        headline = headline.split('&amp;').join('&');
+        headline = headline.split('&#x2026;').join('...');
+        headline = headline.split('&#x2014;').join('-');
 
         /**
          * TRANSLATING
