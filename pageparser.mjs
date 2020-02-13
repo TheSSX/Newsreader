@@ -1,9 +1,10 @@
 import {Article} from "./article.mjs";
-import {Summarise} from "./summarise.mjs";
+import {ArticleExtractor} from "./articleextractor.mjs";
 import {Translator} from "./translator.mjs";
 import {language_choice, sources} from "./preferences.js";
 import {languages, translation_unavailable} from "./language_config.js";
 import {Speech} from "./speech.mjs";
+import {Summarise} from "./summarise.mjs";
 
 /**
  Class for object to parse source article pages
@@ -92,8 +93,6 @@ export class PageParser
         }
 
         let headline, text;
-        text = Summarise.extractGuardianText(data);
-        console.log(text);
 
         /**
          * SUMMARISING
@@ -104,7 +103,7 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split('|')[0];      //get headline from article data
-            text = Summarise.extractGuardianText(data);
+            text = ArticleExtractor.extractGuardianText(data);
             if (text !== undefined)
             {
                 if (text.split(' - ')[1])
@@ -123,7 +122,7 @@ export class PageParser
             if (error === 2)
             {
                 headline = data.split('<title>')[1].split('|')[0];      //get headline from article data
-                text = Summarise.extractGuardianText(data);
+                text = ArticleExtractor.extractGuardianText(data);
                 if (text !== undefined)
                 {
                     if (text.split(' - ')[1])
@@ -219,7 +218,8 @@ export class PageParser
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
         let headline, text;
-        text = Summarise.extractBBCText(data);
+        text = ArticleExtractor.extractBBCText(data);
+        console.log(randomlink);
         console.log(text);
 
         /**
@@ -231,7 +231,7 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
-            text = Summarise.extractBBCText(data);
+            text = ArticleExtractor.extractBBCText(data);
             if (text !== undefined)
             {
                 if (text.split(' - ')[1])
@@ -250,7 +250,7 @@ export class PageParser
             if (error === 2)
             {
                 headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
-                text = Summarise.extractBBCText(data);
+                text = ArticleExtractor.extractBBCText(data);
                 if (text !== undefined)
                 {
                     if (text.split(' - ')[1])
@@ -375,7 +375,8 @@ export class PageParser
         }
 
         let headline, text;
-        text = Summarise.extractReutersText(data);
+        text = ArticleExtractor.extractReutersText(data);
+        console.log(randomlink);
         console.log(text);
 
         /**
@@ -387,7 +388,7 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split(' - Reuters')[0];      //get headline from article data
-            text = Summarise.extractReutersText(data);
+            text = ArticleExtractor.extractReutersText(data);
             if (text !== undefined)
             {
                 if (text.split(' - ')[1])
@@ -406,7 +407,7 @@ export class PageParser
             if (error === 2)
             {
                 headline = data.split('<title>')[1].split(' - Reuters')[0];      //get headline from article data
-                text = Summarise.extractReutersText(data);
+                text = ArticleExtractor.extractReutersText(data);
                 if (text !== undefined)
                 {
                     if (text.split(' - ')[1])
@@ -550,7 +551,8 @@ export class PageParser
         }*/
 
         let headline, text;
-        text = Summarise.extractSkyText(data);
+        text = ArticleExtractor.extractSkyText(data);
+        console.log(randomlink);
         console.log(text);
 
         /**
@@ -562,7 +564,7 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split(' |')[0];      //get headline from article data
-            text = Summarise.extractSkyText(data);
+            text = ArticleExtractor.extractSkyText(data);
             if (text !== undefined)
             {
                 if (text.split(' - ')[1])
@@ -581,7 +583,7 @@ export class PageParser
             if (error === 2)
             {
                 headline = data.split('<title>')[1].split(' |')[0];      //get headline from article data
-                text = Summarise.extractSkyText(data);
+                text = ArticleExtractor.extractSkyText(data);
                 if (text !== undefined)
                 {
                     if (text.split(' - ')[1])
@@ -701,7 +703,8 @@ export class PageParser
         }*/
 
         let headline, text;
-        text = Summarise.extractAPText(data);
+        text = ArticleExtractor.extractAPText(data);
+        console.log(randomlink);
         console.log(text);
 
         /**
@@ -712,8 +715,8 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = Summarise.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
-            text = Summarise.extractAPText(data);
+            headline = ArticleExtractor.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
+            text = ArticleExtractor.extractAPText(data);
             if (text !== undefined)
             {
                 if (text.split(' - ')[1])
@@ -725,13 +728,13 @@ export class PageParser
             }
         } else    //SMMRY API working fine
         {
-            headline = Summarise.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
+            headline = ArticleExtractor.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
             text = smmrydata['sm_api_content'];       //summarised article returned
             const error = smmrydata['sm_api_error'];    //detecting presence of error code
 
             if (error === 2)
             {
-                text = Summarise.extractAPText(data);
+                text = ArticleExtractor.extractAPText(data);
                 if (text !== undefined)
                 {
                     if (text.split(' — ')[1])
@@ -845,7 +848,8 @@ export class PageParser
         }*/
 
         let headline, text;
-        text = Summarise.extractEveningStandardText(data);
+        text = ArticleExtractor.extractEveningStandardText(data);
+        console.log(randomlink);
         console.log(text);
 
         /**
@@ -857,7 +861,7 @@ export class PageParser
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
-            text = Summarise.extractEveningStandardText(data);
+            text = ArticleExtractor.extractEveningStandardText(data);
             if (text !== undefined)
             {
                 text = "Not enough summary credits! " + text;
@@ -871,7 +875,7 @@ export class PageParser
             if (error === 2)
             {
                 headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
-                text = Summarise.extractEveningStandardText(data);
+                text = ArticleExtractor.extractEveningStandardText(data);
                 if (text !== undefined)
                 {
                     text = "Not enough summary credits! " + text;
@@ -980,7 +984,8 @@ export class PageParser
         }
 
         let headline, text;
-        text = Summarise.extractIndependentText(data);
+        text = ArticleExtractor.extractIndependentText(data);
+        console.log(randomlink);
         console.log(text);
 
         /**
@@ -1000,7 +1005,7 @@ export class PageParser
             }
             headline = headline.replace('&amp;', '&');
 
-            text = Summarise.extractIndependentText(data);
+            text = ArticleExtractor.extractIndependentText(data);
             if (text !== undefined)
             {
                 text = "Not enough summary credits! " + text;
@@ -1014,7 +1019,7 @@ export class PageParser
             if (error === 2)
             {
                 headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
-                text = Summarise.extractIndependentText(data);
+                text = ArticleExtractor.extractIndependentText(data);
                 if (text !== undefined)
                 {
                     text = "Not enough summary credits! " + text;
@@ -1123,7 +1128,8 @@ export class PageParser
         }*/
 
         let headline, text;
-        text = Summarise.extractNewsAUText(data);
+        text = ArticleExtractor.extractNewsAUText(data);
+        console.log(randomlink);
         console.log(text);
 
         /**
@@ -1149,7 +1155,7 @@ export class PageParser
                 return undefined;
             }
 
-            text = Summarise.extractNewsAUText(data);
+            text = ArticleExtractor.extractNewsAUText(data);
             if (text !== undefined)
             {
                 text = "Not enough summary credits! " + text;
@@ -1177,7 +1183,7 @@ export class PageParser
                     return undefined;
                 }
 
-                text = Summarise.extractNewsAUText(data);
+                text = ArticleExtractor.extractNewsAUText(data);
                 if (text !== undefined)
                 {
                     text = "Not enough summary credits! " + text;
@@ -1295,7 +1301,8 @@ export class PageParser
         }*/
 
         let headline, text;
-        text = Summarise.extractITVText(data);
+        text = ArticleExtractor.extractITVText(data);
+        console.log(randomlink);
         console.log(text);
 
         /**
@@ -1331,7 +1338,7 @@ export class PageParser
                 return undefined;
             }
 
-            text = Summarise.extractITVText(data);
+            text = ArticleExtractor.extractITVText(data);
             if (text !== undefined)
             {
                 text = "Not enough summary credits! " + text;
@@ -1369,7 +1376,7 @@ export class PageParser
                     return undefined;
                 }
 
-                text = Summarise.extractITVText(data);
+                text = ArticleExtractor.extractITVText(data);
                 if (text !== undefined)
                 {
                     text = "Not enough summary credits! " + text;
