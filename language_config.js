@@ -1,51 +1,54 @@
 /**
  * Map of dialects to speechSynthesis-recognised strings
  * Map of languages to Yandex-recognised country codes
+ * Map of languages to native phrases indicating a translation for the article was unavailable
  */
 
 export const dialects =
     {
         'English': 'en-US',
+        'Chinese': 'zh-CN',
+        'Dutch': 'nl-NL',
+        'French': 'fr-FR',
         'German': 'de-DE',
         'Italian': 'it-IT',
-        'French': 'fr-FR',
-        'Spanish': 'es-ES',
-        'Korean': 'ko-KR',
         'Japanese': 'ja-JP',
-        'Chinese': 'zh-CN',
+        'Korean': 'ko-KR',
         'Russian': 'ru-RU',
-        'Dutch': 'nl-NL'
+        'Spanish': 'es-ES'
     };
 
 export const languages =
     {
-            'English': 'en',
-            'German': 'de',
-            'Italian': 'it',
-            'French': 'fr',
-            'Spanish': 'es',
-            'Korean': 'ko',
-            'Japanese': 'ja',
-            'Chinese': 'zh',
-            'Russian': 'ru',
-            'Dutch': 'nl'
+        'English': 'en',
+        'Chinese': 'zh',
+        'Dutch': 'nl',
+        'French': 'fr',
+        'German': 'de',
+        'Italian': 'it',
+        'Japanese': 'ja',
+        'Korean': 'ko',
+        'Russian': 'ru',
+        'Spanish': 'es'
     };
 
 export const translation_unavailable =
     {
         'English': 'Translation unavailable',
+        'Chinese': '翻譯不可用',
+        'Dutch': 'Vertaling niet beschikbaar',
+        'French': 'Traduction indisponible',
         'German': 'Übersetzung nicht verfügbar',
         'Italian': 'Traduzione non disponibile',
-        'French': 'Traduction indisponible',
-        'Spanish': 'Traducción no disponible',
-        'Korean': '번역 불가',
         'Japanese': '翻訳を使用できません',
-        'Chinese': '翻譯不可用',
+        'Korean': '번역 불가',
         'Russian': 'Перевод недоступен',
-        'Dutch': 'Vertaling niet beschikbaar'
+        'Spanish': 'Traducción no disponible'
     };
 
 /**
+ For reference only
+
  Arabic (Saudi Arabia) ➡️ ar-SA
  Chinese (China) ➡️ zh-CN
  Chinese (Hong Kong SAR China) ➡️ zh-HK

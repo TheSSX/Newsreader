@@ -1,9 +1,8 @@
 import {Article} from "./article.mjs";
 import {Summarise} from "./summarise.mjs";
 import {Translator} from "./translator.mjs";
-import {language_choice} from "./preferences.js";
+import {language_choice, sources} from "./preferences.js";
 import {languages, translation_unavailable} from "./language_config.js";
-import {sources} from "./preferences.js";
 import {Speech} from "./speech.mjs";
 
 /**
@@ -25,8 +24,8 @@ export class PageParser
             return PageParser.extractGuardian(topic, topiclink, sentences);
         else if (source === "BBC")
             return PageParser.extractBBC(topic, topiclink, sentences);
-		else if (source === "Reuters")
-			return PageParser.extractReuters(topic, topiclink, sentences);
+        else if (source === "Reuters")
+            return PageParser.extractReuters(topic, topiclink, sentences);
         else if (source === "Sky News")
             return PageParser.extractSky(topic, topiclink, sentences);
         else if (source === "Associated Press")
@@ -54,19 +53,19 @@ export class PageParser
          * GETTING RANDOM LINK FOR TOPIC
          */
 
-		 //This ain't too good. Maybe need to have another map where standard understood topics like UK can map to
-		 //their website equivalents, e.g. UK maps to uk-news for the Guardian
-		 if (topic === "uk")
-		 {
-			 topic = "uk-news";
-		 }
+        //This ain't too good. Maybe need to have another map where standard understood topics like UK can map to
+        //their website equivalents, e.g. UK maps to uk-news for the Guardian
+        if (topic === "uk")
+        {
+            topic = "uk-news";
+        }
 
         let publisher = "The Guardian";
         let linkdata = await PageParser.extractPageData(topiclink);
         linkdata = linkdata.split('<a href="' + sources[publisher] + '' + topic + '/');
 
         let linksarr = [];
-        for (let i=1; i<linkdata.length; i+=1)
+        for (let i = 1; i < linkdata.length; i += 1)
         {
             linksarr.push(linkdata[i].split('"')[0]);
         }
@@ -77,7 +76,7 @@ export class PageParser
 
         do
         {
-            randomlink = sources[publisher] + topic + '/' + links[Math.floor(Math.random()*links.length)];  //select a random article
+            randomlink = sources[publisher] + topic + '/' + links[Math.floor(Math.random() * links.length)];  //select a random article
         }
         while (randomlink.startsWith(sources[publisher] + topic + '/video/'));  //articles devoted to a video are no good
 
@@ -93,6 +92,8 @@ export class PageParser
         }
 
         let headline, text;
+        text = Summarise.extractGuardianText(data);
+        console.log(text);
 
         /**
          * SUMMARISING
@@ -113,8 +114,7 @@ export class PageParser
 
                 text = "Not enough summary credits! " + text;
             }
-        }
-        else    //SMMRY API working fine
+        } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
@@ -156,12 +156,10 @@ export class PageParser
             if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else
+            } else
             {
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
@@ -173,7 +171,7 @@ export class PageParser
         return new Article(publisher, topic, headline, randomlink, text);
     }
 
-	/**
+    /**
      * Queries a topic page on the BBC website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
@@ -189,30 +187,30 @@ export class PageParser
         let publisher = "BBC";
 
         let linkdata = await PageParser.extractPageData(topiclink);
-		linkdata = linkdata.split('<div role="region"')[0];		//Removes articles that are "featured" or unrelated to subject
+        linkdata = linkdata.split('<div role="region"')[0];		//Removes articles that are "featured" or unrelated to subject
         linkdata = linkdata.split('href="/news/');
 
         let linksarr = [];
-        for (let i=1; i<linkdata.length; i+=1)
+        for (let i = 1; i < linkdata.length; i += 1)
         {
-			const currentlink = linkdata[i].split('"')[0];
+            const currentlink = linkdata[i].split('"')[0];
             linksarr.push(currentlink);
         }
 
-		//Parsing links we've found
-		let articlelinks = [];
-		for (let i=0; i<linksarr.length; i+=1)
-		{
-			const current = linksarr[i];
-			if (!current.includes('/') && current.includes('-') && !isNaN(current[current.length-1]))
-			{
-				articlelinks.push(sources[publisher] + 'news/' + current);
-			}
-		}
+        //Parsing links we've found
+        let articlelinks = [];
+        for (let i = 0; i < linksarr.length; i += 1)
+        {
+            const current = linksarr[i];
+            if (!current.includes('/') && current.includes('-') && !isNaN(current[current.length - 1]))
+            {
+                articlelinks.push(sources[publisher] + 'news/' + current);
+            }
+        }
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        const randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+        const randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
 
         /**
          * Extracting article from article page
@@ -221,6 +219,8 @@ export class PageParser
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
         let headline, text;
+        text = Summarise.extractBBCText(data);
+        console.log(text);
 
         /**
          * SUMMARISING
@@ -241,8 +241,7 @@ export class PageParser
 
                 text = "Not enough summary credits! " + text;
             }
-        }
-        else    //SMMRY API working fine
+        } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
@@ -284,12 +283,10 @@ export class PageParser
             if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else
+            } else
             {
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
@@ -301,7 +298,7 @@ export class PageParser
         return new Article(publisher, topic, headline, randomlink, text);
     }
 
-	/**
+    /**
      * Queries a topic page on the Reuters website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
@@ -320,57 +317,57 @@ export class PageParser
         let linkdata = permadata.split('<a href="' + sources[publisher] + 'article/');
 
         let linksarr = [];
-        for (let i=1; i<linkdata.length; i+=1)
+        for (let i = 1; i < linkdata.length; i += 1)
         {
-			const currentlink = linkdata[i].split('"')[0];
+            const currentlink = linkdata[i].split('"')[0];
             linksarr.push(currentlink);
         }
 
-		if (!linksarr.length)
-		{
-			linkdata = permadata.split('<a href="/article/');
+        if (!linksarr.length)
+        {
+            linkdata = permadata.split('<a href="/article/');
 
-			for (let i=1; i<linkdata.length; i+=1)
-			{
-				const currentlink = linkdata[i].split('"')[0];
-				linksarr.push(currentlink);
-			}
-		}
+            for (let i = 1; i < linkdata.length; i += 1)
+            {
+                const currentlink = linkdata[i].split('"')[0];
+                linksarr.push(currentlink);
+            }
+        }
 
-		//Parsing links we've found
-		let articlelinks = [];
-		for (let i=0; i<linksarr.length; i+=1)
-		{
-			const current = linksarr[i];
-			if (current.includes('/') && current.includes('-'))
-			{
-				articlelinks.push('https://uk.reuters.com/article/' + current);		//Removes the issue (seemingly) where some articles are geographically unavailable. Hard-code is annoying but works right now.
+        //Parsing links we've found
+        let articlelinks = [];
+        for (let i = 0; i < linksarr.length; i += 1)
+        {
+            const current = linksarr[i];
+            if (current.includes('/') && current.includes('-'))
+            {
+                articlelinks.push('https://uk.reuters.com/article/' + current);		//Removes the issue (seemingly) where some articles are geographically unavailable. Hard-code is annoying but works right now.
                 articlelinks.push('https://www.reuters.com/article/' + current);
-			}
-		}
+            }
+        }
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+        let randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
 
         /**
          * Extracting article from article page
          */
 
         let data = await PageParser.extractPageData(randomlink);  //fetch data from article page
-		let timeout = 0;
+        let timeout = 0;
 
-		while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
-		{
-			randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
-			data = await PageParser.extractPageData(randomlink);  //fetch data from article page
-			timeout += 1;
+        while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
+        {
+            randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
+            data = await PageParser.extractPageData(randomlink);  //fetch data from article page
+            timeout += 1;
 
-			if (data === undefined && timeout === 3)
-			{
-				return undefined;
-			}
-		}
+            if (data === undefined && timeout === 3)
+            {
+                return undefined;
+            }
+        }
 
         if (data.includes('<h3'))      //indicates a Q&A article
         {
@@ -378,6 +375,8 @@ export class PageParser
         }
 
         let headline, text;
+        text = Summarise.extractReutersText(data);
+        console.log(text);
 
         /**
          * SUMMARISING
@@ -398,8 +397,7 @@ export class PageParser
 
                 text = "Not enough summary credits! " + text;
             }
-        }
-        else    //SMMRY API working fine
+        } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
@@ -441,12 +439,10 @@ export class PageParser
             if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else
+            } else
             {
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
@@ -479,14 +475,13 @@ export class PageParser
         if (topic === "sport")
         {
             linkdata = permadata.split('<a class="news-list__headline-link" href="https://www.skysports.com/');
-        }
-        else
+        } else
         {
             linkdata = permadata.split('<a href="' + sources[publisher] + 'story/');
         }
 
         let linksarr = [];
-        for (let i=1; i<linkdata.length; i+=1)
+        for (let i = 1; i < linkdata.length; i += 1)
         {
             const currentlink = linkdata[i].split('"')[0];
             linksarr.push(currentlink);
@@ -497,13 +492,12 @@ export class PageParser
             if (topic === "sport")
             {
                 linkdata = permadata.split('<a class="news-list__headline-link" href="https://www.skysports.com/');
-            }
-            else
+            } else
             {
                 linkdata = permadata.split('<a href="/story/');
             }
 
-            for (let i=1; i<linkdata.length; i+=1)
+            for (let i = 1; i < linkdata.length; i += 1)
             {
                 const currentlink = linkdata[i].split('"')[0];
                 linksarr.push(currentlink);
@@ -512,7 +506,7 @@ export class PageParser
 
         //Parsing links we've found
         let articlelinks = [];
-        for (let i=0; i<linksarr.length; i+=1)
+        for (let i = 0; i < linksarr.length; i += 1)
         {
             const current = linksarr[i];
             if (current.includes('-'))
@@ -520,8 +514,7 @@ export class PageParser
                 if (topic === "sport")
                 {
                     articlelinks.push('https://www.skysports.com/' + current);
-                }
-                else
+                } else
                 {
                     articlelinks.push('https://news.sky.com/story/' + current);
                 }
@@ -530,7 +523,7 @@ export class PageParser
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+        let randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
 
         /**
          * Extracting article from article page
@@ -541,7 +534,7 @@ export class PageParser
 
         while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
         {
-            randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+            randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
             data = await PageParser.extractPageData(randomlink);  //fetch data from article page
             timeout += 1;
 
@@ -552,11 +545,13 @@ export class PageParser
         }
 
         /**if (data.includes('<h3'))      //indicates a Q&A article
-        {
+         {
             return undefined;
         }*/
 
         let headline, text;
+        text = Summarise.extractSkyText(data);
+        console.log(text);
 
         /**
          * SUMMARISING
@@ -577,8 +572,7 @@ export class PageParser
 
                 text = "Not enough summary credits! " + text;
             }
-        }
-        else    //SMMRY API working fine
+        } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
@@ -626,12 +620,10 @@ export class PageParser
             if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else
+            } else
             {
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
@@ -662,7 +654,7 @@ export class PageParser
         let linkdata = permadata.split('href="/');
 
         let linksarr = [];
-        for (let i=1; i<linkdata.length; i+=1)
+        for (let i = 1; i < linkdata.length; i += 1)
         {
             const currentlink = linkdata[i].split('"')[0];
             linksarr.push(currentlink);
@@ -670,7 +662,7 @@ export class PageParser
 
         //Parsing links we've found
         let articlelinks = [];
-        for (let i=0; i<linksarr.length; i+=1)
+        for (let i = 0; i < linksarr.length; i += 1)
         {
             const current = linksarr[i];
             //if (current.matches("/^[a-z0-9]+$/"))
@@ -682,7 +674,7 @@ export class PageParser
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+        let randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
 
         /**
          * Extracting article from article page
@@ -693,7 +685,7 @@ export class PageParser
 
         while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
         {
-            randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+            randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
             data = await PageParser.extractPageData(randomlink);  //fetch data from article page
             timeout += 1;
 
@@ -709,6 +701,8 @@ export class PageParser
         }*/
 
         let headline, text;
+        text = Summarise.extractAPText(data);
+        console.log(text);
 
         /**
          * SUMMARISING
@@ -729,8 +723,7 @@ export class PageParser
 
                 text = "Not enough summary credits! " + text;
             }
-        }
-        else    //SMMRY API working fine
+        } else    //SMMRY API working fine
         {
             headline = Summarise.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
             text = smmrydata['sm_api_content'];       //summarised article returned
@@ -771,12 +764,10 @@ export class PageParser
             if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else
+            } else
             {
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
@@ -807,7 +798,7 @@ export class PageParser
         let linkdata = permadata.split('href="/');
 
         let linksarr = [];
-        for (let i=1; i<linkdata.length; i+=1)
+        for (let i = 1; i < linkdata.length; i += 1)
         {
             const currentlink = linkdata[i].split('"')[0];
             linksarr.push(currentlink);
@@ -815,7 +806,7 @@ export class PageParser
 
         //Parsing links we've found
         let articlelinks = [];
-        for (let i=0; i<linksarr.length; i+=1)
+        for (let i = 0; i < linksarr.length; i += 1)
         {
             const current = linksarr[i];
             //if (current.matches("/^[a-z0-9]+$/"))
@@ -827,7 +818,7 @@ export class PageParser
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+        let randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
 
         /**
          * Extracting article from article page
@@ -838,7 +829,7 @@ export class PageParser
 
         while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
         {
-            randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+            randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
             data = await PageParser.extractPageData(randomlink);  //fetch data from article page
             timeout += 1;
 
@@ -854,6 +845,8 @@ export class PageParser
         }*/
 
         let headline, text;
+        text = Summarise.extractEveningStandardText(data);
+        console.log(text);
 
         /**
          * SUMMARISING
@@ -869,8 +862,7 @@ export class PageParser
             {
                 text = "Not enough summary credits! " + text;
             }
-        }
-        else    //SMMRY API working fine
+        } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
@@ -907,12 +899,10 @@ export class PageParser
             if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else
+            } else
             {
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
@@ -943,7 +933,7 @@ export class PageParser
         let linkdata = permadata.split('href="/');
 
         let linksarr = [];
-        for (let i=1; i<linkdata.length; i+=1)
+        for (let i = 1; i < linkdata.length; i += 1)
         {
             const currentlink = linkdata[i].split('"')[0];
             linksarr.push(currentlink);
@@ -951,7 +941,7 @@ export class PageParser
 
         //Parsing links we've found
         let articlelinks = [];
-        for (let i=0; i<linksarr.length; i+=1)
+        for (let i = 0; i < linksarr.length; i += 1)
         {
             const current = linksarr[i];
             //if (current.matches("/^[a-z0-9]+$/"))
@@ -963,7 +953,7 @@ export class PageParser
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+        let randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
 
         /**
          * Extracting article from article page
@@ -974,7 +964,7 @@ export class PageParser
 
         while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
         {
-            randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+            randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
             data = await PageParser.extractPageData(randomlink);  //fetch data from article page
             timeout += 1;
 
@@ -990,6 +980,8 @@ export class PageParser
         }
 
         let headline, text;
+        text = Summarise.extractIndependentText(data);
+        console.log(text);
 
         /**
          * SUMMARISING
@@ -1002,8 +994,7 @@ export class PageParser
             if (data.split('<title>')[1].split(' | ')[0])
             {
                 headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
-            }
-            else
+            } else
             {
                 headline = data.split('<title>')[1].split('</title>')[0];      //got an article which had an inconsistent headline scheme once
             }
@@ -1014,8 +1005,7 @@ export class PageParser
             {
                 text = "Not enough summary credits! " + text;
             }
-        }
-        else    //SMMRY API working fine
+        } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
@@ -1052,12 +1042,10 @@ export class PageParser
             if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else
+            } else
             {
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
@@ -1088,7 +1076,7 @@ export class PageParser
         let linkdata = permadata.split('href="https://www.news.com.au/');
 
         let linksarr = [];
-        for (let i=1; i<linkdata.length; i+=1)
+        for (let i = 1; i < linkdata.length; i += 1)
         {
             const currentlink = linkdata[i].split('"')[0];
             linksarr.push(currentlink);
@@ -1096,7 +1084,7 @@ export class PageParser
 
         //Parsing links we've found
         let articlelinks = [];
-        for (let i=0; i<linksarr.length; i+=1)
+        for (let i = 0; i < linksarr.length; i += 1)
         {
             const current = linksarr[i];
             //if (current.matches("/^[a-z0-9]+$/"))
@@ -1108,7 +1096,7 @@ export class PageParser
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+        let randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
 
         /**
          * Extracting article from article page
@@ -1119,7 +1107,7 @@ export class PageParser
 
         while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
         {
-            randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+            randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
             data = await PageParser.extractPageData(randomlink);  //fetch data from article page
             timeout += 1;
 
@@ -1130,11 +1118,13 @@ export class PageParser
         }
 
         /**if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
-        {
+         {
             return undefined;
         }*/
 
         let headline, text;
+        text = Summarise.extractNewsAUText(data);
+        console.log(text);
 
         /**
          * SUMMARISING
@@ -1150,13 +1140,11 @@ export class PageParser
                 if (headline.split('</title>')[0])
                 {
                     headline = headline.split('</title>')[0];      //get headline from article data
-                }
-                else
+                } else
                 {
                     return undefined;
                 }
-            }
-            else
+            } else
             {
                 return undefined;
             }
@@ -1166,8 +1154,7 @@ export class PageParser
             {
                 text = "Not enough summary credits! " + text;
             }
-        }
-        else    //SMMRY API working fine
+        } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
@@ -1181,13 +1168,11 @@ export class PageParser
                     if (headline.split('</title>')[0])
                     {
                         headline = headline.split('</title>')[0];      //get headline from article data
-                    }
-                    else
+                    } else
                     {
                         return undefined;
                     }
-                }
-                else
+                } else
                 {
                     return undefined;
                 }
@@ -1229,12 +1214,10 @@ export class PageParser
             if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else
+            } else
             {
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
@@ -1265,7 +1248,7 @@ export class PageParser
         let linkdata = permadata.split('href="/');
 
         let linksarr = [];
-        for (let i=1; i<linkdata.length; i+=1)
+        for (let i = 1; i < linkdata.length; i += 1)
         {
             const currentlink = linkdata[i].split('"')[0];
             linksarr.push(currentlink);
@@ -1273,7 +1256,7 @@ export class PageParser
 
         //Parsing links we've found
         let articlelinks = [];
-        for (let i=0; i<linksarr.length; i+=1)
+        for (let i = 0; i < linksarr.length; i += 1)
         {
             const current = linksarr[i];
             //if (current.matches("/^[a-z0-9]+$/"))
@@ -1285,7 +1268,7 @@ export class PageParser
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
-        let randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+        let randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
 
         /**
          * Extracting article from article page
@@ -1296,7 +1279,7 @@ export class PageParser
 
         while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
         {
-            randomlink = links[Math.floor(Math.random()*links.length)];  //select a random article
+            randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
             data = await PageParser.extractPageData(randomlink);  //fetch data from article page
             timeout += 1;
 
@@ -1312,6 +1295,8 @@ export class PageParser
         }*/
 
         let headline, text;
+        text = Summarise.extractITVText(data);
+        console.log(text);
 
         /**
          * SUMMARISING
@@ -1327,25 +1312,21 @@ export class PageParser
                 if (headline.split(' - ITV News')[0])
                 {
                     headline = headline.split(' - ITV News')[0];      //get headline from article data
-                }
-                else
+                } else
                 {
                     return undefined;
                 }
-            }
-            else if (data.split('<h1 class="update__title update__title--large">')[1])
+            } else if (data.split('<h1 class="update__title update__title--large">')[1])
             {
                 headline = data.split('<h1 class="update__title update__title--large">')[1];
                 if (headline.split('</h1>')[0])
                 {
                     headline = headline.split('</h1>')[0];
-                }
-                else
+                } else
                 {
                     return undefined;
                 }
-            }
-            else
+            } else
             {
                 return undefined;
             }
@@ -1355,8 +1336,7 @@ export class PageParser
             {
                 text = "Not enough summary credits! " + text;
             }
-        }
-        else    //SMMRY API working fine
+        } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
@@ -1370,25 +1350,21 @@ export class PageParser
                     if (headline.split(' - ITV News')[0])
                     {
                         headline = headline.split(' - ITV News')[0];      //get headline from article data
-                    }
-                    else
+                    } else
                     {
                         return undefined;
                     }
-                }
-                else if (data.split('<h1 class="update__title update__title--large">')[1])
+                } else if (data.split('<h1 class="update__title update__title--large">')[1])
                 {
                     headline = data.split('<h1 class="update__title update__title--large">')[1];
                     if (headline.split('</h1>')[0])
                     {
                         headline = headline.split('</h1>')[0];
-                    }
-                    else
+                    } else
                     {
                         return undefined;
                     }
-                }
-                else
+                } else
                 {
                     return undefined;
                 }
@@ -1426,12 +1402,10 @@ export class PageParser
             if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            }
-            else
+            } else
             {
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
@@ -1450,6 +1424,10 @@ export class PageParser
      */
     static extractPageData(theurl)
     {
-        return $.ajax({url: theurl}).done(function(data){}).fail(function(ajaxError){});    //not convinced this actually returns or throws an error
+        return $.ajax({url: theurl}).done(function (data)
+        {
+        }).fail(function (ajaxError)
+        {
+        });    //not convinced this actually returns or throws an error
     }
 }
