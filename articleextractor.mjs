@@ -107,8 +107,7 @@ export class ArticleExtractor
             if (startoftext)
             {
                 copy = true;
-            }
-            else if (endoftext)
+            } else if (endoftext)
             {
                 articletext += " ";
                 copy = false;
@@ -150,8 +149,7 @@ export class ArticleExtractor
             if (startoftext)
             {
                 copy = true;
-            }
-            else if (endoftext)
+            } else if (endoftext)
             {
                 articletext += " ";
                 copy = false;
@@ -357,7 +355,7 @@ export class ArticleExtractor
             return undefined;
         }
 
-        data = DataCleaner.cleanHTML(data);
+        data = DataCleaner.cleanHTML(data);     // This needs to be here so that identifying elements of where to split aren't removed beforehand
 
         while (counter < data.length - 3)
         {
