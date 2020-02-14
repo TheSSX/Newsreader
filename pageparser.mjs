@@ -11,6 +11,33 @@ import {Summarise} from "./summarise.mjs";
  */
 export class PageParser
 {
+    static async callTranslation(publisher, topic, headline, text)
+    {
+        const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
+        const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
+        const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
+        const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+
+        //If translation API not available
+        if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+        {
+            return undefined;
+        }
+        else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+        {
+            return undefined;
+        }
+        else
+        {
+            publisher = publishertranslatedata['text'];
+            topic = topictranslatedata['text'];
+            headline = headlinetranslatedata['text'];
+            text = texttranslatedata['text'];
+
+            return [publisher, topic, headline, text];
+        }
+    }
+
     /**
      * Calls the right function for selecting and parsing an article based on the news source
      * @param source - the news source
@@ -21,24 +48,29 @@ export class PageParser
      */
     static getArticle(source, topic, topiclink, sentences)
     {
-        if (source === "The Guardian")
-            return PageParser.extractGuardian(topic, topiclink, sentences);
-        else if (source === "BBC")
-            return PageParser.extractBBC(topic, topiclink, sentences);
-        else if (source === "Reuters")
-            return PageParser.extractReuters(topic, topiclink, sentences);
-        else if (source === "Sky News")
-            return PageParser.extractSky(topic, topiclink, sentences);
-        else if (source === "Associated Press")
-            return PageParser.extractAP(topic, topiclink, sentences);
-        else if (source === "Evening Standard")
-            return PageParser.extractEveningStandard(topic, topiclink, sentences);
-        else if (source === "The Independent")
-            return PageParser.extractIndependent(topic, topiclink, sentences);
-        else if (source === "ITV News")
-            return PageParser.extractITV(topic, topiclink, sentences);
-        else if (source === "News.com.au")
-            return PageParser.extractNewsAU(topic, topiclink, sentences);
+        switch(source)
+        {
+            case "The Guardian":
+                return PageParser.extractGuardian(topic, topiclink, sentences);
+            case "BBC":
+                return PageParser.extractBBC(topic, topiclink, sentences);
+            case "Reuters":
+                return PageParser.extractReuters(topic, topiclink, sentences);
+            case "Sky News":
+                return PageParser.extractSky(topic, topiclink, sentences);
+            case "Associated Press":
+                return PageParser.extractAP(topic, topiclink, sentences);
+            case "Evening Standard":
+                return PageParser.extractEveningStandard(topic, topiclink, sentences);
+            case "The Independent":
+                return PageParser.extractIndependent(topic, topiclink, sentences);
+            case "ITV News":
+                return PageParser.extractITV(topic, topiclink, sentences);
+            case "News.com.au":
+                return PageParser.extractNewsAU(topic, topiclink, sentences);
+            default:
+                throw TypeError;
+        }
     }
 
     /**
@@ -53,9 +85,7 @@ export class PageParser
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        //This ain't too good. Maybe need to have another map where standard understood topics like UK can map to
-        //their website equivalents, e.g. UK maps to uk-news for the Guardian
+        
         if (topic === "uk")
         {
             topic = "uk-news";
@@ -86,11 +116,6 @@ export class PageParser
          */
 
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
-
-        // if (data.includes('<p><strong>') || data.includes('<h2>'))      //indicates a Q&A article
-        // {
-        //     return undefined;
-        // }
 
         let headline, text;
 
@@ -146,24 +171,18 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
 
-            //If translation API not available
-            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            if (translations !== undefined)
+            {
+                publisher = translations[0];
+                topic = translations[1];
+                headline = translations[2];
+                text = translations[3];
+            }
+            else
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            } else
-            {
-                publisher = publishertranslatedata['text'];
-                topic = topictranslatedata['text'];
-                headline = headlinetranslatedata['text'];
-                text = texttranslatedata['text'];
             }
         }
 
@@ -208,7 +227,6 @@ export class PageParser
         }
 
         const links = Array.from(new Set(articlelinks));    //array of URLs for articles
-
         const randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
 
         /**
@@ -218,9 +236,6 @@ export class PageParser
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
         let headline, text;
-        text = ArticleExtractor.extractBBCText(data);
-        console.log(randomlink);
-        console.log(text);
 
         /**
          * SUMMARISING
@@ -274,24 +289,18 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
 
-            //If translation API not available
-            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            if (translations !== undefined)
+            {
+                publisher = translations[0];
+                topic = translations[1];
+                headline = translations[2];
+                text = translations[3];
+            }
+            else
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            } else
-            {
-                publisher = publishertranslatedata['text'];
-                topic = topictranslatedata['text'];
-                headline = headlinetranslatedata['text'];
-                text = texttranslatedata['text'];
             }
         }
 
@@ -369,15 +378,7 @@ export class PageParser
             }
         }
 
-        // if (data.includes('<h3'))      //indicates a Q&A article
-        // {
-        //     return undefined;
-        // }
-
         let headline, text;
-        text = ArticleExtractor.extractReutersText(data);
-        console.log(randomlink);
-        console.log(text);
 
         /**
          * SUMMARISING
@@ -431,24 +432,18 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
 
-            //If translation API not available
-            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            if (translations !== undefined)
+            {
+                publisher = translations[0];
+                topic = translations[1];
+                headline = translations[2];
+                text = translations[3];
+            }
+            else
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            } else
-            {
-                publisher = publishertranslatedata['text'];
-                topic = topictranslatedata['text'];
-                headline = headlinetranslatedata['text'];
-                text = texttranslatedata['text'];
             }
         }
 
@@ -546,9 +541,6 @@ export class PageParser
         }
 
         let headline, text;
-        text = ArticleExtractor.extractSkyText(data);
-        console.log(randomlink);
-        console.log(text);
 
         /**
          * SUMMARISING
@@ -608,24 +600,18 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
 
-            //If translation API not available
-            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            if (translations !== undefined)
+            {
+                publisher = translations[0];
+                topic = translations[1];
+                headline = translations[2];
+                text = translations[3];
+            }
+            else
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            } else
-            {
-                publisher = publishertranslatedata['text'];
-                topic = topictranslatedata['text'];
-                headline = headlinetranslatedata['text'];
-                text = texttranslatedata['text'];
             }
         }
 
@@ -693,9 +679,6 @@ export class PageParser
         }
 
         let headline, text;
-        text = ArticleExtractor.extractAPText(data);
-        console.log(randomlink);
-        console.log(text);
 
         /**
          * SUMMARISING
@@ -748,24 +731,18 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
 
-            //If translation API not available
-            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            if (translations !== undefined)
+            {
+                publisher = translations[0];
+                topic = translations[1];
+                headline = translations[2];
+                text = translations[3];
+            }
+            else
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            } else
-            {
-                publisher = publishertranslatedata['text'];
-                topic = topictranslatedata['text'];
-                headline = headlinetranslatedata['text'];
-                text = texttranslatedata['text'];
             }
         }
 
@@ -833,9 +810,6 @@ export class PageParser
         }
 
         let headline, text;
-        text = ArticleExtractor.extractEveningStandardText(data);
-        console.log(randomlink);
-        console.log(text);
 
         /**
          * SUMMARISING
@@ -879,24 +853,18 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
 
-            //If translation API not available
-            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            if (translations !== undefined)
+            {
+                publisher = translations[0];
+                topic = translations[1];
+                headline = translations[2];
+                text = translations[3];
+            }
+            else
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            } else
-            {
-                publisher = publishertranslatedata['text'];
-                topic = topictranslatedata['text'];
-                headline = headlinetranslatedata['text'];
-                text = texttranslatedata['text'];
             }
         }
 
@@ -963,15 +931,7 @@ export class PageParser
             }
         }
 
-        // if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
-        // {
-        //     return undefined;
-        // }
-
         let headline, text;
-        text = ArticleExtractor.extractIndependentText(data);
-        console.log(randomlink);
-        console.log(text);
 
         /**
          * SUMMARISING
@@ -1023,24 +983,18 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
 
-            //If translation API not available
-            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            if (translations !== undefined)
+            {
+                publisher = translations[0];
+                topic = translations[1];
+                headline = translations[2];
+                text = translations[3];
+            }
+            else
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            } else
-            {
-                publisher = publishertranslatedata['text'];
-                topic = topictranslatedata['text'];
-                headline = headlinetranslatedata['text'];
-                text = texttranslatedata['text'];
             }
         }
 
@@ -1108,9 +1062,6 @@ export class PageParser
         }
 
         let headline, text;
-        text = ArticleExtractor.extractNewsAUText(data);
-        console.log(randomlink);
-        console.log(text);
 
         /**
          * SUMMARISING
@@ -1191,24 +1142,18 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
 
-            //If translation API not available
-            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            if (translations !== undefined)
+            {
+                publisher = translations[0];
+                topic = translations[1];
+                headline = translations[2];
+                text = translations[3];
+            }
+            else
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            } else
-            {
-                publisher = publishertranslatedata['text'];
-                topic = topictranslatedata['text'];
-                headline = headlinetranslatedata['text'];
-                text = texttranslatedata['text'];
             }
         }
 
@@ -1276,9 +1221,6 @@ export class PageParser
         }
 
         let headline, text;
-        text = ArticleExtractor.extractITVText(data);
-        console.log(randomlink);
-        console.log(text);
 
         /**
          * SUMMARISING
@@ -1375,24 +1317,18 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-            const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-            const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-            const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
 
-            //If translation API not available
-            if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+            if (translations !== undefined)
+            {
+                publisher = translations[0];
+                topic = translations[1];
+                headline = translations[2];
+                text = translations[3];
+            }
+            else
             {
                 new Speech(translation_unavailable[language_choice]).speak();
-            } else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            } else
-            {
-                publisher = publishertranslatedata['text'];
-                topic = topictranslatedata['text'];
-                headline = headlinetranslatedata['text'];
-                text = texttranslatedata['text'];
             }
         }
 
