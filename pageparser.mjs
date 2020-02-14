@@ -1,5 +1,5 @@
 import {Article} from "./article.mjs";
-import {ArticleExtractor} from "./articleextractor.mjs";
+import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
 import {Translator} from "./translator.mjs";
 import {language_choice, sources} from "./preferences.js";
 import {languages, translation_unavailable} from "./language_config.js";
@@ -11,33 +11,6 @@ import {Summarise} from "./summarise.mjs";
  */
 export class PageParser
 {
-    static async callTranslation(publisher, topic, headline, text)
-    {
-        const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-        const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-        const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-        const texttranslatedata = await Translator.translate(text, languages[language_choice]);
-
-        //If translation API not available
-        if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
-        {
-            return undefined;
-        }
-        else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-        {
-            return undefined;
-        }
-        else
-        {
-            publisher = publishertranslatedata['text'];
-            topic = topictranslatedata['text'];
-            headline = headlinetranslatedata['text'];
-            text = texttranslatedata['text'];
-
-            return [publisher, topic, headline, text];
-        }
-    }
-
     /**
      * Calls the right function for selecting and parsing an article based on the news source
      * @param source - the news source
@@ -171,7 +144,7 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
+            const translations = await callTranslation(publisher, topic, headline, text);
 
             if (translations !== undefined)
             {
@@ -289,7 +262,7 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
+            const translations = await callTranslation(publisher, topic, headline, text);
 
             if (translations !== undefined)
             {
@@ -432,7 +405,7 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
+            const translations = await callTranslation(publisher, topic, headline, text);
 
             if (translations !== undefined)
             {
@@ -600,7 +573,7 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
+            const translations = await callTranslation(publisher, topic, headline, text);
 
             if (translations !== undefined)
             {
@@ -731,7 +704,7 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
+            const translations = await callTranslation(publisher, topic, headline, text);
 
             if (translations !== undefined)
             {
@@ -853,7 +826,7 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
+            const translations = await callTranslation(publisher, topic, headline, text);
 
             if (translations !== undefined)
             {
@@ -948,7 +921,6 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split('</title>')[0];      //got an article which had an inconsistent headline scheme once
             }
-            headline = headline.replace('&amp;', '&');
 
             text = ArticleExtractor.extractIndependentText(data);
             if (text !== undefined)
@@ -977,13 +949,15 @@ export class PageParser
             return undefined;
         }
 
+        headline = DataCleaner.cleanText(headline);
+
         /**
          * TRANSLATING
          */
 
         if (language_choice !== "English")
         {
-            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
+            const translations = await callTranslation(publisher, topic, headline, text);
 
             if (translations !== undefined)
             {
@@ -1122,19 +1096,12 @@ export class PageParser
             }
         }
 
-        if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
+        if (headline === undefined || text === undefined || headline.includes('?'))		//TODO not sure this includes statement works
         {
             return undefined;
         }
 
-        headline = headline.split('&#x2013;').join("-");
-        headline = headline.split('&#x201D;').join('"');
-        headline = headline.split('&#x2018;').join('"');
-        headline = headline.split('&#x2019;').join("'");
-        headline = headline.split('&#x201C;').join('"');
-        headline = headline.split('&amp;').join('&');
-        headline = headline.split('&#x2026;').join('...');
-        headline = headline.split('&#x2014;').join('-');
+        headline = DataCleaner.cleanText(headline);
 
         /**
          * TRANSLATING
@@ -1142,7 +1109,7 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
+            const translations = await callTranslation(publisher, topic, headline, text);
 
             if (translations !== undefined)
             {
@@ -1174,7 +1141,6 @@ export class PageParser
          */
 
         let publisher = "ITV News";
-
         const permadata = await PageParser.extractPageData(topiclink);
         let linkdata = permadata.split('href="/');
 
@@ -1306,10 +1272,7 @@ export class PageParser
             return undefined;
         }
 
-        headline = headline.replace('&#39;', ("'"));
-        headline = headline.replace('&quot;', ('"'));
-        headline = headline.split('&#39;').join("'");
-        headline = headline.split('&quot;').join('"');
+        headline = DataCleaner.cleanText(headline);
 
         /**
          * TRANSLATING
@@ -1317,7 +1280,7 @@ export class PageParser
 
         if (language_choice !== "English")
         {
-            const translations = await PageParser.callTranslation(publisher, topic, headline, text);
+            const translations = await callTranslation(publisher, topic, headline, text);
 
             if (translations !== undefined)
             {
@@ -1347,5 +1310,32 @@ export class PageParser
         }).fail(function (ajaxError)
         {
         });    //not convinced this actually returns or throws an error
+    }
+}
+
+async function callTranslation(publisher, topic, headline, text)
+{
+    const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
+    const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
+    const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
+    const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+
+    //If translation API not available
+    if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+    {
+        return undefined;
+    }
+    else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+    {
+        return undefined;
+    }
+    else
+    {
+        publisher = publishertranslatedata['text'];
+        topic = topictranslatedata['text'];
+        headline = headlinetranslatedata['text'];
+        text = texttranslatedata['text'];
+
+        return [publisher, topic, headline, text];
     }
 }

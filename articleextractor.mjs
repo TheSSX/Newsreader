@@ -1,4 +1,78 @@
 /**
+ * Class to clean unwanted data from HTML received from Ajax
+ */
+export class DataCleaner
+{
+    /**
+     * Removes unwanted HTML tags, excludes <div>
+     * @param articletext - the HTML to clean
+     * @returns {string} - the clean HTML
+     */
+    static cleanHTML(articletext)
+    {
+        articletext = articletext.replace(/<figure .+>/g, '');
+        articletext = articletext.replace(/<\/figure>/g, '');
+        articletext = articletext.replace(/<figure[^.+]*>/g, "");
+        articletext = articletext.replace(/<\/figure>/g, "");
+        articletext = articletext.replace(/<footer .+\/footer>/g, '');
+        articletext = articletext.replace(/<span .+>.+<\/span>/ig, '');
+        articletext = articletext.replace(/<figure .+>.+<\/figure>/ig, '');
+        articletext = articletext.replace(/<figure .+>.+<\/figure>/ig, '');
+        articletext = articletext.split(/<figure .+>.+<\/figure>/g).join('');
+        articletext = articletext.split(/<span .+>.+<\/span>/g).join('');
+        articletext = articletext.split(/<p><em>.+<\/em><\/p>/g).join('');
+        articletext = articletext.split(/<figure[^.+]*>/g).join('');
+        articletext = articletext.split(/<\/figure>/g).join('');
+
+        return articletext;
+    }
+
+    /**
+     * Removes or replaces awkward or unrecognised characters parsed from articles' HTML
+     * @param articletext - the text to clean
+     * @returns {string} - the clean text
+     */
+    static cleanText(articletext)
+    {
+        articletext = articletext.replace(/(<([^>]+)>)/ig, "");
+        articletext = articletext.replace(/(<([^>]+)>)/ig, "");
+        articletext = articletext.split(/<p><em>.+<\/em><\/p>/g).join('');
+        articletext = articletext.split(/<p><strong>.+<\/strong><\/p>/g).join('');
+        articletext = articletext.split(/<p><i>.+<\/i><\/p>/g).join('');
+        articletext = articletext.split(/<p><b>.+<\/b><\/p>/g).join('');
+        articletext = articletext.split(/<p><u>.+<\/u><\/p>/g).join('');
+        articletext = articletext.split('&#x2013;').join("-");
+        articletext = articletext.split('&#x201D;').join('"');
+        articletext = articletext.split('&#x2018;').join('"');
+        articletext = articletext.split('&#x2019;').join("'");
+        articletext = articletext.split('&#x201C;').join('"');
+        articletext = articletext.split('&amp;').join('&');
+        articletext = articletext.split('&#x2026;').join('...');
+        articletext = articletext.split('&#x2022;').join('•');
+        articletext = articletext.split('&#x200B;').join('');
+        articletext = articletext.split('&#x2014;').join('-');
+        articletext = articletext.split('&#xF3;').join('ó');
+        articletext = articletext.split('&#39;').join("'");
+        articletext = articletext.split('&quot;').join('"');
+        articletext = articletext.split('&nbsp;').join(" ");
+        articletext = articletext.split(' span>').join("");
+        articletext = articletext.split('&amp;').join('&');
+        articletext = articletext.split('&#163;').join('£');
+        articletext = articletext.split('&#8364;').join('€');
+        articletext = articletext.split(/\&rsquo\;/g).join("'");
+        articletext = articletext.split(/\&lsquo\;/g).join("'");
+        articletext = articletext.split(/\&ldquo\;/g).join('"');
+        articletext = articletext.split(/\&rdquo\;/g).join('"');
+        articletext = articletext.split('Sharing the full story, not just the headlines').join(' ');
+
+        articletext = articletext.trim();
+        articletext = articletext.replace(/\s+/g, ' ');
+
+        return articletext;
+    }
+}
+
+/**
  * Class to manually extract text from retrieved articles
  */
 export class ArticleExtractor
@@ -48,7 +122,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        return ArticleExtractor.cleanText(articletext);
+        return DataCleaner.cleanText(articletext);
     }
 
     /**
@@ -91,7 +165,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        return ArticleExtractor.cleanText(articletext);
+        return DataCleaner.cleanText(articletext);
     }
 
     /**
@@ -128,7 +202,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        articletext = ArticleExtractor.cleanText(articletext);
+        articletext = DataCleaner.cleanText(articletext);
 
         if (articletext.split(' - ')[1])
         {
@@ -177,7 +251,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        return ArticleExtractor.cleanText(articletext);
+        return DataCleaner.cleanText(articletext);
     }
 
     //TODO the second line returned an error at one point
@@ -196,7 +270,7 @@ export class ArticleExtractor
             }
         }
 
-        return ArticleExtractor.cleanText(data);
+        return DataCleaner.cleanText(data);
     }
 
     /**
@@ -235,7 +309,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        articletext = ArticleExtractor.cleanText(articletext);
+        articletext = DataCleaner.cleanText(articletext);
 
         if (articletext.split('(AP) — ')[1])
         {
@@ -283,7 +357,7 @@ export class ArticleExtractor
             return undefined;
         }
 
-        data = ArticleExtractor.cleanSurrounding(data);
+        data = DataCleaner.cleanHTML(data);
 
         while (counter < data.length - 3)
         {
@@ -307,7 +381,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        return ArticleExtractor.cleanText(articletext);
+        return DataCleaner.cleanText(articletext);
     }
 
     /**
@@ -350,7 +424,7 @@ export class ArticleExtractor
             return undefined;
         }
 
-        data = ArticleExtractor.cleanSurrounding(data);
+        data = DataCleaner.cleanHTML(data);
 
         while (counter < data.length - 3)
         {
@@ -379,7 +453,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        return ArticleExtractor.cleanText(articletext);
+        return DataCleaner.cleanText(articletext);
     }
 
     /**
@@ -414,7 +488,7 @@ export class ArticleExtractor
             return undefined;
         }
 
-        data = ArticleExtractor.cleanSurrounding(data);
+        data = DataCleaner.cleanHTML(data);
 
         while (counter < data.length - 3)
         {
@@ -438,7 +512,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        return ArticleExtractor.cleanText(articletext);
+        return DataCleaner.cleanText(articletext);
     }
 
     /**
@@ -495,7 +569,7 @@ export class ArticleExtractor
         }
 
         data = data.split(/<div[^.+]*>/g).join('');
-        data = ArticleExtractor.cleanSurrounding(data);
+        data = DataCleaner.cleanHTML(data);
 
         let counter = 0;
         let copy = false;
@@ -528,64 +602,6 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        return ArticleExtractor.cleanText(articletext);
-    }
-
-    static cleanSurrounding(articletext)
-    {
-        articletext = articletext.replace(/<figure .+>/g, '');
-        articletext = articletext.replace(/<\/figure>/g, '');
-        articletext = articletext.replace(/<figure[^.+]*>/g, "");
-        articletext = articletext.replace(/<\/figure>/g, "");
-        articletext = articletext.replace(/<footer .+\/footer>/g, '');
-        articletext = articletext.replace(/<span .+>.+<\/span>/ig, '');
-        articletext = articletext.replace(/<figure .+>.+<\/figure>/ig, '');
-        articletext = articletext.replace(/<figure .+>.+<\/figure>/ig, '');
-        articletext = articletext.split(/<figure .+>.+<\/figure>/g).join('');
-        articletext = articletext.split(/<span .+>.+<\/span>/g).join('');
-        articletext = articletext.split(/<p><em>.+<\/em><\/p>/g).join('');
-        articletext = articletext.split(/<figure[^.+]*>/g).join('');
-        articletext = articletext.split(/<\/figure>/g).join('');
-
-        return articletext;
-    }
-
-    static cleanText(articletext)
-    {
-        articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-        articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-        articletext = articletext.split(/<p><em>.+<\/em><\/p>/g).join('');
-        articletext = articletext.split(/<p><strong>.+<\/strong><\/p>/g).join('');
-        articletext = articletext.split(/<p><i>.+<\/i><\/p>/g).join('');
-        articletext = articletext.split(/<p><b>.+<\/b><\/p>/g).join('');
-        articletext = articletext.split(/<p><u>.+<\/u><\/p>/g).join('');
-        articletext = articletext.split('&#x2013;').join("-");
-        articletext = articletext.split('&#x201D;').join('"');
-        articletext = articletext.split('&#x2018;').join('"');
-        articletext = articletext.split('&#x2019;').join("'");
-        articletext = articletext.split('&#x201C;').join('"');
-        articletext = articletext.split('&amp;').join('&');
-        articletext = articletext.split('&#x2026;').join('...');
-        articletext = articletext.split('&#x2022;').join('•');
-        articletext = articletext.split('&#x200B;').join('');
-        articletext = articletext.split('&#x2014;').join('-');
-        articletext = articletext.split('&#xF3;').join('ó');
-        articletext = articletext.split('&#39;').join("'");
-        articletext = articletext.split('&quot;').join('"');
-        articletext = articletext.split('&nbsp;').join(" ");
-        articletext = articletext.split(' span>').join("");
-        articletext = articletext.split('&amp;').join('&');
-        articletext = articletext.split('&#163;').join('£');
-        articletext = articletext.split('&#8364;').join('€');
-        articletext = articletext.split(/\&rsquo\;/g).join("'");
-        articletext = articletext.split(/\&lsquo\;/g).join("'");
-        articletext = articletext.split(/\&ldquo\;/g).join('"');
-        articletext = articletext.split(/\&rdquo\;/g).join('"');
-        articletext = articletext.split('Sharing the full story, not just the headlines').join(' ');
-
-        articletext = articletext.trim();
-        articletext = articletext.replace(/\s+/g, ' ');
-
-        return articletext;
+        return DataCleaner.cleanText(articletext);
     }
 }
