@@ -87,10 +87,10 @@ export class PageParser
 
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
 
-        if (data.includes('<p><strong>') || data.includes('<h2>'))      //indicates a Q&A article
-        {
-            return undefined;
-        }
+        // if (data.includes('<p><strong>') || data.includes('<h2>'))      //indicates a Q&A article
+        // {
+        //     return undefined;
+        // }
 
         let headline, text;
 
@@ -369,10 +369,10 @@ export class PageParser
             }
         }
 
-        if (data.includes('<h3'))      //indicates a Q&A article
-        {
-            return undefined;
-        }
+        // if (data.includes('<h3'))      //indicates a Q&A article
+        // {
+        //     return undefined;
+        // }
 
         let headline, text;
         text = ArticleExtractor.extractReutersText(data);
@@ -545,11 +545,6 @@ export class PageParser
             }
         }
 
-        /**if (data.includes('<h3'))      //indicates a Q&A article
-         {
-            return undefined;
-        }*/
-
         let headline, text;
         text = ArticleExtractor.extractSkyText(data);
         console.log(randomlink);
@@ -697,11 +692,6 @@ export class PageParser
             }
         }
 
-        /**if (data.includes('<h3'))      //indicates a Q&A article
-         {
-            return undefined;
-        }*/
-
         let headline, text;
         text = ArticleExtractor.extractAPText(data);
         console.log(randomlink);
@@ -842,11 +832,6 @@ export class PageParser
             }
         }
 
-        /**if (data.includes('<h3'))      //indicates a Q&A article
-         {
-            return undefined;
-        }*/
-
         let headline, text;
         text = ArticleExtractor.extractEveningStandardText(data);
         console.log(randomlink);
@@ -978,10 +963,10 @@ export class PageParser
             }
         }
 
-        if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
-        {
-            return undefined;
-        }
+        // if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
+        // {
+        //     return undefined;
+        // }
 
         let headline, text;
         text = ArticleExtractor.extractIndependentText(data);
@@ -1121,11 +1106,6 @@ export class PageParser
                 return undefined;
             }
         }
-
-        /**if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
-         {
-            return undefined;
-        }*/
 
         let headline, text;
         text = ArticleExtractor.extractNewsAUText(data);
@@ -1294,11 +1274,6 @@ export class PageParser
                 return undefined;
             }
         }
-
-        /**if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
-         {
-            return undefined;
-        }*/
 
         let headline, text;
         text = ArticleExtractor.extractITVText(data);

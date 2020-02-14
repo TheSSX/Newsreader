@@ -1,6 +1,5 @@
 /**
- Class to summarise articles. Communicates with the SMMRY API or, failing that, attempts to
- summarise the article itself.
+ * Class to manually extract text from retrieved articles
  */
 export class ArticleExtractor
 {
@@ -33,10 +32,9 @@ export class ArticleExtractor
 
             if (startoftext)
             {
-                // articletext += " ";
-                // counter += 1;
                 copy = true;
-            } else if (endoftext)
+            }
+            else if (endoftext)
             {
                 articletext += " ";
                 copy = false;
@@ -50,11 +48,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        articletext = ArticleExtractor.cleanText(articletext);
-
-        //articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-
-        return articletext;
+        return ArticleExtractor.cleanText(articletext);
     }
 
     /**
@@ -81,10 +75,9 @@ export class ArticleExtractor
 
             if (startoftext)
             {
-                // articletext += " ";
-                // counter += 1;
                 copy = true;
-            } else if (endoftext)
+            }
+            else if (endoftext)
             {
                 articletext += " ";
                 copy = false;
@@ -98,11 +91,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        articletext = ArticleExtractor.cleanText(articletext);
-
-        //articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-
-        return articletext;
+        return ArticleExtractor.cleanText(articletext);
     }
 
     /**
@@ -141,13 +130,11 @@ export class ArticleExtractor
 
         articletext = ArticleExtractor.cleanText(articletext);
 
-        // articletext = articletext.replace(/\&rsquo\;/g, "'");
-        // articletext = articletext.replace(/\&lsquo\;/g, "'");
-        // articletext = articletext.replace(/\&ldquo\;/g, '"');
-        // articletext = articletext.replace(/\&rdquo\;/g, '"');
-        // articletext = articletext.replace(/<footer.+\/footer>/g, '');
-        // articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-        // articletext = articletext.split(' - ')[1];
+        if (articletext.split(' - ')[1])
+        {
+            articletext = articletext.split(' - ')[1];
+        }
+
         if (articletext.split('All quotes delayed a minimum of ')[0])
         {
             articletext = articletext.split('All quotes delayed a minimum of ')[0];
@@ -190,17 +177,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        articletext = ArticleExtractor.cleanText(articletext);
-
-        // articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-        // articletext = articletext.replace('&#163;', '£');
-        // articletext = articletext.replace('&#8364;', '€');
-        // while (articletext.startsWith(" "))
-        // {
-        //     articletext = articletext.substr(1);
-        // }
-
-        return articletext;
+        return ArticleExtractor.cleanText(articletext);
     }
 
     //TODO the second line returned an error at one point
@@ -209,9 +186,17 @@ export class ArticleExtractor
     //     at Function.extractAP (pageparser.mjs:733)
     static extractAPHeadline(data)
     {
-        data = data.split('<div class="CardHeadline">')[1];
-        data = data.split('<div class="Component-signature-')[0];
-        return data.replace(/(<([^>]+)>)/ig, "");
+        if (data.split('<div class="CardHeadline">')[1])
+        {
+            data = data.split('<div class="CardHeadline">')[1];
+
+            if (data.split('<div class="Component-signature-')[0])
+            {
+                data = data.split('<div class="Component-signature-')[0];
+            }
+        }
+
+        return ArticleExtractor.cleanText(data);
     }
 
     /**
@@ -251,8 +236,6 @@ export class ArticleExtractor
         }
 
         articletext = ArticleExtractor.cleanText(articletext);
-
-        //articletext = articletext.replace(/(<([^>]+)>)/ig, "");
 
         if (articletext.split('(AP) — ')[1])
         {
@@ -301,7 +284,6 @@ export class ArticleExtractor
         }
 
         data = ArticleExtractor.cleanSurrounding(data);
-        // data = data.replace(/<span.+>.+<\/span>/ig, '');
 
         while (counter < data.length - 3)
         {
@@ -325,19 +307,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        articletext = ArticleExtractor.cleanText(articletext);
-
-        // articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-        // articletext = articletext.replace(/<figure .+>/g, '');
-        // articletext = articletext.replace(/<\/figure>/g, '');
-        // articletext = articletext.replace(/<figure[^.+]*>/g, "");
-        // articletext = articletext.replace(/<\/figure>/g, "");
-        // articletext = articletext.replace('&amp;', '&');
-        // articletext = articletext.replace('&nbsp;', ' ');
-        // articletext = articletext.split('&nbsp;').join(" ");
-        // articletext = articletext.split('&amp;').join("&");
-
-        return articletext;
+        return ArticleExtractor.cleanText(articletext);
     }
 
     /**
@@ -347,6 +317,11 @@ export class ArticleExtractor
      */
     static extractIndependentText(data)
     {
+        if (data.includes('<p><strong>') || data.includes('<h2><span class="title">'))
+        {
+            return undefined;
+        }
+
         let copy = false;
         let articletext = "";
         let counter = 0;
@@ -377,16 +352,6 @@ export class ArticleExtractor
 
         data = ArticleExtractor.cleanSurrounding(data);
 
-        // data = data.replace(/<figure.+>.+<\/figure>/ig, '');
-        // data = data.replace('&nbsp;', ' ');
-        // data = data.replace(/<figure .+>/g, '');
-        // data = data.replace(/<\/figure>/g, '');
-        // data = data.replace(/<figure[^.+]*>/g, "");
-        // data = data.split(/<figure.+>.+<\/figure>/g).join('');
-        // data = data.split(/<p><em>.+<\/em><\/p>/g).join('');
-        // data = data.split(/<figure[^.+]*>/g).join('');
-        // data = data.split(/<\/figure>/g).join('');
-
         while (counter < data.length - 3)
         {
             const startoftext = data.substring(counter - 3, counter) === '<p>';
@@ -414,20 +379,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        articletext = ArticleExtractor.cleanText(articletext);
-
-        // articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-        // articletext = articletext.replace(/<figure .+>/g, '');
-        // articletext = articletext.replace(/<\/figure>/g, '');
-        // articletext = articletext.replace(/<figure[^.+]*>/g, "");
-        // articletext = articletext.replace(/<\/figure>/g, "");
-        // articletext = articletext.replace('&amp;', '&');
-        // articletext = articletext.replace('&nbsp;', ' ');
-        // articletext = articletext.split('&nbsp;').join(" ");
-        // articletext = articletext.split('&amp;').join("&");
-        // articletext.replace("Sharing the full story, not just the headlines", " ");
-
-        return articletext;
+        return ArticleExtractor.cleanText(articletext);
     }
 
     /**
@@ -464,17 +416,6 @@ export class ArticleExtractor
 
         data = ArticleExtractor.cleanSurrounding(data);
 
-        // data = data.replace(/<figure.+>.+<\/figure>/ig, '');
-        // data = data.replace(/<span.+>.+<\/span>/ig, '');
-        // data = data.replace('&nbsp;', ' ');
-        // data = data.replace(/<figure .+>/g, '');
-        // data = data.replace(/<\/figure>/g, '');
-        // data = data.replace(/<figure[^.+]*>/g, "");
-        // data = data.split(/<figure.+>.+<\/figure>/g).join('');
-        // data = data.split(/<p><em>.+<\/em><\/p>/g).join('');
-        // data = data.split(/<figure[^.+]*>/g).join('');
-        // data = data.split(/<\/figure>/g).join('');
-
         while (counter < data.length - 3)
         {
             const startoftext = data.substring(counter - 3, counter) === '<p>';
@@ -497,19 +438,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        articletext = ArticleExtractor.cleanText(articletext);
-
-        // articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-        // articletext = articletext.replace(/<figure .+>/g, '');
-        // articletext = articletext.replace(/<\/figure>/g, '');
-        // articletext = articletext.replace(/<figure[^.+]*>/g, "");
-        // articletext = articletext.replace(/<\/figure>/g, "");
-        // articletext = articletext.replace('&#39;', ("'"));					//not as convinced this is doing anything, honest to God
-        // articletext = articletext.replace('&quot;', ('"'));
-        // articletext = articletext.split('&#39;').join("'");
-        // articletext = articletext.split('&quot;').join('"');
-
-        return articletext;
+        return ArticleExtractor.cleanText(articletext);
     }
 
     /**
@@ -599,22 +528,7 @@ export class ArticleExtractor
             counter += 1;
         }
 
-        articletext = ArticleExtractor.cleanText(articletext);
-
-        // articletext = articletext.replace(/(<([^>]+)>)/ig, "");
-        // articletext = articletext.split('&#x2013;').join("-");
-        // articletext = articletext.split('&#x201D;').join('"');
-        // articletext = articletext.split('&#x2018;').join('"');
-        // articletext = articletext.split('&#x2019;').join("'");
-        // articletext = articletext.split('&#x201C;').join('"');
-        // articletext = articletext.split('&amp;').join('&');
-        // articletext = articletext.split('&#x2026;').join('...');
-        // articletext = articletext.split('&#x2022;').join('•');
-        // articletext = articletext.split('&#x200B;').join('');
-        // articletext = articletext.split('&#x2014;').join('-');
-        // articletext = articletext.split('&#xF3;').join('ó');
-
-        return articletext;
+        return ArticleExtractor.cleanText(articletext);
     }
 
     static cleanSurrounding(articletext)

@@ -1,4 +1,6 @@
 /**
+ * Class to summarise articles. Communicates with the SMMRY API or, failing that, attempts to
+ * summarise the article itself.
  * Contains config info for querying the SMMRY API
  */
 
