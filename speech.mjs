@@ -1,4 +1,4 @@
-import {rate, volume, language_choice, pitch} from "./preferences.js";
+import {language_choice, pitch, rate, volume} from "./preferences.js";
 import {dialects} from "./language_config.js";
 
 /**

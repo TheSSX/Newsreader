@@ -2,9 +2,9 @@
  * The starting script which triggers when the user clicks the extension icon
  */
 
-//import {Bulletin} from "./bulletin.mjs";
-
-window.onload=function(){
+window.onload = function ()
+{
+    // Various buttons on the main screen
     const playButton = document.getElementById('playBtn');
     const pauseButton = document.getElementById('pauseBtn');
     const resumeButton = document.getElementById('resumeBtn');
@@ -31,39 +31,35 @@ window.onload=function(){
     }
 };
 
-// const script = document.createElement('script');
-// script.src = 'jquery.js';
-// script.type = 'text/javascript';
-// document.getElementsByTagName('head')[0].appendChild(script);
-
-// // Called when the user clicks on the browser action.
-// chrome.browserAction.onClicked.addListener(function(tab) {
-//     window.speechSynthesis.cancel();
-//     Bulletin.fetchNews();
-// });
-
+/**
+ * Start a news bulletin
+ */
 function starter()
 {
-    stopper();
-    // chrome.runtime.getBackgroundPage(function(backgroundPage){
-    //     backgroundPage.fetchNews()
-    // });
-    //chrome.extension.getBackgroundPage();
-    //Bulletin.fetchNews();
+    stopper();  // stop a currently playing bulletin, if there is one
 
     chrome.runtime.sendMessage({greeting: "play"});
 }
 
+/**
+ * Pause any news bulletins currently playing
+ */
 function pauser()
 {
     chrome.runtime.sendMessage({greeting: "pause"});
 }
 
+/**
+ * Resume any news bulletins that are currently paused. Does NOT start a new news bulletin
+ */
 function resumer()
 {
     chrome.runtime.sendMessage({greeting: "resume"});
 }
 
+/**
+ * Stop any news bulletins currently playing. This erases a current news bulletin from memory
+ */
 function stopper()
 {
     chrome.runtime.sendMessage({greeting: "stop"});
