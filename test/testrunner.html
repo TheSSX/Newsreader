@@ -1,11 +1,20 @@
 <html>
+<head>
+    <meta charset="utf-8">
+    <title>Mocha Tests</title>
+    <link href="../node_modules/mocha/mocha.css" rel="stylesheet" />
+</head>
 <body>
 <div id="mocha"></div>
 <script src="../node_modules/mocha/mocha.js"></script>
-<script src="../node_modules/chai/chai.js" type="text/javascript"></script>
-<script src="app.test.js"></script>
-<script>
-    mocha.run()
+<script src="../node_modules/chai/chai.js"></script>
+<script>mocha.setup('bdd')</script>
+<!--Gotta include app.js too-->
+<script type="module" src="../article.mjs"></script>
+<script type="module" src="newapp.test.js"></script>
+<script type="module">
+    mocha.checkLeaks();
+    mocha.run();
 </script>
 </body>
 </html>

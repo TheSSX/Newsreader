@@ -7,5 +7,5 @@ const { assert } = require('chai');
 describe('App', function () {
     it('Should be true', function () {
         expect(true).to.equal(true);
-    })
+    });
 });
