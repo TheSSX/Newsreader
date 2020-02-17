@@ -1,5 +1,4 @@
-//import {Speech} from "./speech.mjs";
-const Speech = require('speech.mjs').Speech;
+import {Speech} from "./speech.mjs";
 
 /**
  Class for an article object

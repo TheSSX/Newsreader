@@ -89,7 +89,7 @@ export class ArticleExtractor
             return undefined;
         }
 
-        data = data.split('<div class="content__article-body from-content-api js-article__body" itemprop="articleBody" data-test-id="article-review-body">')[1];
+        data = data.split('<div class="content__article-body from-content-api js-article__body" itemprop="articleBody" data-test-es6-id="article-review-body">')[1];
         if (data === undefined)
         {
             return undefined;

@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <title>Mocha Tests</title>
@@ -8,10 +8,11 @@
 <div id="mocha"></div>
 <script src="../node_modules/mocha/mocha.js"></script>
 <script src="../node_modules/chai/chai.js"></script>
-<script>mocha.setup('bdd')</script>
-<!--Gotta include app.js too-->
-<script type="module" src="../article.mjs"></script>
+<script type="module">mocha.setup('bdd');</script>
+
+<script type="module" src="../src/article.mjs"></script>
 <script type="module" src="newapp.test.js"></script>
+
 <script type="module">
     mocha.checkLeaks();
     mocha.run();

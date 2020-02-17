@@ -1,12 +1,14 @@
-import {Article} from "../article.mjs";
+"use strict";
 
-const describe = require('mocha').describe;
-const it = require('mocha').it;
-const { expect } = require('chai');
+var _article = require("../dist/article.js");
 
-describe('Article', function () {
-    it('should be good', function () {
-        const article = new Article("test", "test", "test", "test", "test")
-        expect(article).to.not.be(null);
-    });
+var _mocha = require("mocha");
+
+var _chai = require("chai");
+
+(0, _mocha.describe)('Article', function () {
+  (0, _mocha.it)('should be good', function () {
+    var article = new _article.Article("test", "test", "test", "test", "test");
+    (0, _chai.expect)(article).to.be(null);
+  });
 });
