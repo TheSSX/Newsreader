@@ -15,19 +15,19 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _article = require("./article.mjs");
+var _article = require("./article");
 
-var _articleextractor = require("./articleextractor.mjs");
+var _articleextractor = require("./articleextractor");
 
-var _translator = require("./translator.mjs");
+var _translator = require("./translator");
 
-var _preferences = require("./preferences.js");
+var _preferences = require("./preferences");
 
-var _language_config = require("./language_config.js");
+var _language_config = require("./language_config");
 
-var _speech = require("./speech.mjs");
+var _speech = require("./speech");
 
-var _summarise = require("./summarise.mjs");
+var _summarise = require("./summarise");
 
 /**
  Class for object to parse source article pages

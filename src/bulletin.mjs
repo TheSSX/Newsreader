@@ -1,5 +1,5 @@
-import {PageParser} from "./pageparser.mjs";
-import {sentences, sources, topics} from "./preferences.js";
+import {PageParser} from "./pageparser";
+import {sentences, sources, topics} from "./preferences";
 
 /**
  Class for object to query random sources for each topic

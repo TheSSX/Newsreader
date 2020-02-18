@@ -11,9 +11,9 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _pageparser = require("./pageparser.mjs");
+var _pageparser = require("./pageparser");
 
-var _preferences = require("./preferences.js");
+var _preferences = require("./preferences");
 
 /**
  Class for object to query random sources for each topic

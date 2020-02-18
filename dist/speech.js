@@ -11,9 +11,9 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _preferences = require("./preferences.js");
+var _preferences = require("./preferences");
 
-var _language_config = require("./language_config.js");
+var _language_config = require("./language_config");
 
 /**
  Class for a speech object

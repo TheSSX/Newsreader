@@ -1,4 +1,4 @@
-import {Speech} from "./speech.mjs";
+import {Speech} from "./speech";
 
 /**
  Class for an article object

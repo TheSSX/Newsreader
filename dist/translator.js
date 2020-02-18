@@ -15,7 +15,7 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _yandex = require("./yandex.js");
+var _yandex = require("./yandex");
 
 /**
  Class for translating articles via the Yandex free translation service.

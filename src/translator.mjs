@@ -1,4 +1,4 @@
-import {apikey, yandexurl} from "./yandex.js";
+import {apikey, yandexurl} from "./yandex";
 
 /**
  Class for translating articles via the Yandex free translation service.
