@@ -1,6 +1,6 @@
 import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
-import {spy} from "sinon";
+import {stub} from "sinon";
 
 import {ArticleExtractor, DataCleaner} from "../dist/articleextractor.js";
 const article = require('../test_articles/guardian.js');
@@ -26,10 +26,13 @@ suite('ArticleExtractor', function () {
             expect(ArticleExtractor.extractGuardianText(data)).to.not.contain('<div class="content__article-body from-content-api js-article__body" itemprop="articleBody" data-test-es6-id="article-review-body">');
         });
 
-        it('Should return text between p tags', function () {
-            const cleanText = spy(DataCleaner, 'cleanText');
-            ArticleExtractor.extractGuardianText(article);
-            expect(cleanText.calledOnce);
+        it('Should return text between <p> tags', function () {
+            DataCleaner.cleanText = stub().returns("This works");
+            const returned = ArticleExtractor.extractGuardianText(article);
+            expect(DataCleaner.cleanText.calledOnce);
+            const argument = DataCleaner.cleanText.getCall(0).args[0];
+            expect(argument).to.not.be.equal("");
+            expect(returned).to.equal("This works");
         });
     });
 });

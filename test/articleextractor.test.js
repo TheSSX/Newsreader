@@ -25,12 +25,17 @@ var article = require('../test_articles/guardian.js');
       var data = '<div class="content__article-body from-content-api js-article__body" itemprop="articleBody" data-test-es6-id="article-review-body"><p>Test</p>';
       (0, _chai.expect)(_articleextractor.ArticleExtractor.extractGuardianText(data)).to.not.contain('<div class="content__article-body from-content-api js-article__body" itemprop="articleBody" data-test-es6-id="article-review-body">');
     });
-    (0, _mocha.it)('Should return text between p tags', function () {
-      var cleanText = (0, _sinon.spy)(_articleextractor.DataCleaner, 'cleanText');
+    (0, _mocha.it)('Should return text between <p> tags', function () {
+      _articleextractor.DataCleaner.cleanText = (0, _sinon.stub)().returns("This works");
 
-      _articleextractor.ArticleExtractor.extractGuardianText(article);
+      var returned = _articleextractor.ArticleExtractor.extractGuardianText(article);
 
-      (0, _chai.expect)(cleanText.callCount(2)).to.equal(2);
+      (0, _chai.expect)(_articleextractor.DataCleaner.cleanText.calledOnce);
+
+      var argument = _articleextractor.DataCleaner.cleanText.getCall(0).args[0];
+
+      (0, _chai.expect)(argument).to.not.be.equal("");
+      (0, _chai.expect)(returned).to.equal("This works");
     });
   });
 });
