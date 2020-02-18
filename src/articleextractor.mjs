@@ -84,11 +84,13 @@ export class ArticleExtractor
      */
     static extractGuardianText(data)
     {
+        //Test 1
         if (data.includes('<p><strong>') || data.includes('<h2>'))
         {
             return undefined;
         }
 
+        //Test 2
         data = data.split('<div class="content__article-body from-content-api js-article__body" itemprop="articleBody" data-test-es6-id="article-review-body">')[1];
         if (data === undefined)
         {

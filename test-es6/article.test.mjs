@@ -1,11 +1,11 @@
-import {Article} from "../dist/article.js";
 import {describe, it} from "mocha";
 import {expect} from "chai";
-import {assert} from "chai";
+
+import {Article} from "../dist/article.js";
 
 describe('Article', function () {
-    it('should be good', function () {
+    it('Should instantiate properly', function () {
         const article = new Article("test", "test", "test", "test", "test");
-        assert(article).to.not.be(null);
+        expect(article).to.not.be.equal(null);
     });
 });

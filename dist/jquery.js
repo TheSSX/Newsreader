@@ -1,12 +1,14 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 /*! jQuery v3.4.1 | (c) JS Foundation and other contributors | jquery.org/license */
 !function (e, t) {
   "use strict";
 
-  "object" == (typeof module === "undefined" ? "undefined" : _typeof(module)) && "object" == _typeof(module.exports) ? module.exports = e.document ? t(e, !0) : function (e) {
+  "object" == (typeof module === "undefined" ? "undefined" : (0, _typeof2["default"])(module)) && "object" == (0, _typeof2["default"])(module.exports) ? module.exports = e.document ? t(e, !0) : function (e) {
     if (!e.document) throw new Error("jQuery requires a window with a document");
     return t(e);
   } : t(e);
@@ -50,7 +52,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   }
 
   function w(e) {
-    return null == e ? e + "" : "object" == _typeof(e) || "function" == typeof e ? n[o.call(e)] || "object" : _typeof(e);
+    return null == e ? e + "" : "object" == (0, _typeof2["default"])(e) || "function" == typeof e ? n[o.call(e)] || "object" : (0, _typeof2["default"])(e);
   }
 
   var f = "3.4.1",
@@ -119,7 +121,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         u = arguments.length,
         l = !1;
 
-    for ("boolean" == typeof a && (l = a, a = arguments[s] || {}, s++), "object" == _typeof(a) || m(a) || (a = {}), s === u && (a = this, s--); s < u; s++) {
+    for ("boolean" == typeof a && (l = a, a = arguments[s] || {}, s++), "object" == (0, _typeof2["default"])(a) || m(a) || (a = {}), s === u && (a = this, s--); s < u; s++) {
       if (null != (e = arguments[s])) for (t in e) {
         r = e[t], "__proto__" !== t && a !== r && (l && r && (k.isPlainObject(r) || (i = Array.isArray(r))) ? (n = a[t], o = i && !Array.isArray(n) ? [] : i || k.isPlainObject(n) ? n : {}, i = !1, a[t] = k.extend(l, o, r)) : void 0 !== r && (a[t] = r));
       }
@@ -1476,7 +1478,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
                 if (!(i < u)) {
                   if ((e = a.apply(n, r)) === o.promise()) throw new TypeError("Thenable self-resolution");
-                  t = e && ("object" == _typeof(e) || "function" == typeof e) && e.then, m(t) ? s ? t.call(e, l(u, o, M, s), l(u, o, I, s)) : (u++, t.call(e, l(u, o, M, s), l(u, o, I, s), l(u, o, M, o.notifyWith))) : (a !== M && (n = void 0, r = [e]), (s || o.resolveWith)(n, r));
+                  t = e && ("object" == (0, _typeof2["default"])(e) || "function" == typeof e) && e.then, m(t) ? s ? t.call(e, l(u, o, M, s), l(u, o, I, s)) : (u++, t.call(e, l(u, o, M, s), l(u, o, I, s), l(u, o, M, o.notifyWith))) : (a !== M && (n = void 0, r = [e]), (s || o.resolveWith)(n, r));
                 }
               },
                   t = s ? e : function () {
@@ -1687,7 +1689,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         return i;
       }
 
-      return "object" == _typeof(n) ? this.each(function () {
+      return "object" == (0, _typeof2["default"])(n) ? this.each(function () {
         J.set(this, n);
       }) : _(this, function (e) {
         var t;
@@ -1930,7 +1932,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   function Ae(e, t, n, r, i, o) {
     var a, s;
 
-    if ("object" == _typeof(t)) {
+    if ("object" == (0, _typeof2["default"])(t)) {
       for (s in "string" != typeof n && (r = r || n, n = void 0), t) {
         Ae(e, s, n, r, t[s], o);
       }
@@ -2232,7 +2234,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var r, i;
       if (e && e.preventDefault && e.handleObj) return r = e.handleObj, k(e.delegateTarget).off(r.namespace ? r.origType + "." + r.namespace : r.origType, r.selector, r.handler), this;
 
-      if ("object" == _typeof(e)) {
+      if ("object" == (0, _typeof2["default"])(e)) {
         for (i in e) {
           this.off(i, t, e[i]);
         }
@@ -2618,7 +2620,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             u = Qe.test(t),
             l = e.style;
         if (u || (t = Ge(s)), a = k.cssHooks[t] || k.cssHooks[s], void 0 === n) return a && "get" in a && void 0 !== (i = a.get(e, !1, r)) ? i : l[t];
-        "string" === (o = _typeof(n)) && (i = ne.exec(n)) && i[1] && (n = le(e, t, i), o = "number"), null != n && n == n && ("number" !== o || u || (n += i && i[3] || (k.cssNumber[s] ? "" : "px")), y.clearCloneStyle || "" !== n || 0 !== t.indexOf("background") || (l[t] = "inherit"), a && "set" in a && void 0 === (n = a.set(e, n, r)) || (u ? l.setProperty(t, n) : l[t] = n));
+        "string" === (o = (0, _typeof2["default"])(n)) && (i = ne.exec(n)) && i[1] && (n = le(e, t, i), o = "number"), null != n && n == n && ("number" !== o || u || (n += i && i[3] || (k.cssNumber[s] ? "" : "px")), y.clearCloneStyle || "" !== n || 0 !== t.indexOf("background") || (l[t] = "inherit"), a && "set" in a && void 0 === (n = a.set(e, n, r)) || (u ? l.setProperty(t, n) : l[t] = n));
       }
     },
     css: function css(e, t, n, r) {
@@ -2888,7 +2890,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       t ? dt.prefilters.unshift(e) : dt.prefilters.push(e);
     }
   }), k.speed = function (e, t, n) {
-    var r = e && "object" == _typeof(e) ? k.extend({}, e) : {
+    var r = e && "object" == (0, _typeof2["default"])(e) ? k.extend({}, e) : {
       complete: n || !n && t || m(e) && e,
       duration: e,
       easing: n && t || t && !m(t) && t
@@ -3165,9 +3167,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return this;
     },
     toggleClass: function toggleClass(i, t) {
-      var o = _typeof(i),
+      var o = (0, _typeof2["default"])(i),
           a = "string" === o || Array.isArray(i);
-
       return "boolean" == typeof t && a ? t ? this.addClass(i) : this.removeClass(i) : m(i) ? this.each(function (e) {
         k(this).toggleClass(i.call(this, e, xt(this), t), t);
       }) : this.each(function () {
@@ -3281,7 +3282,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           d = v.call(e, "type") ? e.type : e,
           h = v.call(e, "namespace") ? e.namespace.split(".") : [];
 
-      if (o = f = a = n = n || E, 3 !== n.nodeType && 8 !== n.nodeType && !Tt.test(d + k.event.triggered) && (-1 < d.indexOf(".") && (d = (h = d.split(".")).shift(), h.sort()), u = d.indexOf(":") < 0 && "on" + d, (e = e[k.expando] ? e : new k.Event(d, "object" == _typeof(e) && e)).isTrigger = r ? 2 : 3, e.namespace = h.join("."), e.rnamespace = e.namespace ? new RegExp("(^|\\.)" + h.join("\\.(?:.*\\.|)") + "(\\.|$)") : null, e.result = void 0, e.target || (e.target = n), t = null == t ? [e] : k.makeArray(t, [e]), c = k.event.special[d] || {}, r || !c.trigger || !1 !== c.trigger.apply(n, t))) {
+      if (o = f = a = n = n || E, 3 !== n.nodeType && 8 !== n.nodeType && !Tt.test(d + k.event.triggered) && (-1 < d.indexOf(".") && (d = (h = d.split(".")).shift(), h.sort()), u = d.indexOf(":") < 0 && "on" + d, (e = e[k.expando] ? e : new k.Event(d, "object" == (0, _typeof2["default"])(e) && e)).isTrigger = r ? 2 : 3, e.namespace = h.join("."), e.rnamespace = e.namespace ? new RegExp("(^|\\.)" + h.join("\\.(?:.*\\.|)") + "(\\.|$)") : null, e.result = void 0, e.target || (e.target = n), t = null == t ? [e] : k.makeArray(t, [e]), c = k.event.special[d] || {}, r || !c.trigger || !1 !== c.trigger.apply(n, t))) {
         if (!r && !c.noBubble && !x(n)) {
           for (s = c.delegateType || d, Tt.test(s + d) || (o = o.parentNode); o; o = o.parentNode) {
             p.push(o), a = o;
@@ -3362,7 +3363,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   function qt(n, e, r, i) {
     var t;
     if (Array.isArray(e)) k.each(e, function (e, t) {
-      r || Nt.test(n) ? i(n, t) : qt(n + "[" + ("object" == _typeof(t) && null != t ? e : "") + "]", t, r, i);
+      r || Nt.test(n) ? i(n, t) : qt(n + "[" + ("object" == (0, _typeof2["default"])(t) && null != t ? e : "") + "]", t, r, i);
     });else if (r || "object" !== w(e)) i(n, e);else for (t in e) {
       qt(n + "[" + t + "]", e[t], r, i);
     }
@@ -3504,7 +3505,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     ajaxPrefilter: Bt(It),
     ajaxTransport: Bt(Wt),
     ajax: function ajax(e, t) {
-      "object" == _typeof(e) && (t = e, e = void 0), t = t || {};
+      "object" == (0, _typeof2["default"])(e) && (t = e, e = void 0), t = t || {};
       var c,
           f,
           p,
@@ -3856,7 +3857,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         o,
         a = this,
         s = e.indexOf(" ");
-    return -1 < s && (r = mt(e.slice(s)), e = e.slice(0, s)), m(t) ? (n = t, t = void 0) : t && "object" == _typeof(t) && (i = "POST"), 0 < a.length && k.ajax({
+    return -1 < s && (r = mt(e.slice(s)), e = e.slice(0, s)), m(t) ? (n = t, t = void 0) : t && "object" == (0, _typeof2["default"])(t) && (i = "POST"), 0 < a.length && k.ajax({
       url: e,
       type: i || "GET",
       dataType: "html",

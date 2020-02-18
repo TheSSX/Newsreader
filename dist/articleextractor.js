@@ -1,15 +1,15 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ArticleExtractor = exports.DataCleaner = void 0;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
 /**
  * Class to clean unwanted data from HTML received from Ajax
@@ -18,10 +18,10 @@ var DataCleaner =
 /*#__PURE__*/
 function () {
   function DataCleaner() {
-    _classCallCheck(this, DataCleaner);
+    (0, _classCallCheck2["default"])(this, DataCleaner);
   }
 
-  _createClass(DataCleaner, null, [{
+  (0, _createClass2["default"])(DataCleaner, null, [{
     key: "cleanHTML",
 
     /**
@@ -89,7 +89,6 @@ function () {
       return articletext;
     }
   }]);
-
   return DataCleaner;
 }();
 /**
@@ -103,10 +102,10 @@ var ArticleExtractor =
 /*#__PURE__*/
 function () {
   function ArticleExtractor() {
-    _classCallCheck(this, ArticleExtractor);
+    (0, _classCallCheck2["default"])(this, ArticleExtractor);
   }
 
-  _createClass(ArticleExtractor, null, [{
+  (0, _createClass2["default"])(ArticleExtractor, null, [{
     key: "extractGuardianText",
 
     /**
@@ -115,9 +114,11 @@ function () {
      * @returns {string|undefined} - the string of the article text, undefined if not available
      */
     value: function extractGuardianText(data) {
+      //Test 1
       if (data.includes('<p><strong>') || data.includes('<h2>')) {
         return undefined;
-      }
+      } //Test 2
+
 
       data = data.split('<div class="content__article-body from-content-api js-article__body" itemprop="articleBody" data-test-es6-id="article-review-body">')[1];
 
@@ -575,7 +576,6 @@ function () {
       return DataCleaner.cleanText(articletext);
     }
   }]);
-
   return ArticleExtractor;
 }();
 

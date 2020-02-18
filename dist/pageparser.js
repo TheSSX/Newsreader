@@ -1,9 +1,19 @@
 "use strict";
 
+var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.PageParser = void 0;
+
+var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+
+var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
+
+var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
 var _article = require("./article.mjs");
 
@@ -19,16 +29,6 @@ var _speech = require("./speech.mjs");
 
 var _summarise = require("./summarise.mjs");
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 /**
  Class for object to parse source article pages
  */
@@ -36,10 +36,10 @@ var PageParser =
 /*#__PURE__*/
 function () {
   function PageParser() {
-    _classCallCheck(this, PageParser);
+    (0, _classCallCheck2["default"])(this, PageParser);
   }
 
-  _createClass(PageParser, null, [{
+  (0, _createClass2["default"])(PageParser, null, [{
     key: "getArticle",
 
     /**
@@ -94,11 +94,11 @@ function () {
   }, {
     key: "extractGuardian",
     value: function () {
-      var _extractGuardian = _asyncToGenerator(
+      var _extractGuardian = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee(topic, topiclink, sentences) {
+      _regenerator["default"].mark(function _callee(topic, topiclink, sentences) {
         var publisher, linkdata, linksarr, i, links, randomlink, data, headline, text, smmrydata, error, translations;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+        return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -237,12 +237,12 @@ function () {
   }, {
     key: "extractBBC",
     value: function () {
-      var _extractBBC = _asyncToGenerator(
+      var _extractBBC = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2(topic, topiclink, sentences) {
+      _regenerator["default"].mark(function _callee2(topic, topiclink, sentences) {
         var publisher, linkdata, linksarr, i, currentlink, articlelinks, _i, current, links, randomlink, data, headline, text, smmrydata, error, translations;
 
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -388,12 +388,12 @@ function () {
   }, {
     key: "extractReuters",
     value: function () {
-      var _extractReuters = _asyncToGenerator(
+      var _extractReuters = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3(topic, topiclink, sentences) {
+      _regenerator["default"].mark(function _callee3(topic, topiclink, sentences) {
         var publisher, permadata, linkdata, linksarr, i, currentlink, _i2, _currentlink, articlelinks, _i3, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
@@ -579,12 +579,12 @@ function () {
   }, {
     key: "extractSky",
     value: function () {
-      var _extractSky = _asyncToGenerator(
+      var _extractSky = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee4(topic, topiclink, sentences) {
+      _regenerator["default"].mark(function _callee4(topic, topiclink, sentences) {
         var publisher, permadata, linkdata, linksarr, i, currentlink, _i4, _currentlink2, articlelinks, _i5, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
@@ -790,12 +790,12 @@ function () {
   }, {
     key: "extractAP",
     value: function () {
-      var _extractAP = _asyncToGenerator(
+      var _extractAP = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee5(topic, topiclink, sentences) {
+      _regenerator["default"].mark(function _callee5(topic, topiclink, sentences) {
         var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i6, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
@@ -968,12 +968,12 @@ function () {
   }, {
     key: "extractEveningStandard",
     value: function () {
-      var _extractEveningStandard = _asyncToGenerator(
+      var _extractEveningStandard = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee6(topic, topiclink, sentences) {
+      _regenerator["default"].mark(function _callee6(topic, topiclink, sentences) {
         var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i7, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        return _regenerator["default"].wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
@@ -1140,12 +1140,12 @@ function () {
   }, {
     key: "extractIndependent",
     value: function () {
-      var _extractIndependent = _asyncToGenerator(
+      var _extractIndependent = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee7(topic, topiclink, sentences) {
+      _regenerator["default"].mark(function _callee7(topic, topiclink, sentences) {
         var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i8, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
-        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+        return _regenerator["default"].wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
@@ -1321,12 +1321,12 @@ function () {
   }, {
     key: "extractNewsAU",
     value: function () {
-      var _extractNewsAU = _asyncToGenerator(
+      var _extractNewsAU = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee8(topic, topiclink, sentences) {
+      _regenerator["default"].mark(function _callee8(topic, topiclink, sentences) {
         var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i9, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
-        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+        return _regenerator["default"].wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
@@ -1558,12 +1558,12 @@ function () {
   }, {
     key: "extractITV",
     value: function () {
-      var _extractITV = _asyncToGenerator(
+      var _extractITV = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee9(topic, topiclink, sentences) {
+      _regenerator["default"].mark(function _callee9(topic, topiclink, sentences) {
         var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i10, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
-        return regeneratorRuntime.wrap(function _callee9$(_context9) {
+        return _regenerator["default"].wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
@@ -1846,7 +1846,6 @@ function () {
       }).done(function (data) {}).fail(function (ajaxError) {}); //not convinced this actually returns or throws an error
     }
   }]);
-
   return PageParser;
 }();
 
@@ -1857,11 +1856,11 @@ function callTranslation(_x28, _x29, _x30, _x31) {
 }
 
 function _callTranslation() {
-  _callTranslation = _asyncToGenerator(
+  _callTranslation = (0, _asyncToGenerator2["default"])(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee10(publisher, topic, headline, text) {
+  _regenerator["default"].mark(function _callee10(publisher, topic, headline, text) {
     var publishertranslatedata, topictranslatedata, headlinetranslatedata, texttranslatedata;
-    return regeneratorRuntime.wrap(function _callee10$(_context10) {
+    return _regenerator["default"].wrap(function _callee10$(_context10) {
       while (1) {
         switch (_context10.prev = _context10.next) {
           case 0:
