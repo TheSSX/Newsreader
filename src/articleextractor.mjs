@@ -202,6 +202,7 @@ export class ArticleExtractor
 
         articletext = DataCleaner.cleanText(articletext);
 
+        //TODO maybe not the best idea. Could be hyphen in the text somewhere
         if (articletext.split(' - ')[1])
         {
             articletext = articletext.split(' - ')[1];
@@ -282,6 +283,7 @@ export class ArticleExtractor
         let articletext = "";
         let counter = 0;
 
+        //TODO add in the various return undefined's here
         data = data.split('<div class="Article" data-key="article">')[1];
         data = data.split('<div class="bellow-article">')[0];
 
@@ -394,10 +396,6 @@ export class ArticleExtractor
             return undefined;
         }
 
-        let copy = false;
-        let articletext = "";
-        let counter = 0;
-
         if (data.split('<div class="body-content">')[1])
         {
             data = data.split('<div class="body-content">')[1];
@@ -423,6 +421,10 @@ export class ArticleExtractor
         }
 
         data = DataCleaner.cleanHTML(data);
+
+        let copy = false;
+        let articletext = "";
+        let counter = 0;
 
         while (counter < data.length - 3)
         {

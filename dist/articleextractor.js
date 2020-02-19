@@ -219,7 +219,7 @@ function () {
         counter += 1;
       }
 
-      articletext = DataCleaner.cleanText(articletext);
+      articletext = DataCleaner.cleanText(articletext); //TODO maybe not the best idea. Could be hyphen in the text somewhere
 
       if (articletext.split(' - ')[1]) {
         articletext = articletext.split(' - ')[1];
@@ -293,7 +293,8 @@ function () {
     value: function extractAPText(data) {
       var copy = false;
       var articletext = "";
-      var counter = 0;
+      var counter = 0; //TODO add in the various return undefined's here
+
       data = data.split('<div class="Article" data-key="article">')[1];
       data = data.split('<div class="bellow-article">')[0];
 
@@ -391,10 +392,6 @@ function () {
         return undefined;
       }
 
-      var copy = false;
-      var articletext = "";
-      var counter = 0;
-
       if (data.split('<div class="body-content">')[1]) {
         data = data.split('<div class="body-content">')[1];
       } else {
@@ -414,6 +411,9 @@ function () {
       }
 
       data = DataCleaner.cleanHTML(data);
+      var copy = false;
+      var articletext = "";
+      var counter = 0;
 
       while (counter < data.length - 3) {
         var startoftext = data.substring(counter - 3, counter) === '<p>';
