@@ -537,9 +537,16 @@ export class ArticleExtractor
      */
     static extractAUStart(data)
     {
-        if (data.split('<p class="description">')[1].split('</p>')[0])
+        console.log("Received " + data);
+
+        if (data.split('<p class="description">')[1])
         {
-            return data.split('<p class="description">')[1].split('</p>')[0];
+            data = data.split('<p class="description">')[1];
+
+            if (data.split('</p>')[0])
+            {
+                return data.split('</p>')[0];
+            }
         }
 
         return "";
@@ -560,12 +567,14 @@ export class ArticleExtractor
             return "";
         }
 
-        if (data.split('<div id="share-and-comment">')[0])
+        if (data === undefined)
+        {
+            return undefined;
+        }
+
+        if (data.includes('<div id="share-and-comment">'))
         {
             data = data.split('<div id="share-and-comment">')[0];
-        } else
-        {
-            return "";
         }
 
         data = data.split(/<div[^.+]*>/g).join('');

@@ -515,8 +515,14 @@ function () {
   }, {
     key: "extractAUStart",
     value: function extractAUStart(data) {
-      if (data.split('<p class="description">')[1].split('</p>')[0]) {
-        return data.split('<p class="description">')[1].split('</p>')[0];
+      console.log("Received " + data);
+
+      if (data.split('<p class="description">')[1]) {
+        data = data.split('<p class="description">')[1];
+
+        if (data.split('</p>')[0]) {
+          return data.split('</p>')[0];
+        }
       }
 
       return "";
@@ -536,10 +542,12 @@ function () {
         return "";
       }
 
-      if (data.split('<div id="share-and-comment">')[0]) {
+      if (data === undefined) {
+        return undefined;
+      }
+
+      if (data.includes('<div id="share-and-comment">')) {
         data = data.split('<div id="share-and-comment">')[0];
-      } else {
-        return "";
       }
 
       data = data.split(/<div[^.+]*>/g).join('');

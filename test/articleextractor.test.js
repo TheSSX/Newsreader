@@ -22,6 +22,10 @@ var reuters = require('../test_articles/reuters.js');
 
 var eveningstandard = require('../test_articles/eveningstandard.js');
 
+var itv = require('../test_articles/itv.js');
+
+var newscomau = require('../test_articles/newscomau.js');
+
 (0, _mocha.suite)('ArticleExtractor', function () {
   /**
    * Stubbing DataCleaner before each test
@@ -175,6 +179,70 @@ var eveningstandard = require('../test_articles/eveningstandard.js');
       (0, _chai.expect)(argument1).to.not.be.equal(undefined);
       (0, _chai.expect)(argument2).to.not.be.equal("");
       (0, _chai.expect)(returned).to.equal("This works");
+    });
+  });
+  (0, _mocha.describe)('extractITVText', function () {
+    (0, _mocha.it)('Should remove unnecessary content on the page', function () {
+      var data = '<article class="update"><p>Test</p>';
+      (0, _chai.expect)(_articleextractor.ArticleExtractor.extractITVText(data)).to.not.be.equal(undefined);
+      data = '<article class="update"><p>Test</p><div className="update__share">';
+      (0, _chai.expect)(_articleextractor.ArticleExtractor.extractITVText(data)).to.not.be.equal(undefined);
+    });
+    (0, _mocha.it)('Should return text between <p> tags', function () {
+      var returned = _articleextractor.ArticleExtractor.extractITVText(itv);
+
+      (0, _chai.expect)(_articleextractor.DataCleaner.cleanHTML.calledOnce);
+      (0, _chai.expect)(_articleextractor.DataCleaner.cleanText.calledOnce);
+
+      var argument1 = _articleextractor.DataCleaner.cleanHTML.getCall(-1).args[0];
+
+      var argument2 = _articleextractor.DataCleaner.cleanText.getCall(-1).args[0];
+
+      (0, _chai.expect)(argument1).to.not.be.equal(undefined);
+      (0, _chai.expect)(argument2).to.not.be.equal("");
+      (0, _chai.expect)(returned).to.equal("This works");
+    });
+  });
+  (0, _mocha.describe)('extractAUStart', function () {
+    (0, _mocha.it)('Should remove unnecessary content on the page', function () {
+      var data = '<p class="description">Test</p>';
+      (0, _chai.expect)(_articleextractor.ArticleExtractor.extractAUStart(data)).to.be.equal("Test");
+      data = 'Test';
+      (0, _chai.expect)(_articleextractor.ArticleExtractor.extractAUStart(data)).to.be.equal("");
+    });
+  });
+  (0, _mocha.describe)('extractAUEnd', function () {
+    (0, _mocha.it)('Should remove unnecessary content on the page', function () {
+      var data = 'Test';
+      (0, _chai.expect)(_articleextractor.ArticleExtractor.extractAUEnd(data)).to.be.equal(""); //data = '<div class="story-content"><p>Test</p>';
+      //expect(ArticleExtractor.extractAUEnd(data)).to.be.equal("");
+
+      data = '<div class="story-content"><p>Test</p><div id="share-and-comment">';
+      (0, _chai.expect)(_articleextractor.ArticleExtractor.extractAUEnd(data)).to.not.be.equal("");
+    });
+    (0, _mocha.it)('Should return text between <p> tags', function () {
+      var returned = _articleextractor.ArticleExtractor.extractAUEnd(newscomau);
+
+      (0, _chai.expect)(_articleextractor.DataCleaner.cleanHTML.calledOnce);
+      (0, _chai.expect)(_articleextractor.DataCleaner.cleanText.calledOnce);
+
+      var argument1 = _articleextractor.DataCleaner.cleanHTML.getCall(-1).args[0];
+
+      var argument2 = _articleextractor.DataCleaner.cleanText.getCall(-1).args[0];
+
+      (0, _chai.expect)(argument1).to.not.be.equal('');
+      (0, _chai.expect)(argument2).to.not.be.equal("");
+      (0, _chai.expect)(returned).to.equal("This works");
+    });
+  });
+  (0, _mocha.describe)('extractNewsAUText', function () {
+    (0, _mocha.it)('Should return undefined with no data', function () {
+      (0, _chai.expect)(_articleextractor.ArticleExtractor.extractNewsAUText(undefined)).to.be.equal(undefined);
+    });
+    (0, _mocha.it)('Should return the concatenation of the start and end of article', function () {
+      _articleextractor.ArticleExtractor.extractAUStart = (0, _sinon.stub)().returns("This");
+      _articleextractor.ArticleExtractor.extractAUEnd = (0, _sinon.stub)().returns("works");
+      (0, _chai.expect)(_articleextractor.ArticleExtractor.extractNewsAUText("Test")).to.be.equal("This works");
     });
   });
 });

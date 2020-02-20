@@ -5,4 +5,5 @@ jobs:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
-      - run: echo "Builds successfully"
+      - build: babel src --out-dir dist --delete-dir-on-start
+      - test: babel test-es6 --out-dir test --delete-dir-on-start && mocha

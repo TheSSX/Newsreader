@@ -10,6 +10,8 @@ const ap = require('../test_articles/AP.js');
 const sky = require('../test_articles/sky.js');
 const reuters = require('../test_articles/reuters.js');
 const eveningstandard = require('../test_articles/eveningstandard.js');
+const itv = require('../test_articles/itv.js');
+const newscomau = require('../test_articles/newscomau.js');
 
 suite('ArticleExtractor', function () {
 
@@ -56,9 +58,6 @@ suite('ArticleExtractor', function () {
         });
     });
 
-
-
-
     describe('extractBBCText', function () {
 
         it("Should recognise pages that aren't articles", function () {
@@ -74,9 +73,6 @@ suite('ArticleExtractor', function () {
             expect(returned).to.equal("This works");
         });
     });
-
-
-
 
     describe('extractIndependentText', function () {
 
@@ -113,9 +109,6 @@ suite('ArticleExtractor', function () {
         });
     });
 
-
-
-
     describe('extractReutersText', function () {
 
         it('Should return text between <p> tags', function () {
@@ -128,9 +121,6 @@ suite('ArticleExtractor', function () {
         });
     });
 
-
-
-
     describe('extractAPText', function () {
 
         it('Should return text between <p> tags', function () {
@@ -142,9 +132,6 @@ suite('ArticleExtractor', function () {
             expect(returned).to.be.equal("This works");
         });
     });
-
-
-
 
     describe('extractSkyText', function () {
 
@@ -182,6 +169,73 @@ suite('ArticleExtractor', function () {
             expect(argument1).to.not.be.equal(undefined);
             expect(argument2).to.not.be.equal("");
             expect(returned).to.equal("This works");
+        });
+    });
+
+    describe('extractITVText', function () {
+
+        it('Should remove unnecessary content on the page', function () {
+            let data = '<article class="update"><p>Test</p>';
+            expect(ArticleExtractor.extractITVText(data)).to.not.be.equal(undefined);
+            data = '<article class="update"><p>Test</p><div className="update__share">';
+            expect(ArticleExtractor.extractITVText(data)).to.not.be.equal(undefined);
+        });
+
+        it('Should return text between <p> tags', function () {
+            const returned = ArticleExtractor.extractITVText(itv);
+            expect(DataCleaner.cleanHTML.calledOnce);
+            expect(DataCleaner.cleanText.calledOnce);
+            const argument1 = DataCleaner.cleanHTML.getCall(-1).args[0];
+            const argument2 = DataCleaner.cleanText.getCall(-1).args[0];
+            expect(argument1).to.not.be.equal(undefined);
+            expect(argument2).to.not.be.equal("");
+            expect(returned).to.equal("This works");
+        });
+    });
+
+    describe('extractAUStart', function () {
+
+        it('Should remove unnecessary content on the page', function () {
+            let data = '<p class="description">Test</p>';
+            expect(ArticleExtractor.extractAUStart(data)).to.be.equal("Test");
+            data = 'Test';
+            expect(ArticleExtractor.extractAUStart(data)).to.be.equal("");
+        });
+    });
+
+    describe('extractAUEnd', function () {
+
+        it('Should remove unnecessary content on the page', function () {
+            let data = 'Test';
+            expect(ArticleExtractor.extractAUEnd(data)).to.be.equal("");
+            //data = '<div class="story-content"><p>Test</p>';
+            //expect(ArticleExtractor.extractAUEnd(data)).to.be.equal("");
+            data = '<div class="story-content"><p>Test</p><div id="share-and-comment">';
+            expect(ArticleExtractor.extractAUEnd(data)).to.not.be.equal("");
+        });
+
+        it('Should return text between <p> tags', function () {
+            const returned = ArticleExtractor.extractAUEnd(newscomau);
+            expect(DataCleaner.cleanHTML.calledOnce);
+            expect(DataCleaner.cleanText.calledOnce);
+            const argument1 = DataCleaner.cleanHTML.getCall(-1).args[0];
+            const argument2 = DataCleaner.cleanText.getCall(-1).args[0];
+            expect(argument1).to.not.be.equal('');
+            expect(argument2).to.not.be.equal("");
+            expect(returned).to.equal("This works");
+        });
+    });
+
+    describe('extractNewsAUText', function () {
+
+        it('Should return undefined with no data', function () {
+           expect(ArticleExtractor.extractNewsAUText(undefined)).to.be.equal(undefined);
+        });
+
+        it('Should return the concatenation of the start and end of article', function () {
+            ArticleExtractor.extractAUStart = stub().returns("This");
+            ArticleExtractor.extractAUEnd = stub().returns("works");
+            expect(ArticleExtractor.extractNewsAUText("Test")).to.be.equal("This works");
         });
     });
 });
