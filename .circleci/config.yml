@@ -1,9 +1,13 @@
 version: 2.1
+commands:
+  build-source:
+    description: 'Transpiles the ES6 source code into ES5 dist code'
+    steps:
+      - run: babel src --out-dir dist --delete-dir-on-start --quiet && echo Transpiled source files
 jobs:
   build:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
-      - build: babel src --out-dir dist --delete-dir-on-start
-      - test: babel test-es6 --out-dir test --delete-dir-on-start && mocha
+      - build-source
