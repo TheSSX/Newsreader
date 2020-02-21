@@ -3,7 +3,7 @@ commands:
   build-source:
     description: 'Transpiles the ES6 source code into ES5 dist code'
     steps:
-      - run: babel src --out-dir dist --delete-dir-on-start --quiet && echo Transpiled source files
+      - run: npm install && babel src --out-dir dist --delete-dir-on-start --quiet && echo Transpiled source files
 jobs:
   build:
     docker:
