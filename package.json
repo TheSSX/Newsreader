@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/jquery.js",
   "scripts": {
-    "build": "babel src --out-dir dist --delete-dir-on-start",
-    "test": "npm run-script build && babel test-es6 --out-dir test --delete-dir-on-start && mocha"
+    "build": "babel src --out-dir dist --delete-dir-on-start --quiet && echo Transpiled source files",
+    "test": "npm run-script build && babel test-es6 --out-dir test --delete-dir-on-start --quiet && echo Transpiled test files && mocha"
   },
   "repository": {
     "type": "git",
