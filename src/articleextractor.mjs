@@ -537,8 +537,6 @@ export class ArticleExtractor
      */
     static extractAUStart(data)
     {
-        console.log("Received " + data);
-
         if (data.split('<p class="description">')[1])
         {
             data = data.split('<p class="description">')[1];

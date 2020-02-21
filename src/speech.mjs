@@ -1,5 +1,5 @@
-import {language_choice, pitch, rate, volume} from "./preferences";
-import {dialects} from "./language_config";
+import {language_choice, pitch, rate, volume} from "./preferences.js";
+import {dialects} from "./language_config.js";
 
 /**
  Class for a speech object

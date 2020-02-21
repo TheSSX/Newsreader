@@ -8,8 +8,8 @@
         "<all_urls>"
       ],
       "js": [
-        "dist/jquery.js",
-        "dist/popup.js"
+        "src/jquery.js",
+        "src/popup.mjs"
       ]
     }
   ],

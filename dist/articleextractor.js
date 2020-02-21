@@ -515,8 +515,6 @@ function () {
   }, {
     key: "extractAUStart",
     value: function extractAUStart(data) {
-      console.log("Received " + data);
-
       if (data.split('<p class="description">')[1]) {
         data = data.split('<p class="description">')[1];
 

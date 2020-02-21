@@ -1,12 +1,11 @@
-import {PageParser} from "./pageparser";
-import {sentences, sources, topics} from "./preferences";
+import {PageParser} from "./pageparser.mjs";
+import {sentences, sources, topics} from "./preferences.js";
 
 /**
  Class for object to query random sources for each topic
  */
 export class Bulletin
 {
-
     /**
      * For each topic specified in the list the user wants to hear from:
      * 1) Pick a random news source to fetch this topc from

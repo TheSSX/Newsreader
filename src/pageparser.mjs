@@ -1,10 +1,10 @@
-import {Article} from "./article";
-import {ArticleExtractor, DataCleaner} from "./articleextractor";
-import {Translator} from "./translator";
-import {language_choice, sources} from "./preferences";
-import {languages, translation_unavailable} from "./language_config";
-import {Speech} from "./speech";
-import {Summarise} from "./summarise";
+import {Article} from "./article.mjs";
+import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
+import {Translator} from "./translator.mjs";
+import {language_choice, sources} from "./preferences.js";
+import {languages, translation_unavailable} from "./language_config.js";
+import {Speech} from "./speech.mjs";
+import {Summarise} from "./summarise.mjs";
 
 /**
  Class for object to parse source article pages
