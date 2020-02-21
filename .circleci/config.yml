@@ -6,16 +6,16 @@ jobs:
     steps:
       - checkout
       - run:
-        name: update-npm
-        command: 'sudo npm install -g npm@latest'
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
-        key: dependency-cache-{{ checksum "package-lock.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-        name: install-npm-wee
-        command: npm install
+          name: install-npm-wee
+          command: npm install
       - run:
-        name: build
-        command: npm run-script build
+          name: build
+          command: npm run-script build
       - run:
-        name: test
-        command: npm test
+          name: test
+          command: npm test
