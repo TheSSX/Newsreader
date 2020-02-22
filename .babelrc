@@ -1,0 +1,38 @@
+{
+  "presets": ["@babel/preset-env"],
+  "plugins": [[
+    "@babel/plugin-transform-runtime"
+  ],
+    [
+      "search-and-replace",
+      {
+        "rules": [
+          {
+            "search": "./article.mjs",
+            "replace": "../dist/article"
+          },
+          {
+            "search": "./articleextractor.mjs",
+            "replace": "../dist/articleextractor"
+          },
+          {
+            "search": "./speech.mjs",
+            "replace": "../dist/speech"
+          },
+          {
+            "search": "./translator.mjs",
+            "replace": "../dist/translator"
+          },
+          {
+            "search": "./summarise.mjs",
+            "replace": "../dist/summarise"
+          },
+          {
+            "search": "./translator.mjs",
+            "replace": "../dist/translator"
+          }
+        ]
+      }
+    ]
+  ]
+}

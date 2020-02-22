@@ -6,7 +6,6 @@ import {sentences, sources, topics} from "./preferences.js";
  */
 export class Bulletin
 {
-
     /**
      * For each topic specified in the list the user wants to hear from:
      * 1) Pick a random news source to fetch this topc from
