@@ -60,7 +60,7 @@ suite('ArticleExtractor', function () {
 
         it('Should return text between <p> tags', function () {
             const returned = ArticleExtractor.extractGuardianText(guardian);
-            expect(fake_cleanText.calledOnce);
+            expect(fake_cleanText.calledOnce).to.be.equal(true);
             const argument = fake_cleanText.getCall(-1).args[0];
             expect(argument).to.not.be.equal("");
             expect(returned).to.equal("This works");
@@ -76,7 +76,7 @@ suite('ArticleExtractor', function () {
 
         it('Should return text between <p> tags', function () {
             const returned = ArticleExtractor.extractBBCText(bbc);
-            expect(fake_cleanText.calledOnce);
+            expect(fake_cleanText.calledOnce).to.be.equal(true);
             const argument = fake_cleanText.getCall(-1).args[0];
             expect(argument).to.not.be.equal("");
             expect(returned).to.equal("This works");
@@ -108,8 +108,8 @@ suite('ArticleExtractor', function () {
 
         it('Should return text between <p> tags', function () {
             const returned = ArticleExtractor.extractIndependentText(independent);
-            expect(fake_cleanHTML.calledOnce);
-            expect(fake_cleanText.calledOnce);
+            expect(fake_cleanHTML.calledOnce).to.be.equal(true);
+            expect(fake_cleanText.calledOnce).to.be.equal(true);
             const argument1 = fake_cleanHTML.getCall(-1).args[0];
             const argument2 = fake_cleanText.getCall(-1).args[0];
             expect(argument1).to.not.be.equal(undefined);
@@ -123,7 +123,7 @@ suite('ArticleExtractor', function () {
         it('Should return text between <p> tags', function () {
             DataCleaner.cleanText = stub().returns("Reuters - This worksAll quotes delayed a minimum of 15 minutes");
             const returned = ArticleExtractor.extractReutersText(reuters);
-            expect(DataCleaner.cleanText.calledOnce);
+            expect(DataCleaner.cleanText.calledOnce).to.be.equal(true);
             const argument = DataCleaner.cleanText.getCall(-1).args[0];
             expect(argument).to.not.be.equal("");
             expect(returned).to.be.equal("This works");
@@ -135,7 +135,7 @@ suite('ArticleExtractor', function () {
         it('Should return text between <p> tags', function () {
             DataCleaner.cleanText = stub().returns("(AP) — This works");
             const returned = ArticleExtractor.extractAPText(ap);
-            expect(DataCleaner.cleanText.calledOnce);
+            expect(DataCleaner.cleanText.calledOnce).to.be.equal(true);
             const argument = DataCleaner.cleanText.getCall(-1).args[0];
             expect(argument).to.not.be.equal("");
             expect(returned).to.be.equal("This works");
@@ -146,7 +146,7 @@ suite('ArticleExtractor', function () {
 
         it('Should return text between <p> tags', function () {
             const returned = ArticleExtractor.extractSkyText(sky);
-            expect(fake_cleanText.calledOnce);
+            expect(fake_cleanText.calledOnce).to.be.equal(true);
             const argument = fake_cleanText.getCall(-1).args[0];
             expect(argument).to.not.be.equal("");
             expect(returned).to.equal("This works");
@@ -171,8 +171,8 @@ suite('ArticleExtractor', function () {
 
         it('Should return text between <p> tags', function () {
             const returned = ArticleExtractor.extractEveningStandardText(eveningstandard);
-            expect(fake_cleanHTML.calledOnce);
-            expect(fake_cleanText.calledOnce);
+            expect(fake_cleanHTML.calledOnce).to.be.equal(true);
+            expect(fake_cleanText.calledOnce).to.be.equal(true);
             const argument1 = fake_cleanHTML.getCall(-1).args[0];
             const argument2 = fake_cleanText.getCall(-1).args[0];
             expect(argument1).to.not.be.equal(undefined);
@@ -192,8 +192,8 @@ suite('ArticleExtractor', function () {
 
         it('Should return text between <p> tags', function () {
             const returned = ArticleExtractor.extractITVText(itv);
-            expect(fake_cleanHTML.calledOnce);
-            expect(fake_cleanText.calledOnce);
+            expect(fake_cleanHTML.calledOnce).to.be.equal(true);
+            expect(fake_cleanText.calledOnce).to.be.equal(true);
             const argument1 = fake_cleanHTML.getCall(-1).args[0];
             const argument2 = fake_cleanText.getCall(-1).args[0];
             expect(argument1).to.not.be.equal(undefined);
@@ -225,8 +225,8 @@ suite('ArticleExtractor', function () {
 
         it('Should return text between <p> tags', function () {
             const returned = ArticleExtractor.extractAUEnd(newscomau);
-            expect(fake_cleanHTML.calledOnce);
-            expect(fake_cleanText.calledOnce);
+            expect(fake_cleanHTML.calledOnce).to.be.equal(true);
+            expect(fake_cleanText.calledOnce).to.be.equal(true);
             const argument1 = fake_cleanHTML.getCall(-1).args[0];
             const argument2 = fake_cleanText.getCall(-1).args[0];
             expect(argument1).to.not.be.equal('');

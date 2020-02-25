@@ -13,14 +13,12 @@ describe('Article', function () {
     });
 
     it('Should read aloud its parameters', function () {
-        const fake_read = stub(Speech, "speech").callsFake(function () {
-           return true;
-        });
+        Speech.speak = stub().returns(true);
         new Article("test1", "test2", "test3", "test4", "test5").read();
-        expect(fake_read.callCount).to.be.equal(4);
-        expect(fake_read.getCall(0).calledWithExactly("test1")).to.be.equal(true);
-        expect(fake_read.getCall(1).calledWithExactly("test2")).to.be.equal(true);
-        expect(fake_read.getCall(2).calledWithExactly("test3")).to.be.equal(true);
-        expect(fake_read.getCall(4).calledWithExactly("test5")).to.be.equal(true);
+        expect(Speech.speak.callCount).to.be.equal(4);
+        expect(Speech.speak.getCall(0).calledWithExactly("test1")).to.be.equal(true);
+        expect(Speech.speak.getCall(1).calledWithExactly("test2")).to.be.equal(true);
+        expect(Speech.speak.getCall(2).calledWithExactly("test3")).to.be.equal(true);
+        expect(Speech.speak.getCall(4).calledWithExactly("test5")).to.be.equal(true);
     });
 });
