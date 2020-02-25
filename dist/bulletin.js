@@ -11,7 +11,7 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _pageparser = require("./pageparser.mjs");
+var _pageparser = require("../dist/pageparser");
 
 var _preferences = require("./preferences.js");
 

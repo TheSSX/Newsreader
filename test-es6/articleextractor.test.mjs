@@ -1,6 +1,6 @@
 import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
-import {stub, restore} from "sinon";
+import {stub} from "sinon";
 
 import {ArticleExtractor, DataCleaner} from "../dist/articleextractor.js";
 const guardian = require('../test_articles/guardian.js');
