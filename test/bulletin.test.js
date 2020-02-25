@@ -40,8 +40,7 @@ var fake_getArticle, fake_Article, fake_read;
 
       _bulletin.Bulletin.fetchNews();
 
-      (0, _chai.expect)(_pageparser.PageParser.getArticle.callCount).to.be.equal(9); // 9 topics
-
+      (0, _chai.expect)(_pageparser.PageParser.getArticle.callCount).to.be.equal(Object.keys(_preferences.topics).length);
       (0, _chai.expect)(_bulletin.Bulletin.retryTopic.called).to.be.equal(false);
     });
   });

@@ -35,7 +35,7 @@ suite('Bulletin', function () {
             PageParser.getArticle = stub().resolves(new Article("test", "test", "test", "test", "test"));
 
             Bulletin.fetchNews();
-            expect(PageParser.getArticle.callCount).to.be.equal(9);     // 9 topics
+            expect(PageParser.getArticle.callCount).to.be.equal(Object.keys(topics).length);
             expect(Bulletin.retryTopic.called).to.be.equal(false);
         });
     });
