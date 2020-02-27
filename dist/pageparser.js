@@ -80,7 +80,7 @@ function () {
           return PageParser.extractNewsAU(topic, topiclink, sentences);
 
         default:
-          throw TypeError;
+          throw new TypeError('Invalid source');
       }
     }
     /**

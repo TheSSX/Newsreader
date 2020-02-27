@@ -5,6 +5,7 @@ import {PageParser} from "../dist/pageparser.js";
 import {Article} from "../dist/article.js";
 import {topics} from "../dist/preferences.js";
 import {Bulletin} from "../dist/bulletin.js";
+import {DataCleaner} from "../dist/articleextractor";
 
 suite('Bulletin', function () {
 
@@ -34,6 +35,8 @@ suite('Bulletin', function () {
             Bulletin.fetchNews();
             expect(stub_getArticle.callCount).to.be.equal(Object.keys(topics).length);
             expect(stub_retryTopic.called).to.be.equal(true);
+            const argument = stub_retryTopic.getCall(-1).args[1];
+            expect(argument).to.be.equal(2);
         });
 
         it('Should retry fetching an article for a topic if initial attempt did not succeed', function () {

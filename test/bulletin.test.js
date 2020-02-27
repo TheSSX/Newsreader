@@ -14,24 +14,16 @@ var _preferences = require("../dist/preferences.js");
 
 var _bulletin = require("../dist/bulletin.js");
 
-var fake_getArticle, fake_Article, fake_read;
+var _articleextractor = require("../dist/articleextractor");
+
 (0, _mocha.suite)('Bulletin', function () {
-  // beforeEach(function () {
-  //     // fake_Article = stub(new Article("test", "test", "test", "test", "test"), "read").callsFake(function () {
-  //     //    return true;
-  //     // });
-  //     fake_Article = new Article("test", "test", "test", "test", "test");
-  //     fake_read = stub(fake_Article, "read").callsFake(function () {
-  //        return true;
-  //     });
-  //
-  //     fake_getArticle = stub(PageParser, "getArticle").resolves(fake_Article);
-  // });
   (0, _mocha.afterEach)(function () {
     (0, _sinon.restore)();
   });
   (0, _mocha.describe)('fetchNews', function () {
-    // TODO finish this off
+    // TODO finish this off by trying to stub read of Article
+    // Currently getting error TypeError: Cannot stub non-existent own property read
+    // Articles online indicating a module called proxyquire might be needed
     (0, _mocha.it)('Should select an article from each topic and read it aloud', function () {
       var stub_retryTopic = (0, _sinon.stub)(_bulletin.Bulletin, "retryTopic").callsFake(function () {
         return true;
@@ -49,6 +41,8 @@ var fake_getArticle, fake_Article, fake_read;
 
       (0, _chai.expect)(stub_getArticle.callCount).to.be.equal(Object.keys(_preferences.topics).length);
       (0, _chai.expect)(stub_retryTopic.called).to.be.equal(true);
+      var argument = stub_retryTopic.getCall(-1).args[1];
+      (0, _chai.expect)(argument).to.be.equal(2);
     });
     (0, _mocha.it)('Should retry fetching an article for a topic if initial attempt did not succeed', function () {
       var stub_getArticle = (0, _sinon.stub)(_pageparser.PageParser, "getArticle")["throws"](new TypeError());

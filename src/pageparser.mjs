@@ -42,7 +42,7 @@ export class PageParser
             case "News.com.au":
                 return PageParser.extractNewsAU(topic, topiclink, sentences);
             default:
-                throw TypeError;
+                throw new TypeError('Invalid source');
         }
     }
 
