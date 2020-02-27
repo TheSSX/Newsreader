@@ -3,24 +3,10 @@ import {expect} from "chai";
 import {stub, spy, restore} from "sinon";
 import {PageParser} from "../dist/pageparser.js";
 import {Article} from "../dist/article.js";
-import {sentences, sources, topics} from "../dist/preferences.js";
+import {topics} from "../dist/preferences.js";
 import {Bulletin} from "../dist/bulletin.js";
 
-let fake_getArticle, fake_Article, fake_read;
-
 suite('Bulletin', function () {
-
-    // beforeEach(function () {
-    //     // fake_Article = stub(new Article("test", "test", "test", "test", "test"), "read").callsFake(function () {
-    //     //    return true;
-    //     // });
-    //     fake_Article = new Article("test", "test", "test", "test", "test");
-    //     fake_read = stub(fake_Article, "read").callsFake(function () {
-    //        return true;
-    //     });
-    //
-    //     fake_getArticle = stub(PageParser, "getArticle").resolves(fake_Article);
-    // });
 
     afterEach(function () {
         restore();
