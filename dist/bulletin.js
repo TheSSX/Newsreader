@@ -48,17 +48,19 @@ function () {
 
         var topiclink = _preferences.topics[topic][source]; // for the selected source, get the URL to the selected topic page
 
-        var data = _pageparser.PageParser.getArticle(source, topic, topiclink, _preferences.sentences); // send source, topic and number of sentences to summarise down to
+        try {
+          var data = _pageparser.PageParser.getArticle(source, topic, topiclink, _preferences.sentences); // send source, topic and number of sentences to summarise down to
 
 
-        data.then(function (article) // returned in form of promise with value of article
-        {
-          try {
+          data.then(function (article) // returned in form of promise with value of article
+          {
             article.read();
-          } catch (TypeError) {
-            Bulletin.retryTopic(topic, 2); // retry fetching an article using recursion
-          }
-        });
+          })["catch"](function () {
+            Bulletin.retryTopic(topic, 2);
+          });
+        } catch (TypeError) {
+          Bulletin.retryTopic(topic, 2); // retry fetching an article using recursion
+        }
       };
 
       for (var i = 0; i < Object.keys(_preferences.topics).length; i++) // change i< to prevent unnecessary credits being used up
@@ -73,22 +75,24 @@ function () {
 
       var topiclink = _preferences.topics[topic][source];
 
-      var data = _pageparser.PageParser.getArticle(source, topic, topiclink, _preferences.sentences); // send source, topic and number of sentences to summarise to
+      try {
+        var data = _pageparser.PageParser.getArticle(source, topic, topiclink, _preferences.sentences); // send source, topic and number of sentences to summarise to
 
 
-      data.then(function (article) // returned in form of promise with value of article
-      {
-        try {
+        data.then(function (article) // returned in form of promise with value of article
+        {
           article.read();
-        } catch (TypeError) {
-          if (attempt === 10) // stop recursive loop, not managed to fetch an article for the topic
-            {
-              console.log("Failed on topic " + topic);
-            } else {
-            Bulletin.retryTopic(topic, ++attempt); // try again, increase number of attempts
-          }
+        })["catch"](function () {
+          Bulletin.retryTopic(topic, ++attempt);
+        });
+      } catch (TypeError) {
+        if (attempt === 10) // stop recursive loop, not managed to fetch an article for the topic
+          {
+            console.log("Failed on topic " + topic);
+          } else {
+          Bulletin.retryTopic(topic, ++attempt); // try again, increase number of attempts
         }
-      });
+      }
     }
   }]);
   return Bulletin;
