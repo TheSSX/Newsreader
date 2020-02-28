@@ -5,6 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.callTranslation = callTranslation;
 exports.PageParser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -102,18 +103,23 @@ function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                /**
-                 * GETTING RANDOM LINK FOR TOPIC
-                 */
+                if (!(sentences <= 0)) {
+                  _context.next = 2;
+                  break;
+                }
+
+                return _context.abrupt("return", undefined);
+
+              case 2:
                 if (topic === "uk") {
                   topic = "uk-news";
                 }
 
                 publisher = "The Guardian";
-                _context.next = 4;
+                _context.next = 6;
                 return PageParser.extractPageData(topiclink);
 
-              case 4:
+              case 6:
                 linkdata = _context.sent;
                 linkdata = linkdata.split('<a href="' + _preferences.sources[publisher] + '' + topic + '/');
                 linksarr = [];
@@ -124,6 +130,14 @@ function () {
 
                 links = Array.from(new Set(linksarr)); //array of URLs for articles
 
+                if (!(links === undefined || links.length === 0)) {
+                  _context.next = 13;
+                  break;
+                }
+
+                return _context.abrupt("return", undefined);
+
+              case 13:
                 do {
                   randomlink = _preferences.sources[publisher] + topic + '/' + links[Math.floor(Math.random() * links.length)]; //select a random article
                 } while (randomlink.startsWith(_preferences.sources[publisher] + topic + '/video/')); //articles devoted to a video are no good
@@ -133,15 +147,15 @@ function () {
                  */
 
 
-                _context.next = 12;
+                _context.next = 16;
                 return PageParser.extractPageData(randomlink);
 
-              case 12:
+              case 16:
                 data = _context.sent;
-                _context.next = 15;
+                _context.next = 19;
                 return _summarise.Summarise.summarise(randomlink, sentences);
 
-              case 15:
+              case 19:
                 smmrydata = _context.sent;
 
                 //send article to SMMRY
@@ -182,22 +196,22 @@ function () {
                   }
 
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context.next = 19;
+                  _context.next = 23;
                   break;
                 }
 
                 return _context.abrupt("return", undefined);
 
-              case 19:
+              case 23:
                 if (!(_preferences.language_choice !== "English")) {
-                  _context.next = 24;
+                  _context.next = 28;
                   break;
                 }
 
-                _context.next = 22;
+                _context.next = 26;
                 return callTranslation(publisher, topic, headline, text);
 
-              case 22:
+              case 26:
                 translations = _context.sent;
 
                 if (translations !== undefined) {
@@ -209,10 +223,10 @@ function () {
                   new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
                 }
 
-              case 24:
+              case 28:
                 return _context.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 25:
+              case 29:
               case "end":
                 return _context.stop();
             }

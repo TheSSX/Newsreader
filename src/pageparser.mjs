@@ -58,6 +58,11 @@ export class PageParser
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
+
+        if (sentences <= 0)
+        {
+            return undefined;
+        }
         
         if (topic === "uk")
         {
@@ -75,6 +80,11 @@ export class PageParser
         }
 
         const links = Array.from(new Set(linksarr));    //array of URLs for articles
+
+        if (links === undefined || links.length === 0)
+        {
+            return undefined;
+        }
 
         let randomlink;
 
@@ -1311,9 +1321,11 @@ export class PageParser
         {
         });    //not convinced this actually returns or throws an error
     }
+
+
 }
 
-async function callTranslation(publisher, topic, headline, text)
+export async function callTranslation(publisher, topic, headline, text)
 {
     const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
     const topictranslatedata = await Translator.translate(topic, languages[language_choice]);

@@ -1,7 +1,7 @@
 import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
 import {stub, spy, restore} from "sinon";
-import {PageParser} from "../dist/pageparser.js";
+import {PageParser, callTranslation} from "../dist/pageparser.js";
 import {Article} from "../dist/article.js";
 import {Bulletin} from "../dist/bulletin.js";
 import {ArticleExtractor, DataCleaner} from "../dist/articleextractor.js";
@@ -11,7 +11,17 @@ import {languages, translation_unavailable} from "../dist/language_config.js";
 import {Speech} from "../dist/speech.js";
 import {Summarise} from "../dist/summarise.js";
 
+const test_smmry_json = {
+    'sm_api_title': 'test-headline',
+    'sm_api_content': 'test-content',
+    'sm_api_error': 0
+};
+
 suite ('PageParser', function () {
+
+    afterEach(function () {
+        restore();
+    });
 
     describe('getArticle', function () {
 
@@ -69,6 +79,62 @@ suite ('PageParser', function () {
             expect(function () {
                 PageParser.getArticle("test", "test", "test", "test");
             }).to.throw(TypeError);
+        });
+    });
+
+    describe('extractGuardian', function () {
+
+        it('Should find no links on an invalid page',  async function () {
+
+            const stub_extractPageData = stub(PageParser, 'extractPageData').returns("");
+
+            const result = await PageParser.extractGuardian("test", "test-link", 3);
+            expect(stub_extractPageData.called).to.be.equal(true);
+            const argument = stub_extractPageData.getCall(-1).args[0];
+            expect(argument).to.be.equal("test-link");
+            expect(result).to.be.equal(undefined);
+        });
+
+        it('Should return a valid article', async function () {
+
+            //Should return undefined for articles of zero or less requested length
+            let result = await PageParser.extractGuardian(topic, "test-link", 0);
+            expect(result).to.be.equal(undefined);
+
+            const topic = Object.keys(topics)[0];   //random topic
+            const test_link = sources["The Guardian"] + topic + '/test-link1';      //test link
+
+            //Mocking a topic page with article links
+            const stub_extractPageData = stub(PageParser, 'extractPageData').returns('<p>Test</p><a href="' + test_link + '"</a><p>Test</p>');
+
+            //Mocking a summarised article
+            const stub_summarise = stub(Summarise, 'summarise').returns(test_smmry_json);
+
+            //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
+            const stub_extractGuardianText = stub(ArticleExtractor, 'extractGuardianText').returns(undefined);
+
+            //Can't figure this out at all
+            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
+            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
+
+            result = await PageParser.extractGuardian(topic, "test", 3);
+
+            //First for getting links on topic page, second for getting article page
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            const argument1 = stub_extractPageData.getCall(-2).args[0];
+            const argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.equal(test_link);
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+
+            //Manual article extraction shouldn't have been called
+            expect(stub_extractGuardianText.called).to.be.equal(false);
+
+            //expect(stub_callTranslation.called).to.be.equal(false);
+
+            expect(typeof result).to.be.equal(Article);
         });
     });
 });
