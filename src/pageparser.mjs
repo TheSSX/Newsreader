@@ -110,7 +110,7 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = data.split('<title>')[1].split('|')[0];      //get headline from article data
+            headline = data.split('<title>')[1].split(' |')[0];      //get headline from article data
             text = ArticleExtractor.extractGuardianText(data);
             if (text !== undefined)
             {
@@ -121,6 +121,9 @@ export class PageParser
 
                 text = "Not enough summary credits! " + text;
             }
+            else {
+                return undefined;
+            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -129,7 +132,7 @@ export class PageParser
 
             if (error === 2)
             {
-                headline = data.split('<title>')[1].split('|')[0];      //get headline from article data
+                headline = data.split('<title>')[1].split(' |')[0];      //get headline from article data
                 text = ArticleExtractor.extractGuardianText(data);
                 if (text !== undefined)
                 {
@@ -139,6 +142,10 @@ export class PageParser
                     }
 
                     text = "Not enough summary credits! " + text;
+                }
+                else
+                {
+                    return undefined;
                 }
             }
         }
@@ -217,6 +224,7 @@ export class PageParser
          */
 
         const data = await PageParser.extractPageData(randomlink);  //fetch data from article page
+        console.log("Here we have " + data);
 
         let headline, text;
 
@@ -228,7 +236,12 @@ export class PageParser
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
-            headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
+            headline = data.split('<title>')[1];
+            console.log("Headline: " + headline);
+            if (headline.split(' - BBC News')[0])
+            {
+                headline = headline.split(' - BBC News')[0];  //get headline from article data
+            }
             text = ArticleExtractor.extractBBCText(data);
             if (text !== undefined)
             {
@@ -247,7 +260,7 @@ export class PageParser
 
             if (error === 2)
             {
-                headline = data.split('<title>')[1].split('- BBC News')[0];      //get headline from article data
+                headline = data.split('<title>')[1].split(' - BBC News')[0];      //get headline from article data
                 text = ArticleExtractor.extractBBCText(data);
                 if (text !== undefined)
                 {

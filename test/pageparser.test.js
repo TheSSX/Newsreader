@@ -2,9 +2,9 @@
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+
+var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
@@ -32,10 +32,15 @@ var _speech = require("../dist/speech.js");
 
 var _summarise = require("../dist/summarise.js");
 
-var test_smmry_json = {
+var valid_test_smmry_json = {
   'sm_api_title': 'test-headline',
   'sm_api_content': 'test-content',
   'sm_api_error': 0
+};
+var invalid_test_smmry_json = {
+  'sm_api_title': 'test-headline',
+  'sm_api_content': 'test-content',
+  'sm_api_error': 2
 };
 (0, _mocha.suite)('PageParser', function () {
   (0, _mocha.afterEach)(function () {
@@ -95,50 +100,16 @@ var test_smmry_json = {
     });
   });
   (0, _mocha.describe)('extractGuardian', function () {
-    (0, _mocha.it)('Should find no links on an invalid page',
-    /*#__PURE__*/
-    (0, _asyncToGenerator2["default"])(
-    /*#__PURE__*/
-    _regenerator["default"].mark(function _callee() {
-      var stub_extractPageData, result, argument;
-      return _regenerator["default"].wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns("");
-              _context.next = 3;
-              return _pageparser.PageParser.extractGuardian("test", "test-link", 3);
-
-            case 3:
-              result = _context.sent;
-              (0, _chai.expect)(stub_extractPageData.called).to.be.equal(true);
-              argument = stub_extractPageData.getCall(-1).args[0];
-              (0, _chai.expect)(argument).to.be.equal("test-link");
-              (0, _chai.expect)(result).to.be.equal(undefined);
-
-            case 8:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    })));
     (0, _mocha.it)('Should return a valid article',
     /*#__PURE__*/
     (0, _asyncToGenerator2["default"])(
     /*#__PURE__*/
-    _regenerator["default"].mark(function _callee2() {
-      var result, topic, test_link, stub_extractPageData, stub_summarise, stub_extractGuardianText, argument1, argument2;
-      return _regenerator["default"].wrap(function _callee2$(_context2) {
+    _regenerator["default"].mark(function _callee() {
+      var topic, test_link, stub_extractPageData, stub_summarise, stub_extractGuardianText, sentences, result, argument1, argument2, summarise_arg1, summarise_arg2;
+      return _regenerator["default"].wrap(function _callee$(_context) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context.prev = _context.next) {
             case 0:
-              _context2.next = 2;
-              return _pageparser.PageParser.extractGuardian(topic, "test-link", 0);
-
-            case 2:
-              result = _context2.sent;
-              (0, _chai.expect)(result).to.be.equal(undefined);
               topic = Object.keys(_preferences.topics)[0]; //random topic
 
               test_link = _preferences.sources["The Guardian"] + topic + '/test-link1'; //test link
@@ -146,17 +117,18 @@ var test_smmry_json = {
 
               stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<p>Test</p><a href="' + test_link + '"</a><p>Test</p>'); //Mocking a summarised article
 
-              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
-              stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns(undefined); //Can't figure this out at all
+              stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns(undefined);
+              sentences = 4; //Can't figure this out at all
               //TypeError: (0 , _sinon.stub)(...).resolves is not a function
               //const stub_callTranslation = stub(callTranslation).resolves(undefined);
 
-              _context2.next = 11;
-              return _pageparser.PageParser.extractGuardian(topic, "test", 3);
+              _context.next = 8;
+              return _pageparser.PageParser.extractGuardian(topic, "test", sentences);
 
-            case 11:
-              result = _context2.sent;
+            case 8:
+              result = _context.sent;
               //First for getting links on topic page, second for getting article page
               (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
               argument1 = stub_extractPageData.getCall(-2).args[0];
@@ -164,18 +136,315 @@ var test_smmry_json = {
               (0, _chai.expect)(argument1).to.be.equal("test");
               (0, _chai.expect)(argument2).to.be.equal(test_link); //SMMRY should have been called
 
-              (0, _chai.expect)(stub_summarise.called).to.be.equal(true); //Manual article extraction shouldn't have been called
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences); //Manual article extraction shouldn't have been called
 
               (0, _chai.expect)(stub_extractGuardianText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
+              //My hacky way of determining if the result is an Article object
 
-              (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal(_article.Article);
+              (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test")));
+              stub_extractPageData.restore();
+              stub_summarise.restore();
+              stub_extractGuardianText.restore();
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"</a><p>Test</p>');
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
+              stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns("Test article");
+              _context.next = 29;
+              return _pageparser.PageParser.extractGuardian(topic, "test", sentences);
 
-            case 20:
+            case 29:
+              result = _context.sent;
+              //First for getting links on topic page, second for getting article page
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences);
+              (0, _chai.expect)(stub_extractGuardianText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
+              //My hacky way of determining if the result is an Article object
+
+              (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test")));
+              (0, _chai.expect)(result.title).to.be.equal('Test headline');
+              (0, _chai.expect)(result.text).to.be.equal('Not enough summary credits! Test article');
+
+            case 44:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    })));
+    (0, _mocha.it)('Should not return an article if an error occurs',
+    /*#__PURE__*/
+    (0, _asyncToGenerator2["default"])(
+    /*#__PURE__*/
+    _regenerator["default"].mark(function _callee2() {
+      var topic, test_link, stub_extractPageData, result, argument, sentences, stub_summarise, stub_extractGuardianText, argument1, argument2, summarise_arg1, summarise_arg2;
+      return _regenerator["default"].wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              topic = Object.keys(_preferences.topics)[0]; //random topic
+
+              test_link = _preferences.sources["The Guardian"] + topic + '/test-link1'; //test link
+              //No articles found
+
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns("");
+              _context2.next = 5;
+              return _pageparser.PageParser.extractGuardian(topic, test_link, 3);
+
+            case 5:
+              result = _context2.sent;
+              (0, _chai.expect)(stub_extractPageData.called).to.be.equal(true);
+              argument = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument).to.be.equal(test_link);
+              (0, _chai.expect)(result).to.be.equal(undefined); //Zero or fewer sentences requested in article
+
+              _context2.next = 12;
+              return _pageparser.PageParser.extractGuardian(topic, test_link, 0);
+
+            case 12:
+              result = _context2.sent;
+              (0, _chai.expect)(result).to.be.equal(undefined); //Smmry didn't work and manual text extraction didn't work either
+
+              sentences = 3;
+              stub_extractPageData.restore();
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"</a><p>Test</p>');
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
+              stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns(undefined);
+              _context2.next = 21;
+              return _pageparser.PageParser.extractGuardian(topic, "test", sentences);
+
+            case 21:
+              result = _context2.sent;
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences);
+              (0, _chai.expect)(stub_extractGuardianText.called).to.be.equal(true);
+              (0, _chai.expect)(result).to.be.equal(undefined);
+              stub_extractPageData.restore();
+              stub_summarise.restore();
+              stub_extractGuardianText.restore(); //Smmry did work but manual text extraction didn't
+
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"</a><p>Test</p>');
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(invalid_test_smmry_json);
+              stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns(undefined);
+              _context2.next = 42;
+              return _pageparser.PageParser.extractGuardian(topic, "test", sentences);
+
+            case 42:
+              result = _context2.sent;
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences);
+              (0, _chai.expect)(stub_extractGuardianText.called).to.be.equal(true);
+              (0, _chai.expect)(result).to.be.equal(undefined);
+
+            case 55:
             case "end":
               return _context2.stop();
           }
         }
       }, _callee2);
+    })));
+  });
+  (0, _mocha.describe)('extractBBC', function () {
+    (0, _mocha.it)('Should return a valid article',
+    /*#__PURE__*/
+    (0, _asyncToGenerator2["default"])(
+    /*#__PURE__*/
+    _regenerator["default"].mark(function _callee3() {
+      var topic, test_link, stub_extractPageData, stub_summarise, stub_extractBBCText, sentences, result, argument1, argument2, summarise_arg1, summarise_arg2;
+      return _regenerator["default"].wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              topic = Object.keys(_preferences.topics)[0]; //random topic
+
+              test_link = 'test-link1'; //test link
+              //Mocking a topic page with article links
+
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"</a><p>Test</p><div role="region"></div>'); //Mocking a summarised article
+
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
+
+              stub_extractBBCText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractBBCText').returns(undefined);
+              sentences = 4; //Can't figure this out at all
+              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
+              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
+
+              _context3.next = 8;
+              return _pageparser.PageParser.extractBBC(topic, "test", sentences);
+
+            case 8:
+              result = _context3.sent;
+              //First for getting links on topic page, second for getting article page
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(_preferences.sources["BBC"] + 'news/' + test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(_preferences.sources["BBC"] + 'news/' + test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences); //Manual article extraction shouldn't have been called
+
+              (0, _chai.expect)(stub_extractBBCText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
+              //My hacky way of determining if the result is an Article object
+
+              (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test")));
+              stub_extractPageData.restore();
+              stub_summarise.restore();
+              stub_extractBBCText.restore();
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"</a><p>Test</p><div role="region"></div>');
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
+              stub_extractBBCText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractBBCText').returns("Test article");
+              _context3.next = 29;
+              return _pageparser.PageParser.extractBBC(topic, "test", sentences);
+
+            case 29:
+              result = _context3.sent;
+              //First for getting links on topic page, second for getting article page
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(_preferences.sources["BBC"] + 'news/' + test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(_preferences.sources["BBC"] + 'news/' + test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences);
+              (0, _chai.expect)(stub_extractBBCText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
+              //My hacky way of determining if the result is an Article object
+
+              (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test")));
+              (0, _chai.expect)(result.title).to.be.equal('Test headline');
+              (0, _chai.expect)(result.text).to.be.equal('Not enough summary credits! Test article');
+
+            case 44:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    })));
+    (0, _mocha.it)('Should not return an article if an error occurs',
+    /*#__PURE__*/
+    (0, _asyncToGenerator2["default"])(
+    /*#__PURE__*/
+    _regenerator["default"].mark(function _callee4() {
+      var topic, test_link, stub_extractPageData, result, argument, sentences, stub_summarise, stub_extractBBCText, argument1, argument2, summarise_arg1, summarise_arg2;
+      return _regenerator["default"].wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              topic = Object.keys(_preferences.topics)[0]; //random topic
+
+              test_link = 'test-link1'; //test link
+              //No articles found
+
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns("");
+              _context4.next = 5;
+              return _pageparser.PageParser.extractBBC(topic, test_link, 3);
+
+            case 5:
+              result = _context4.sent;
+              (0, _chai.expect)(stub_extractPageData.called).to.be.equal(true);
+              argument = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument).to.be.equal(test_link);
+              (0, _chai.expect)(result).to.be.equal(undefined); //Zero or fewer sentences requested in article
+
+              _context4.next = 12;
+              return _pageparser.PageParser.extractBBC(topic, "test", 0);
+
+            case 12:
+              result = _context4.sent;
+              (0, _chai.expect)(result).to.be.equal(undefined); //Smmry didn't work and manual text extraction didn't work either
+
+              sentences = 3;
+              stub_extractPageData.restore();
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"</a><p>Test</p><div role="region"></div>');
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
+              stub_extractBBCText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractBBCText').returns(undefined);
+              _context4.next = 21;
+              return _pageparser.PageParser.extractBBC(topic, "test", sentences);
+
+            case 21:
+              result = _context4.sent;
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(_preferences.sources["BBC"] + 'news/' + test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(_preferences.sources["BBC"] + 'news/' + test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences);
+              (0, _chai.expect)(stub_extractBBCText.called).to.be.equal(true);
+              (0, _chai.expect)(result).to.be.equal(undefined);
+              stub_extractPageData.restore();
+              stub_summarise.restore();
+              stub_extractBBCText.restore(); //Smmry did work but manual text extraction didn't
+
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"</a><p>Test</p><div role="region"></div>');
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(invalid_test_smmry_json);
+              stub_extractBBCText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractBBCText').returns(undefined);
+              _context4.next = 42;
+              return _pageparser.PageParser.extractBBC(topic, "test", sentences);
+
+            case 42:
+              result = _context4.sent;
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(_preferences.sources["BBC"] + 'news/' + test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(_preferences.sources["BBC"] + 'news/' + test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences);
+              (0, _chai.expect)(stub_extractBBCText.called).to.be.equal(true);
+              (0, _chai.expect)(result).to.be.equal(undefined);
+
+            case 55:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
     })));
   });
 });

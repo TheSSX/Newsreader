@@ -158,60 +158,85 @@ function () {
               case 19:
                 smmrydata = _context.sent;
 
-                //send article to SMMRY
-                if (smmrydata === undefined) //SMMRY API unavailable
-                  {
-                    headline = data.split('<title>')[1].split('|')[0]; //get headline from article data
+                if (!(smmrydata === undefined)) {
+                  _context.next = 31;
+                  break;
+                }
 
-                    text = _articleextractor.ArticleExtractor.extractGuardianText(data);
+                headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
 
-                    if (text !== undefined) {
-                      if (text.split(' - ')[1]) {
-                        text = text.split(' - ')[1];
-                      }
+                text = _articleextractor.ArticleExtractor.extractGuardianText(data);
 
-                      text = "Not enough summary credits! " + text;
-                    }
-                  } else //SMMRY API working fine
-                  {
-                    headline = smmrydata['sm_api_title']; //article headline returned
+                if (!(text !== undefined)) {
+                  _context.next = 28;
+                  break;
+                }
 
-                    text = smmrydata['sm_api_content']; //summarised article returned
+                if (text.split(' - ')[1]) {
+                  text = text.split(' - ')[1];
+                }
 
-                    error = smmrydata['sm_api_error']; //detecting presence of error code
+                text = "Not enough summary credits! " + text;
+                _context.next = 29;
+                break;
 
-                    if (error === 2) {
-                      headline = data.split('<title>')[1].split('|')[0]; //get headline from article data
+              case 28:
+                return _context.abrupt("return", undefined);
 
-                      text = _articleextractor.ArticleExtractor.extractGuardianText(data);
+              case 29:
+                _context.next = 43;
+                break;
 
-                      if (text !== undefined) {
-                        if (text.split(' - ')[1]) {
-                          text = text.split(' - ')[1];
-                        }
+              case 31:
+                headline = smmrydata['sm_api_title']; //article headline returned
 
-                        text = "Not enough summary credits! " + text;
-                      }
-                    }
-                  }
+                text = smmrydata['sm_api_content']; //summarised article returned
 
+                error = smmrydata['sm_api_error']; //detecting presence of error code
+
+                if (!(error === 2)) {
+                  _context.next = 43;
+                  break;
+                }
+
+                headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
+
+                text = _articleextractor.ArticleExtractor.extractGuardianText(data);
+
+                if (!(text !== undefined)) {
+                  _context.next = 42;
+                  break;
+                }
+
+                if (text.split(' - ')[1]) {
+                  text = text.split(' - ')[1];
+                }
+
+                text = "Not enough summary credits! " + text;
+                _context.next = 43;
+                break;
+
+              case 42:
+                return _context.abrupt("return", undefined);
+
+              case 43:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context.next = 23;
+                  _context.next = 45;
                   break;
                 }
 
                 return _context.abrupt("return", undefined);
 
-              case 23:
+              case 45:
                 if (!(_preferences.language_choice !== "English")) {
-                  _context.next = 28;
+                  _context.next = 50;
                   break;
                 }
 
-                _context.next = 26;
+                _context.next = 48;
                 return callTranslation(publisher, topic, headline, text);
 
-              case 26:
+              case 48:
                 translations = _context.sent;
 
                 if (translations !== undefined) {
@@ -223,10 +248,10 @@ function () {
                   new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
                 }
 
-              case 28:
+              case 50:
                 return _context.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 29:
+              case 51:
               case "end":
                 return _context.stop();
             }
@@ -303,16 +328,23 @@ function () {
 
               case 14:
                 data = _context2.sent;
-                _context2.next = 17;
+                //fetch data from article page
+                console.log("Here we have " + data);
+                _context2.next = 18;
                 return _summarise.Summarise.summarise(randomlink, sentences);
 
-              case 17:
+              case 18:
                 smmrydata = _context2.sent;
 
                 //send article to SMMRY
                 if (smmrydata === undefined) //SMMRY API unavailable
                   {
-                    headline = data.split('<title>')[1].split('- BBC News')[0]; //get headline from article data
+                    headline = data.split('<title>')[1];
+                    console.log("Headline: " + headline);
+
+                    if (headline.split(' - BBC News')[0]) {
+                      headline = headline.split(' - BBC News')[0]; //get headline from article data
+                    }
 
                     text = _articleextractor.ArticleExtractor.extractBBCText(data);
 
@@ -332,7 +364,7 @@ function () {
                     error = smmrydata['sm_api_error']; //detecting presence of error code
 
                     if (error === 2) {
-                      headline = data.split('<title>')[1].split('- BBC News')[0]; //get headline from article data
+                      headline = data.split('<title>')[1].split(' - BBC News')[0]; //get headline from article data
 
                       text = _articleextractor.ArticleExtractor.extractBBCText(data);
 
@@ -347,22 +379,22 @@ function () {
                   }
 
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context2.next = 21;
+                  _context2.next = 22;
                   break;
                 }
 
                 return _context2.abrupt("return", undefined);
 
-              case 21:
+              case 22:
                 if (!(_preferences.language_choice !== "English")) {
-                  _context2.next = 26;
+                  _context2.next = 27;
                   break;
                 }
 
-                _context2.next = 24;
+                _context2.next = 25;
                 return callTranslation(publisher, topic, headline, text);
 
-              case 24:
+              case 25:
                 translations = _context2.sent;
 
                 if (translations !== undefined) {
@@ -374,10 +406,10 @@ function () {
                   new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
                 }
 
-              case 26:
+              case 27:
                 return _context2.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 27:
+              case 28:
               case "end":
                 return _context2.stop();
             }
