@@ -92,7 +92,7 @@ suite ('PageParser', function () {
 
         it('Should return a valid article', async function () {
 
-            const topic = Object.keys(topics)[0];   //random topic
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
             const test_link = sources["The Guardian"] + topic + '/test-link1';      //test link
 
             //Mocking a topic page with article links
@@ -172,7 +172,7 @@ suite ('PageParser', function () {
 
         it('Should not return an article if an error occurs', async function () {
 
-            const topic = Object.keys(topics)[0];   //random topic
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
             const test_link = sources["The Guardian"] + topic + '/test-link1';      //test link
 
             //No articles found
@@ -248,7 +248,7 @@ suite ('PageParser', function () {
 
         it('Should return a valid article', async function () {
 
-            const topic = Object.keys(topics)[0];   //random topic
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
             const test_link = 'test-link1';      //test link
 
             //Mocking a topic page with article links
@@ -328,14 +328,14 @@ suite ('PageParser', function () {
 
         it('Should not return an article if an error occurs', async function () {
 
-            const topic = Object.keys(topics)[0];   //random topic
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
             const test_link = 'test-link1';      //test link
 
             //No articles found
             let stub_extractPageData = stub(PageParser, 'extractPageData').returns("");
 
             let result = await PageParser.extractBBC(topic, test_link, 3);
-            expect(stub_extractPageData.called).to.be.equal(true);
+            expect(stub_extractPageData.calledOnce).to.be.equal(true);
             const argument = stub_extractPageData.getCall(-1).args[0];
             expect(argument).to.be.equal(test_link);
             expect(result).to.be.equal(undefined);
@@ -395,6 +395,488 @@ suite ('PageParser', function () {
             expect(summarise_arg2).to.be.equal(sentences);
 
             expect(stub_extractBBCText.called).to.be.equal(true);
+            expect(result).to.be.equal(undefined);
+        });
+    });
+
+    describe('extractReuters', function () {
+
+        it('Should return a valid article', async function () {
+
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
+            const test_link = 'article/test-link1/test';      //test link
+
+            //Mocking a topic page with article links
+            let stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"</a><a href="' + sources["Reuters"] + test_link + '"</a><p>Test</p>');
+
+            //Mocking a summarised article
+            let stub_summarise = stub(Summarise, 'summarise').returns(valid_test_smmry_json);
+
+            //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
+            let stub_extractReutersText = stub(ArticleExtractor, 'extractReutersText').returns(undefined);
+
+            let sentences = 4;
+
+            //Can't figure this out at all
+            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
+            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
+
+            let result = await PageParser.extractReuters(topic, "test", sentences);
+
+            //First for getting links on topic page, second for getting article page
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            let argument1 = stub_extractPageData.getCall(-2).args[0];
+            let argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.oneOf([sources["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
+
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            let summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            let summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.oneOf([sources["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            //Manual article extraction shouldn't have been called
+            expect(stub_extractReutersText.called).to.be.equal(false);
+
+            //expect(stub_callTranslation.called).to.be.equal(false);
+
+            //My hacky way of determining if the result is an Article object
+            expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test"));
+
+
+
+            stub_extractPageData.restore();
+            stub_summarise.restore();
+            stub_extractReutersText.restore();
+
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"</a><a href="' + sources["Reuters"] + test_link + '"</a><p>Test</p>');
+            stub_summarise = stub(Summarise, 'summarise').returns(undefined);
+            stub_extractReutersText = stub(ArticleExtractor, 'extractReutersText').returns("Test article");
+
+            result = await PageParser.extractReuters(topic, "test", sentences);
+
+            //First for getting links on topic page, second for getting article page
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            argument1 = stub_extractPageData.getCall(-2).args[0];
+            argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.oneOf([sources["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.oneOf([sources["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            expect(stub_extractReutersText.called).to.be.equal(true);
+
+            //expect(stub_callTranslation.called).to.be.equal(false);
+
+            //My hacky way of determining if the result is an Article object
+            expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test"));
+            expect(result.title).to.be.equal('Test headline');
+            expect(result.text).to.be.equal('Not enough summary credits! Test article');
+        });
+
+        it('Should not return an article if an error occurs', async function () {
+
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
+            const test_link = 'article/test-link1/test';      //test link
+
+            //No articles found
+            let stub_extractPageData = stub(PageParser, 'extractPageData').returns("");
+
+            let result = await PageParser.extractReuters(topic, test_link, 3);
+            expect(stub_extractPageData.calledOnce).to.be.equal(true);
+            const argument = stub_extractPageData.getCall(-1).args[0];
+            expect(argument).to.be.equal(test_link);
+            expect(result).to.be.equal(undefined);
+
+
+            //Zero or fewer sentences requested in article
+            result = await PageParser.extractReuters(topic, "test", 0);
+            expect(result).to.be.equal(undefined);
+
+
+            //Smmry didn't work and manual text extraction didn't work either
+            const sentences = 3;
+            stub_extractPageData.restore();
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"</a><a href="' + sources["Reuters"] + test_link + '"</a><p>Test</p>');
+            let stub_summarise = stub(Summarise, 'summarise').returns(undefined);
+            let stub_extractReutersText = stub(ArticleExtractor, 'extractReutersText').returns(undefined);
+
+            result = await PageParser.extractReuters(topic, "test", sentences);
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            let argument1 = stub_extractPageData.getCall(-2).args[0];
+            let argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.oneOf([sources["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
+
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            let summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            let summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.oneOf([sources["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            expect(stub_extractReutersText.called).to.be.equal(true);
+            expect(result).to.be.equal(undefined);
+
+            stub_extractPageData.restore();
+            stub_summarise.restore();
+            stub_extractReutersText.restore();
+
+
+            //Smmry did work but manual text extraction didn't
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"</a><a href="' + sources["Reuters"] + test_link + '"</a><p>Test</p>');
+            stub_summarise = stub(Summarise, 'summarise').returns(invalid_test_smmry_json);
+            stub_extractReutersText = stub(ArticleExtractor, 'extractReutersText').returns(undefined);
+
+            result = await PageParser.extractReuters(topic, "test", sentences);
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            argument1 = stub_extractPageData.getCall(-2).args[0];
+            argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.oneOf([sources["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
+
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.oneOf([sources["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            expect(stub_extractReutersText.called).to.be.equal(true);
+            expect(result).to.be.equal(undefined);
+        });
+    });
+
+    describe('extractSky', function () {
+
+        it('Should return a valid article', async function () {
+
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
+            const test_link = 'test-link1';      //test link
+
+            //Mocking a topic page with article links
+            let stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + sources["Sky News"] + 'story/' + test_link + '"</a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"</a><p>Test</p>');
+
+            //Mocking a summarised article
+            let stub_summarise = stub(Summarise, 'summarise').returns(valid_test_smmry_json);
+
+            //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
+            let stub_extractSkyText = stub(ArticleExtractor, 'extractSkyText').returns(undefined);
+
+            let sentences = 4;
+
+            //Can't figure this out at all
+            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
+            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
+
+            let result = await PageParser.extractSky(topic, "test", sentences);
+
+            //First for getting links on topic page, second for getting article page
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            let argument1 = stub_extractPageData.getCall(-2).args[0];
+            let argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.oneOf([sources["Sky News"] + 'story/' +  test_link, 'https://www.skysports.com/' + test_link]);
+
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            let summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            let summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            //expect(summarise_arg1).to.be.equal(sources["Sky News"] + 'story/' +  test_link);
+            expect(summarise_arg1).to.be.oneOf([sources["Sky News"] + 'story/' +  test_link, 'https://www.skysports.com/' + test_link]);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            //Manual article extraction shouldn't have been called
+            expect(stub_extractSkyText.called).to.be.equal(false);
+
+            //expect(stub_callTranslation.called).to.be.equal(false);
+
+            //My hacky way of determining if the result is an Article object
+            expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test"));
+
+
+
+            stub_extractPageData.restore();
+            stub_summarise.restore();
+            stub_extractSkyText.restore();
+
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + sources["Sky News"] + 'story/' + test_link + '"</a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"</a><p>Test</p>');
+            stub_summarise = stub(Summarise, 'summarise').returns(undefined);
+            stub_extractSkyText = stub(ArticleExtractor, 'extractSkyText').returns("Test article");
+
+            result = await PageParser.extractSky(topic, "test", sentences);
+
+            //First for getting links on topic page, second for getting article page
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            argument1 = stub_extractPageData.getCall(-2).args[0];
+            argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.oneOf([sources["Sky News"] + 'story/' +  test_link, 'https://www.skysports.com/' + test_link]);
+
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.oneOf([sources["Sky News"] + 'story/' +  test_link, 'https://www.skysports.com/' + test_link]);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            expect(stub_extractSkyText.called).to.be.equal(true);
+
+            //expect(stub_callTranslation.called).to.be.equal(false);
+
+            //My hacky way of determining if the result is an Article object
+            expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test"));
+            expect(result.title).to.be.equal('Test headline');
+            expect(result.text).to.be.equal('Not enough summary credits! Test article');
+        });
+
+        it('Should not return an article if an error occurs', async function () {
+
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
+            const test_link = 'story/test-link1';      //test link
+
+            //No articles found
+            let stub_extractPageData = stub(PageParser, 'extractPageData').returns("");
+
+            let result = await PageParser.extractSky(topic, test_link, 3);
+            expect(stub_extractPageData.calledOnce).to.be.equal(true);
+            const argument = stub_extractPageData.getCall(-1).args[0];
+            expect(argument).to.be.equal(test_link);
+            expect(result).to.be.equal(undefined);
+
+
+            //Zero or fewer sentences requested in article
+            result = await PageParser.extractSky(topic, "test", 0);
+            expect(result).to.be.equal(undefined);
+
+
+            //Smmry didn't work and manual text extraction didn't work either
+            const sentences = 3;
+            stub_extractPageData.restore();
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + sources["Sky News"] + 'story/' + test_link + '"</a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"</a><p>Test</p>');
+            let stub_summarise = stub(Summarise, 'summarise').returns(undefined);
+            let stub_extractSkyText = stub(ArticleExtractor, 'extractSkyText').returns(undefined);
+
+            result = await PageParser.extractSky(topic, "test", sentences);
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            let argument1 = stub_extractPageData.getCall(-2).args[0];
+            let argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.oneOf([sources["Sky News"] + 'story/' +  test_link, 'https://www.skysports.com/' + test_link]);
+
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            let summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            let summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.oneOf([sources["Sky News"] + 'story/' +  test_link, 'https://www.skysports.com/' + test_link]);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            expect(stub_extractSkyText.called).to.be.equal(true);
+            expect(result).to.be.equal(undefined);
+
+            stub_extractPageData.restore();
+            stub_summarise.restore();
+            stub_extractSkyText.restore();
+
+
+            //Smmry did work but manual text extraction didn't
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + sources["Sky News"] + 'story/' + test_link + '"</a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"</a><p>Test</p>');
+            stub_summarise = stub(Summarise, 'summarise').returns(invalid_test_smmry_json);
+            stub_extractSkyText = stub(ArticleExtractor, 'extractSkyText').returns(undefined);
+
+            result = await PageParser.extractSky(topic, "test", sentences);
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            argument1 = stub_extractPageData.getCall(-2).args[0];
+            argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.oneOf([sources["Sky News"] + 'story/' +  test_link, 'https://www.skysports.com/' + test_link]);
+
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.oneOf([sources["Sky News"] + 'story/' +  test_link, 'https://www.skysports.com/' + test_link]);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            expect(stub_extractSkyText.called).to.be.equal(true);
+            expect(result).to.be.equal(undefined);
+        });
+    });
+    describe('extractAP', function () {
+
+        it('Should return a valid article', async function () {
+
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
+            const test_link = '501c4j';      //test link
+
+            //Mocking a topic page with article links
+            let stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"</a><p>Test</p>');
+
+            //Mocking a summarised article
+            let stub_summarise = stub(Summarise, 'summarise').returns(valid_test_smmry_json);
+
+            //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
+            let stub_extractAPHeadline = stub(ArticleExtractor, 'extractAPHeadline').returns(undefined);
+            let stub_extractAPText = stub(ArticleExtractor, 'extractAPText').returns(undefined);
+
+            let sentences = 4;
+
+            //Can't figure this out at all
+            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
+            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
+
+            let result = await PageParser.extractAP(topic, "test", sentences);
+
+            //First for getting links on topic page, second for getting article page
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            let argument1 = stub_extractPageData.getCall(-2).args[0];
+            let argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.equal(sources["Associated Press"] + test_link);
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            let summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            let summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.equal(sources["Associated Press"] + test_link);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            //Manual article extraction shouldn't have been called
+            expect(stub_extractAPHeadline.called).to.be.equal(false);
+            expect(stub_extractAPText.called).to.be.equal(false);
+
+            //expect(stub_callTranslation.called).to.be.equal(false);
+
+            //My hacky way of determining if the result is an Article object
+            expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test"));
+
+
+
+            stub_extractPageData.restore();
+            stub_summarise.restore();
+            stub_extractAPHeadline.restore();
+            stub_extractAPText.restore();
+
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"</a><p>Test</p>');
+            stub_summarise = stub(Summarise, 'summarise').returns(undefined);
+            stub_extractAPHeadline = stub(ArticleExtractor, 'extractAPHeadline').returns("Test headline");
+            stub_extractAPText = stub(ArticleExtractor, 'extractAPText').returns("Test article");
+
+            result = await PageParser.extractAP(topic, "test", sentences);
+
+            //First for getting links on topic page, second for getting article page
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            argument1 = stub_extractPageData.getCall(-2).args[0];
+            argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.equal(sources["Associated Press"] + test_link);
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.equal(sources["Associated Press"] + test_link);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            expect(stub_extractAPHeadline.called).to.be.equal(true);
+            expect(stub_extractAPText.called).to.be.equal(true);
+
+            //expect(stub_callTranslation.called).to.be.equal(false);
+
+            //My hacky way of determining if the result is an Article object
+            expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test"));
+            expect(result.title).to.be.equal('Test headline');
+            expect(result.text).to.be.equal('Not enough summary credits! Test article');
+        });
+
+        it('Should not return an article if an error occurs', async function () {
+
+            const topic = Object.keys(topics)[Math.floor(Math.random() * Object.keys(topics).length)];   //random topic
+            const test_link = '501c4j';      //test link
+
+            //No articles found
+            let stub_extractPageData = stub(PageParser, 'extractPageData').returns("");
+
+            let result = await PageParser.extractAP(topic, test_link, 3);
+            expect(stub_extractPageData.calledOnce).to.be.equal(true);
+            const argument = stub_extractPageData.getCall(-1).args[0];
+            expect(argument).to.be.equal(test_link);
+            expect(result).to.be.equal(undefined);
+
+
+            //Zero or fewer sentences requested in article
+            result = await PageParser.extractAP(topic, "test", 0);
+            expect(result).to.be.equal(undefined);
+
+
+            //Smmry didn't work and manual text extraction didn't work either
+            const sentences = 3;
+            stub_extractPageData.restore();
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"</a><p>Test</p>');
+            let stub_summarise = stub(Summarise, 'summarise').returns(undefined);
+            let stub_extractAPHeadline = stub(ArticleExtractor, 'extractAPHeadline').returns(undefined);
+            let stub_extractAPText = stub(ArticleExtractor, 'extractAPText').returns(undefined);
+
+            result = await PageParser.extractAP(topic, "test", sentences);
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            let argument1 = stub_extractPageData.getCall(-2).args[0];
+            let argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.equal(sources["Associated Press"] + test_link);
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            let summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            let summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.equal(sources["Associated Press"] + test_link);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            expect(stub_extractAPHeadline.called).to.be.equal(true);
+            expect(stub_extractAPText.called).to.be.equal(true);
+            expect(result).to.be.equal(undefined);
+
+            stub_extractPageData.restore();
+            stub_summarise.restore();
+            stub_extractAPHeadline.restore();
+            stub_extractAPText.restore();
+
+
+            //Smmry did work but manual text extraction didn't
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"</a><p>Test</p>');
+            stub_summarise = stub(Summarise, 'summarise').returns(invalid_test_smmry_json);
+            stub_extractAPHeadline = stub(ArticleExtractor, 'extractAPHeadline').returns(undefined);
+            stub_extractAPText = stub(ArticleExtractor, 'extractAPText').returns(undefined);
+
+            result = await PageParser.extractAP(topic, "test", sentences);
+            expect(stub_extractPageData.callCount).to.be.equal(2);
+            argument1 = stub_extractPageData.getCall(-2).args[0];
+            argument2 = stub_extractPageData.getCall(-1).args[0];
+            expect(argument1).to.be.equal("test");
+            expect(argument2).to.be.equal(sources["Associated Press"] + test_link);
+
+            //SMMRY should have been called
+            expect(stub_summarise.called).to.be.equal(true);
+            summarise_arg1 = stub_summarise.getCall(-1).args[0];
+            summarise_arg2 = stub_summarise.getCall(-1).args[1];
+            expect(summarise_arg1).to.be.equal(sources["Associated Press"] + test_link);
+            expect(summarise_arg2).to.be.equal(sentences);
+
+            expect(stub_extractAPHeadline.called).to.be.equal(true);
+            expect(stub_extractAPText.called).to.be.equal(true);
             expect(result).to.be.equal(undefined);
         });
     });
