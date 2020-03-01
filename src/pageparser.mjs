@@ -71,15 +71,27 @@ export class PageParser
 
         let publisher = "The Guardian";
         let linkdata = await PageParser.extractPageData(topiclink);
-        linkdata = linkdata.split('<a href="' + sources[publisher] + '' + topic + '/');
+        linkdata = linkdata.split('<a href="');
 
         let linksarr = [];
         for (let i = 1; i < linkdata.length; i += 1)
         {
-            linksarr.push(linkdata[i].split('"')[0]);
+            const currentlink = linkdata[i].split('"')[0];
+            linksarr.push(currentlink);
         }
 
-        const links = Array.from(new Set(linksarr));    //array of URLs for articles
+        //Parsing links we've found
+        let articlelinks = [];
+        for (let i = 0; i < linksarr.length; i += 1)
+        {
+            const current = linksarr[i];
+            if (current.includes('-'))
+            {
+                articlelinks.push(current);
+            }
+        }
+
+        const links = Array.from(new Set(articlelinks));    //array of URLs for articles
 
         if (links === undefined || links.length === 0)
         {
@@ -87,12 +99,19 @@ export class PageParser
         }
 
         let randomlink;
+        let counter = 0;
 
         do
         {
-            randomlink = sources[publisher] + topic + '/' + links[Math.floor(Math.random() * links.length)];  //select a random article
+            randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
+            counter++;
         }
-        while (randomlink.startsWith(sources[publisher] + topic + '/video/'));  //articles devoted to a video are no good
+        while (randomlink.startsWith(sources[publisher] + topic + '/video/') && counter < 3);  //articles devoted to a video are no good
+
+        if (randomlink.startsWith(sources[publisher] + topic + '/video/'))
+        {
+            return undefined;
+        }
 
         /**
          * Extracting article from article page
@@ -819,7 +838,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && (current.includes('news/') || current.includes('sport/') || current.includes('tech/')) && current.endsWith(".html"))
             {
-                articlelinks.push('https://www.standard.co.uk/' + current);
+                articlelinks.push(sources[publisher] + current);
             }
         }
 

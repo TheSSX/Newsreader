@@ -115,7 +115,7 @@ var invalid_test_smmry_json = {
               test_link = _preferences.sources["The Guardian"] + topic + '/test-link1'; //test link
               //Mocking a topic page with article links
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<p>Test</p><a href="' + test_link + '"</a><p>Test</p>'); //Mocking a summarised article
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"></a><p>Test</p>'); //Mocking a summarised article
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
@@ -149,7 +149,7 @@ var invalid_test_smmry_json = {
               stub_extractPageData.restore();
               stub_summarise.restore();
               stub_extractGuardianText.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns("Test article");
               _context.next = 29;
@@ -204,13 +204,13 @@ var invalid_test_smmry_json = {
 
             case 5:
               result = _context2.sent;
-              (0, _chai.expect)(stub_extractPageData.called).to.be.equal(true);
+              (0, _chai.expect)(stub_extractPageData.calledOnce).to.be.equal(true);
               argument = stub_extractPageData.getCall(-1).args[0];
               (0, _chai.expect)(argument).to.be.equal(test_link);
               (0, _chai.expect)(result).to.be.equal(undefined); //Zero or fewer sentences requested in article
 
               _context2.next = 12;
-              return _pageparser.PageParser.extractGuardian(topic, test_link, 0);
+              return _pageparser.PageParser.extractGuardian(topic, "test", 0);
 
             case 12:
               result = _context2.sent;
@@ -218,7 +218,7 @@ var invalid_test_smmry_json = {
 
               sentences = 3;
               stub_extractPageData.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns(undefined);
               _context2.next = 21;
@@ -243,7 +243,7 @@ var invalid_test_smmry_json = {
               stub_summarise.restore();
               stub_extractGuardianText.restore(); //Smmry did work but manual text extraction didn't
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | The Guardian</title><p>Test</p><a href="' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(invalid_test_smmry_json);
               stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns(undefined);
               _context2.next = 42;
@@ -289,7 +289,7 @@ var invalid_test_smmry_json = {
               test_link = 'test-link1'; //test link
               //Mocking a topic page with article links
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"</a><p>Test</p><div role="region"></div>'); //Mocking a summarised article
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"></a><p>Test</p><div role="region"></div>'); //Mocking a summarised article
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
@@ -323,7 +323,7 @@ var invalid_test_smmry_json = {
               stub_extractPageData.restore();
               stub_summarise.restore();
               stub_extractBBCText.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"</a><p>Test</p><div role="region"></div>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"></a><p>Test</p><div role="region"></div>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractBBCText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractBBCText').returns("Test article");
               _context3.next = 29;
@@ -392,7 +392,7 @@ var invalid_test_smmry_json = {
 
               sentences = 3;
               stub_extractPageData.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"</a><p>Test</p><div role="region"></div>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"></a><p>Test</p><div role="region"></div>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractBBCText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractBBCText').returns(undefined);
               _context4.next = 21;
@@ -417,7 +417,7 @@ var invalid_test_smmry_json = {
               stub_summarise.restore();
               stub_extractBBCText.restore(); //Smmry did work but manual text extraction didn't
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"</a><p>Test</p><div role="region"></div>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - BBC News</title><p>Test</p><a href="/news/' + test_link + '"></a><p>Test</p><div role="region"></div>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(invalid_test_smmry_json);
               stub_extractBBCText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractBBCText').returns(undefined);
               _context4.next = 42;
@@ -463,7 +463,7 @@ var invalid_test_smmry_json = {
               test_link = 'article/test-link1/test'; //test link
               //Mocking a topic page with article links
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"</a><a href="' + _preferences.sources["Reuters"] + test_link + '"</a><p>Test</p>'); //Mocking a summarised article
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"></a><a href="' + _preferences.sources["Reuters"] + test_link + '"</a><p>Test</p>'); //Mocking a summarised article
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
@@ -497,7 +497,7 @@ var invalid_test_smmry_json = {
               stub_extractPageData.restore();
               stub_summarise.restore();
               stub_extractReutersText.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"</a><a href="' + _preferences.sources["Reuters"] + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"></a><a href="' + _preferences.sources["Reuters"] + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractReutersText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractReutersText').returns("Test article");
               _context5.next = 29;
@@ -566,7 +566,7 @@ var invalid_test_smmry_json = {
 
               sentences = 3;
               stub_extractPageData.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"</a><a href="' + _preferences.sources["Reuters"] + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"></a><a href="' + _preferences.sources["Reuters"] + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractReutersText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractReutersText').returns(undefined);
               _context6.next = 21;
@@ -591,7 +591,7 @@ var invalid_test_smmry_json = {
               stub_summarise.restore();
               stub_extractReutersText.restore(); //Smmry did work but manual text extraction didn't
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"</a><a href="' + _preferences.sources["Reuters"] + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Reuters</title><p>Test</p><a href="/' + test_link + '"></a><a href="' + _preferences.sources["Reuters"] + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(invalid_test_smmry_json);
               stub_extractReutersText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractReutersText').returns(undefined);
               _context6.next = 42;
@@ -637,7 +637,7 @@ var invalid_test_smmry_json = {
               test_link = 'test-link1'; //test link
               //Mocking a topic page with article links
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + _preferences.sources["Sky News"] + 'story/' + test_link + '"</a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"</a><p>Test</p>'); //Mocking a summarised article
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + _preferences.sources["Sky News"] + 'story/' + test_link + '"></a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"></a><p>Test</p>'); //Mocking a summarised article
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
@@ -672,7 +672,7 @@ var invalid_test_smmry_json = {
               stub_extractPageData.restore();
               stub_summarise.restore();
               stub_extractSkyText.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + _preferences.sources["Sky News"] + 'story/' + test_link + '"</a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + _preferences.sources["Sky News"] + 'story/' + test_link + '"></a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractSkyText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractSkyText').returns("Test article");
               _context7.next = 29;
@@ -741,7 +741,7 @@ var invalid_test_smmry_json = {
 
               sentences = 3;
               stub_extractPageData.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + _preferences.sources["Sky News"] + 'story/' + test_link + '"</a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + _preferences.sources["Sky News"] + 'story/' + test_link + '"></a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractSkyText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractSkyText').returns(undefined);
               _context8.next = 21;
@@ -766,7 +766,7 @@ var invalid_test_smmry_json = {
               stub_summarise.restore();
               stub_extractSkyText.restore(); //Smmry did work but manual text extraction didn't
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + _preferences.sources["Sky News"] + 'story/' + test_link + '"</a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | Sky News</title><p>Test</p><a href="' + _preferences.sources["Sky News"] + 'story/' + test_link + '"></a><a class="news-list__headline-link" href="https://www.skysports.com/' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(invalid_test_smmry_json);
               stub_extractSkyText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractSkyText').returns(undefined);
               _context8.next = 42;
@@ -812,7 +812,7 @@ var invalid_test_smmry_json = {
               test_link = '501c4j'; //test link
               //Mocking a topic page with article links
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"</a><p>Test</p>'); //Mocking a summarised article
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"></a><p>Test</p>'); //Mocking a summarised article
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
@@ -849,7 +849,7 @@ var invalid_test_smmry_json = {
               stub_summarise.restore();
               stub_extractAPHeadline.restore();
               stub_extractAPText.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractAPHeadline = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractAPHeadline').returns("Test headline");
               stub_extractAPText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractAPText').returns("Test article");
@@ -920,7 +920,7 @@ var invalid_test_smmry_json = {
 
               sentences = 3;
               stub_extractPageData.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractAPHeadline = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractAPHeadline').returns(undefined);
               stub_extractAPText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractAPText').returns(undefined);
@@ -948,7 +948,7 @@ var invalid_test_smmry_json = {
               stub_extractAPHeadline.restore();
               stub_extractAPText.restore(); //Smmry did work but manual text extraction didn't
 
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"</a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - Associated Press</title><p>Test</p><a href="/' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(invalid_test_smmry_json);
               stub_extractAPHeadline = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractAPHeadline').returns(undefined);
               stub_extractAPText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractAPText').returns(undefined);
@@ -978,6 +978,180 @@ var invalid_test_smmry_json = {
           }
         }
       }, _callee10);
+    })));
+  });
+  (0, _mocha.describe)('extractEveningStandard', function () {
+    (0, _mocha.it)('Should return a valid article',
+    /*#__PURE__*/
+    (0, _asyncToGenerator2["default"])(
+    /*#__PURE__*/
+    _regenerator["default"].mark(function _callee11() {
+      var topic, test_link, stub_extractPageData, stub_summarise, stub_extractEveningStandardText, sentences, result, argument1, argument2, summarise_arg1, summarise_arg2;
+      return _regenerator["default"].wrap(function _callee11$(_context11) {
+        while (1) {
+          switch (_context11.prev = _context11.next) {
+            case 0:
+              topic = Object.keys(_preferences.topics)[Math.floor(Math.random() * Object.keys(_preferences.topics).length)]; //random topic
+
+              test_link = 'news/test-link1.html'; //test link
+              //Mocking a topic page with article links
+
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | London Evening Standard</title><p>Test</p><a href="/' + test_link + '"></a><p>Test</p>'); //Mocking a summarised article
+
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
+
+              stub_extractEveningStandardText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractEveningStandardText').returns(undefined);
+              sentences = 4; //Can't figure this out at all
+              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
+              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
+
+              _context11.next = 8;
+              return _pageparser.PageParser.extractEveningStandard(topic, "test", sentences);
+
+            case 8:
+              result = _context11.sent;
+              //First for getting links on topic page, second for getting article page
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(_preferences.sources["Evening Standard"] + test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(_preferences.sources["Evening Standard"] + test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences); //Manual article extraction shouldn't have been called
+
+              (0, _chai.expect)(stub_extractEveningStandardText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
+              //My hacky way of determining if the result is an Article object
+
+              (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test")));
+              stub_extractPageData.restore();
+              stub_summarise.restore();
+              stub_extractEveningStandardText.restore();
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | London Evening Standard</title><p>Test</p><a href="/' + test_link + '"></a><p>Test</p>');
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
+              stub_extractEveningStandardText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractEveningStandardText').returns("Test article");
+              _context11.next = 29;
+              return _pageparser.PageParser.extractEveningStandard(topic, "test", sentences);
+
+            case 29:
+              result = _context11.sent;
+              //First for getting links on topic page, second for getting article page
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(_preferences.sources["Evening Standard"] + test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(_preferences.sources["Evening Standard"] + test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences);
+              (0, _chai.expect)(stub_extractEveningStandardText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
+              //My hacky way of determining if the result is an Article object
+
+              (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test")));
+              (0, _chai.expect)(result.title).to.be.equal('Test headline');
+              (0, _chai.expect)(result.text).to.be.equal('Not enough summary credits! Test article');
+
+            case 44:
+            case "end":
+              return _context11.stop();
+          }
+        }
+      }, _callee11);
+    })));
+    (0, _mocha.it)('Should not return an article if an error occurs',
+    /*#__PURE__*/
+    (0, _asyncToGenerator2["default"])(
+    /*#__PURE__*/
+    _regenerator["default"].mark(function _callee12() {
+      var topic, test_link, stub_extractPageData, result, argument, sentences, stub_summarise, stub_extractEveningStandardText, argument1, argument2, summarise_arg1, summarise_arg2;
+      return _regenerator["default"].wrap(function _callee12$(_context12) {
+        while (1) {
+          switch (_context12.prev = _context12.next) {
+            case 0:
+              topic = Object.keys(_preferences.topics)[Math.floor(Math.random() * Object.keys(_preferences.topics).length)]; //random topic
+
+              test_link = 'news/test-link1.html'; //test link
+              //No articles found
+
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns("");
+              _context12.next = 5;
+              return _pageparser.PageParser.extractEveningStandard(topic, test_link, 3);
+
+            case 5:
+              result = _context12.sent;
+              (0, _chai.expect)(stub_extractPageData.called).to.be.equal(true);
+              argument = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument).to.be.equal(test_link);
+              (0, _chai.expect)(result).to.be.equal(undefined); //Zero or fewer sentences requested in article
+
+              _context12.next = 12;
+              return _pageparser.PageParser.extractEveningStandard(topic, test_link, 0);
+
+            case 12:
+              result = _context12.sent;
+              (0, _chai.expect)(result).to.be.equal(undefined); //Smmry didn't work and manual text extraction didn't work either
+
+              sentences = 3;
+              stub_extractPageData.restore();
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | London Evening Standard</title><p>Test</p><a href="/' + test_link + '"></a><p>Test</p>');
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
+              stub_extractEveningStandardText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractEveningStandardText').returns(undefined);
+              _context12.next = 21;
+              return _pageparser.PageParser.extractEveningStandard(topic, "test", sentences);
+
+            case 21:
+              result = _context12.sent;
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(_preferences.sources["Evening Standard"] + test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(_preferences.sources["Evening Standard"] + test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences);
+              (0, _chai.expect)(stub_extractEveningStandardText.called).to.be.equal(true);
+              (0, _chai.expect)(result).to.be.equal(undefined);
+              stub_extractPageData.restore();
+              stub_summarise.restore();
+              stub_extractEveningStandardText.restore(); //Smmry did work but manual text extraction didn't
+
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline | London Evening Standard</title><p>Test</p><a href="/' + test_link + '"></a><p>Test</p>');
+              stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(invalid_test_smmry_json);
+              stub_extractEveningStandardText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractEveningStandardText').returns(undefined);
+              _context12.next = 42;
+              return _pageparser.PageParser.extractEveningStandard(topic, "test", sentences);
+
+            case 42:
+              result = _context12.sent;
+              (0, _chai.expect)(stub_extractPageData.callCount).to.be.equal(2);
+              argument1 = stub_extractPageData.getCall(-2).args[0];
+              argument2 = stub_extractPageData.getCall(-1).args[0];
+              (0, _chai.expect)(argument1).to.be.equal("test");
+              (0, _chai.expect)(argument2).to.be.equal(_preferences.sources["Evening Standard"] + test_link); //SMMRY should have been called
+
+              (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
+              summarise_arg1 = stub_summarise.getCall(-1).args[0];
+              summarise_arg2 = stub_summarise.getCall(-1).args[1];
+              (0, _chai.expect)(summarise_arg1).to.be.equal(_preferences.sources["Evening Standard"] + test_link);
+              (0, _chai.expect)(summarise_arg2).to.be.equal(sentences);
+              (0, _chai.expect)(stub_extractEveningStandardText.called).to.be.equal(true);
+              (0, _chai.expect)(result).to.be.equal(undefined);
+
+            case 55:
+            case "end":
+              return _context12.stop();
+          }
+        }
+      }, _callee12);
     })));
   });
 });

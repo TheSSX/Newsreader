@@ -98,7 +98,8 @@ function () {
       var _extractGuardian = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
       _regenerator["default"].mark(function _callee(topic, topiclink, sentences) {
-        var publisher, linkdata, linksarr, i, links, randomlink, data, headline, text, smmrydata, error, translations;
+        var publisher, linkdata, linksarr, i, currentlink, articlelinks, _i, current, links, randomlink, counter, data, headline, text, smmrydata, error, translations;
+
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -121,45 +122,65 @@ function () {
 
               case 6:
                 linkdata = _context.sent;
-                linkdata = linkdata.split('<a href="' + _preferences.sources[publisher] + '' + topic + '/');
+                linkdata = linkdata.split('<a href="');
                 linksarr = [];
 
                 for (i = 1; i < linkdata.length; i += 1) {
-                  linksarr.push(linkdata[i].split('"')[0]);
+                  currentlink = linkdata[i].split('"')[0];
+                  linksarr.push(currentlink);
+                } //Parsing links we've found
+
+
+                articlelinks = [];
+
+                for (_i = 0; _i < linksarr.length; _i += 1) {
+                  current = linksarr[_i];
+
+                  if (current.includes('-')) {
+                    articlelinks.push(current);
+                  }
                 }
 
-                links = Array.from(new Set(linksarr)); //array of URLs for articles
+                links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context.next = 13;
+                  _context.next = 15;
                   break;
                 }
 
                 return _context.abrupt("return", undefined);
 
-              case 13:
+              case 15:
+                counter = 0;
+
                 do {
-                  randomlink = _preferences.sources[publisher] + topic + '/' + links[Math.floor(Math.random() * links.length)]; //select a random article
-                } while (randomlink.startsWith(_preferences.sources[publisher] + topic + '/video/')); //articles devoted to a video are no good
+                  randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
-                /**
-                 * Extracting article from article page
-                 */
+                  counter++;
+                } while (randomlink.startsWith(_preferences.sources[publisher] + topic + '/video/') && counter < 3); //articles devoted to a video are no good
 
 
-                _context.next = 16;
-                return PageParser.extractPageData(randomlink);
+                if (!randomlink.startsWith(_preferences.sources[publisher] + topic + '/video/')) {
+                  _context.next = 19;
+                  break;
+                }
 
-              case 16:
-                data = _context.sent;
-                _context.next = 19;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+                return _context.abrupt("return", undefined);
 
               case 19:
+                _context.next = 21;
+                return PageParser.extractPageData(randomlink);
+
+              case 21:
+                data = _context.sent;
+                _context.next = 24;
+                return _summarise.Summarise.summarise(randomlink, sentences);
+
+              case 24:
                 smmrydata = _context.sent;
 
                 if (!(smmrydata === undefined)) {
-                  _context.next = 31;
+                  _context.next = 36;
                   break;
                 }
 
@@ -168,7 +189,7 @@ function () {
                 text = _articleextractor.ArticleExtractor.extractGuardianText(data);
 
                 if (!(text !== undefined)) {
-                  _context.next = 28;
+                  _context.next = 33;
                   break;
                 }
 
@@ -177,17 +198,17 @@ function () {
                 }
 
                 text = "Not enough summary credits! " + text;
-                _context.next = 29;
+                _context.next = 34;
                 break;
 
-              case 28:
+              case 33:
                 return _context.abrupt("return", undefined);
 
-              case 29:
-                _context.next = 43;
+              case 34:
+                _context.next = 48;
                 break;
 
-              case 31:
+              case 36:
                 headline = smmrydata['sm_api_title']; //article headline returned
 
                 text = smmrydata['sm_api_content']; //summarised article returned
@@ -195,7 +216,7 @@ function () {
                 error = smmrydata['sm_api_error']; //detecting presence of error code
 
                 if (!(error === 2)) {
-                  _context.next = 43;
+                  _context.next = 48;
                   break;
                 }
 
@@ -204,7 +225,7 @@ function () {
                 text = _articleextractor.ArticleExtractor.extractGuardianText(data);
 
                 if (!(text !== undefined)) {
-                  _context.next = 42;
+                  _context.next = 47;
                   break;
                 }
 
@@ -213,30 +234,30 @@ function () {
                 }
 
                 text = "Not enough summary credits! " + text;
-                _context.next = 43;
+                _context.next = 48;
                 break;
 
-              case 42:
+              case 47:
                 return _context.abrupt("return", undefined);
 
-              case 43:
+              case 48:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context.next = 45;
-                  break;
-                }
-
-                return _context.abrupt("return", undefined);
-
-              case 45:
-                if (!(_preferences.language_choice !== "English")) {
                   _context.next = 50;
                   break;
                 }
 
-                _context.next = 48;
+                return _context.abrupt("return", undefined);
+
+              case 50:
+                if (!(_preferences.language_choice !== "English")) {
+                  _context.next = 55;
+                  break;
+                }
+
+                _context.next = 53;
                 return callTranslation(publisher, topic, headline, text);
 
-              case 48:
+              case 53:
                 translations = _context.sent;
 
                 if (translations !== undefined) {
@@ -248,10 +269,10 @@ function () {
                   new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
                 }
 
-              case 50:
+              case 55:
                 return _context.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 51:
+              case 56:
               case "end":
                 return _context.stop();
             }
@@ -279,7 +300,7 @@ function () {
       var _extractBBC = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
       _regenerator["default"].mark(function _callee2(topic, topiclink, sentences) {
-        var publisher, linkdata, linksarr, i, currentlink, articlelinks, _i, current, links, randomlink, data, headline, text, smmrydata, error, translations;
+        var publisher, linkdata, linksarr, i, currentlink, articlelinks, _i2, current, links, randomlink, data, headline, text, smmrydata, error, translations;
 
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
@@ -312,8 +333,8 @@ function () {
 
                 articlelinks = [];
 
-                for (_i = 0; _i < linksarr.length; _i += 1) {
-                  current = linksarr[_i];
+                for (_i2 = 0; _i2 < linksarr.length; _i2 += 1) {
+                  current = linksarr[_i2];
 
                   if (!current.includes('/') && current.includes('-') && !isNaN(current[current.length - 1])) {
                     articlelinks.push(_preferences.sources[publisher] + 'news/' + current);
@@ -442,7 +463,7 @@ function () {
       var _extractReuters = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
       _regenerator["default"].mark(function _callee3(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, _i2, _currentlink, articlelinks, _i3, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+        var publisher, permadata, linkdata, linksarr, i, currentlink, _i3, _currentlink, articlelinks, _i4, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) {
@@ -473,8 +494,8 @@ function () {
                 if (!linksarr.length) {
                   linkdata = permadata.split('<a href="/article/');
 
-                  for (_i2 = 1; _i2 < linkdata.length; _i2 += 1) {
-                    _currentlink = linkdata[_i2].split('"')[0];
+                  for (_i3 = 1; _i3 < linkdata.length; _i3 += 1) {
+                    _currentlink = linkdata[_i3].split('"')[0];
                     linksarr.push(_currentlink);
                   }
                 } //Parsing links we've found
@@ -482,8 +503,8 @@ function () {
 
                 articlelinks = [];
 
-                for (_i3 = 0; _i3 < linksarr.length; _i3 += 1) {
-                  current = linksarr[_i3];
+                for (_i4 = 0; _i4 < linksarr.length; _i4 += 1) {
+                  current = linksarr[_i4];
 
                   if (current.includes('/') && current.includes('-')) {
                     articlelinks.push('https://uk.reuters.com/article/' + current); //Removes the issue (seemingly) where some articles are geographically unavailable. Hard-code is annoying but works right now.
@@ -646,7 +667,7 @@ function () {
       var _extractSky = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
       _regenerator["default"].mark(function _callee4(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, _i4, _currentlink2, articlelinks, _i5, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+        var publisher, permadata, linkdata, linksarr, i, currentlink, _i5, _currentlink2, articlelinks, _i6, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) {
@@ -687,8 +708,8 @@ function () {
                     linkdata = permadata.split('<a href="/story/');
                   }
 
-                  for (_i4 = 1; _i4 < linkdata.length; _i4 += 1) {
-                    _currentlink2 = linkdata[_i4].split('"')[0];
+                  for (_i5 = 1; _i5 < linkdata.length; _i5 += 1) {
+                    _currentlink2 = linkdata[_i5].split('"')[0];
                     linksarr.push(_currentlink2);
                   }
                 } //Parsing links we've found
@@ -696,8 +717,8 @@ function () {
 
                 articlelinks = [];
 
-                for (_i5 = 0; _i5 < linksarr.length; _i5 += 1) {
-                  current = linksarr[_i5];
+                for (_i6 = 0; _i6 < linksarr.length; _i6 += 1) {
+                  current = linksarr[_i6];
 
                   if (current.includes('-')) {
                     if (topic === "sport") {
@@ -870,7 +891,7 @@ function () {
       var _extractAP = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
       _regenerator["default"].mark(function _callee5(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i6, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i7, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
         return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) {
@@ -901,8 +922,8 @@ function () {
 
                 articlelinks = [];
 
-                for (_i6 = 0; _i6 < linksarr.length; _i6 += 1) {
-                  current = linksarr[_i6]; //if (current.matches("/^[a-z0-9]+$/"))
+                for (_i7 = 0; _i7 < linksarr.length; _i7 += 1) {
+                  current = linksarr[_i7]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (!current.includes('-') && !current.includes('/') && !current.includes('.') && current.length && current !== "termsofservice" && current !== "privacystatement") {
                     articlelinks.push(_preferences.sources[publisher] + current);
@@ -1063,7 +1084,7 @@ function () {
       var _extractEveningStandard = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
       _regenerator["default"].mark(function _callee6(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i7, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i8, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
         return _regenerator["default"].wrap(function _callee6$(_context6) {
           while (1) {
@@ -1094,11 +1115,11 @@ function () {
 
                 articlelinks = [];
 
-                for (_i7 = 0; _i7 < linksarr.length; _i7 += 1) {
-                  current = linksarr[_i7]; //if (current.matches("/^[a-z0-9]+$/"))
+                for (_i8 = 0; _i8 < linksarr.length; _i8 += 1) {
+                  current = linksarr[_i8]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (current.includes('-') && (current.includes('news/') || current.includes('sport/') || current.includes('tech/')) && current.endsWith(".html")) {
-                    articlelinks.push('https://www.standard.co.uk/' + current);
+                    articlelinks.push(_preferences.sources[publisher] + current);
                   }
                 }
 
@@ -1248,7 +1269,7 @@ function () {
       var _extractIndependent = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
       _regenerator["default"].mark(function _callee7(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i8, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i9, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
         return _regenerator["default"].wrap(function _callee7$(_context7) {
           while (1) {
@@ -1279,8 +1300,8 @@ function () {
 
                 articlelinks = [];
 
-                for (_i8 = 0; _i8 < linksarr.length; _i8 += 1) {
-                  current = linksarr[_i8]; //if (current.matches("/^[a-z0-9]+$/"))
+                for (_i9 = 0; _i9 < linksarr.length; _i9 += 1) {
+                  current = linksarr[_i9]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (current.includes('-') && current.endsWith(".html") && !current.includes('service/') && !current.includes('independentpremium/') && !current.includes('long_reads/') && !current.includes('extras/') && !current.includes('food-and-drink/recipes/')) {
                     articlelinks.push(_preferences.sources[publisher] + current);
@@ -1442,7 +1463,7 @@ function () {
       var _extractNewsAU = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
       _regenerator["default"].mark(function _callee8(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i9, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i10, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
         return _regenerator["default"].wrap(function _callee8$(_context8) {
           while (1) {
@@ -1473,8 +1494,8 @@ function () {
 
                 articlelinks = [];
 
-                for (_i9 = 0; _i9 < linksarr.length; _i9 += 1) {
-                  current = linksarr[_i9]; //if (current.matches("/^[a-z0-9]+$/"))
+                for (_i10 = 0; _i10 < linksarr.length; _i10 += 1) {
+                  current = linksarr[_i10]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (current.includes('-') && current.includes("/news-story/") && !current.includes('/game-reviews/')) {
                     articlelinks.push(_preferences.sources[publisher] + current);
@@ -1692,7 +1713,7 @@ function () {
       var _extractITV = (0, _asyncToGenerator2["default"])(
       /*#__PURE__*/
       _regenerator["default"].mark(function _callee9(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i10, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i11, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
 
         return _regenerator["default"].wrap(function _callee9$(_context9) {
           while (1) {
@@ -1723,8 +1744,8 @@ function () {
 
                 articlelinks = [];
 
-                for (_i10 = 0; _i10 < linksarr.length; _i10 += 1) {
-                  current = linksarr[_i10]; //if (current.matches("/^[a-z0-9]+$/"))
+                for (_i11 = 0; _i11 < linksarr.length; _i11 += 1) {
+                  current = linksarr[_i11]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (current.includes('-') && current.includes("news/") && !current.includes("topic/") && !current.includes("meet-the-team/") && !current.includes("/uk-weather-forecast-") && !current.includes("/assets/") && /\d/.test(current)) {
                     articlelinks.push(_preferences.sources[publisher] + current);
