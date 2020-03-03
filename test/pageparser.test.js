@@ -24,6 +24,8 @@ var _preferences = require("../dist/preferences.js");
 
 var _summarise = require("../dist/summarise.js");
 
+var _translator = require("../dist/translator.js");
+
 var valid_test_smmry_json = {
   'sm_api_title': 'test-headline',
   'sm_api_content': 'test-content',
@@ -1633,5 +1635,29 @@ var topic = Object.keys(_preferences.topics)[Math.floor(Math.random() * Object.k
         }
       }, _callee18);
     })));
+  }); // describe('extractPageData', function () {
+  //
+  //     it('Should return results from the web server', function () {
+  //
+  //         const server = createFakeServer();
+  //         server.respondWith("GET", "*",
+  //             [200, { "Content-Type": "application/json" },
+  //                 '[{ "id": 12, "comment": "Hey there" }]']);
+  //         const stub_ajax = stub($, 'ajax').resolves({ data: 'test data' });
+  //
+  //         PageParser.extractPageData("test").then(() => {
+  //             expect(stub_ajax.calledOnce).to.be.true;
+  //         });
+  //     });
+  // });
+});
+(0, _mocha.describe)('callTranslation', function () {
+  (0, _mocha.it)('Should return translated data', function () {
+    var stub_translate = (0, _sinon.stub)(_translator.Translator, 'translate').resolves({
+      'text': 'translation'
+    });
+    var result = (0, _pageparser.callTranslation)("test", "test", "test", "test");
+    (0, _chai.expect)(stub_translate.callCount).to.be.equal(4);
+    (0, _chai.expect)(result).to.be.deep.equal(['translation', 'translation', 'translation', 'translation']);
   });
 });

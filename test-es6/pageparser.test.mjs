@@ -1,11 +1,12 @@
 import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
-import {stub, restore} from "sinon";
-import {PageParser} from "../dist/pageparser.js";
+import {stub, restore, createFakeServer} from "sinon";
+import {PageParser, callTranslation} from "../dist/pageparser.js";
 import {Article} from "../dist/article.js";
 import {ArticleExtractor} from "../dist/articleextractor.js";
 import {topics, sources} from "../dist/preferences.js";
 import {Summarise} from "../dist/summarise.js";
+import {Translator} from "../dist/translator.js";
 
 const valid_test_smmry_json = {
     'sm_api_title': 'test-headline',
@@ -1479,5 +1480,32 @@ suite ('PageParser', function () {
             expect(stub_extractNewsAUText.called).to.be.equal(true);
             expect(result).to.be.equal(undefined);
         });
+    });
+
+    // describe('extractPageData', function () {
+    //
+    //     it('Should return results from the web server', function () {
+    //
+    //         const server = createFakeServer();
+    //         server.respondWith("GET", "*",
+    //             [200, { "Content-Type": "application/json" },
+    //                 '[{ "id": 12, "comment": "Hey there" }]']);
+    //         const stub_ajax = stub($, 'ajax').resolves({ data: 'test data' });
+    //
+    //         PageParser.extractPageData("test").then(() => {
+    //             expect(stub_ajax.calledOnce).to.be.true;
+    //         });
+    //     });
+    // });
+});
+
+describe('callTranslation', function () {
+
+    it('Should return translated data', function () {
+
+        const stub_translate = stub(Translator, 'translate').resolves({'text': 'translation'});
+        const result = callTranslation("test", "test", "test", "test");
+        expect(stub_translate.callCount).to.be.equal(4);
+        expect(result).to.be.deep.equal(['translation', 'translation', 'translation', 'translation']);
     });
 });
