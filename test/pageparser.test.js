@@ -26,8 +26,7 @@ var _summarise = require("../dist/summarise.js");
 
 var _translator = require("../dist/translator.js");
 
-global.$ = require('jquery');
-global.window = window;
+//import {$} from "../dist/jquery.js";
 var valid_test_smmry_json = {
   'sm_api_title': 'test-headline',
   'sm_api_content': 'test-content',
@@ -1637,24 +1636,23 @@ var topic = Object.keys(_preferences.topics)[Math.floor(Math.random() * Object.k
         }
       }, _callee18);
     })));
-  });
-  (0, _mocha.describe)('extractPageData', function () {
-    (0, _mocha.it)('Should return results from the web server', function () {
-      var server = (0, _sinon.createFakeServer)();
-      server.respondWith("GET", "*", [200, {
-        "Content-Type": "application/json"
-      }, '[{ "id": 12, "comment": "Hey there" }]']);
-      var stub_ajax = (0, _sinon.stub)($, 'ajax').resolves({
-        data: 'test data'
-      });
-
-      _pageparser.PageParser.extractPageData("test").then(function (data) {
-        server.respond();
-        console.log("Data is " + data);
-        (0, _chai.expect)(stub_ajax.called).to.be.equal(true);
-      });
-    });
-  });
+  }); // describe('extractPageData', function () {
+  //
+  //     it('Should return results from the web server', function () {
+  //
+  //         const server = createFakeServer();
+  //         server.respondWith("GET", "*",
+  //             [200, { "Content-Type": "application/json" },
+  //                 '[{ "id": 12, "comment": "Hey there" }]']);
+  //         const stub_ajax = stub($, 'ajax').resolves({ data: 'test data' });
+  //
+  //         PageParser.extractPageData("test").then((data) => {
+  //             server.respond();
+  //             console.log("Data is " + data);
+  //             expect(stub_ajax.called).to.be.equal(true);
+  //         });
+  //     });
+  // });
 });
 (0, _mocha.describe)('callTranslation', function () {
   (0, _mocha.afterEach)(function () {
