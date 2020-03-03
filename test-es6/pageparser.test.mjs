@@ -7,6 +7,7 @@ import {ArticleExtractor} from "../dist/articleextractor.js";
 import {topics, sources} from "../dist/preferences.js";
 import {Summarise} from "../dist/summarise.js";
 import {Translator} from "../dist/translator.js";
+//import {$} from "../dist/jquery.js";
 
 const valid_test_smmry_json = {
     'sm_api_title': 'test-headline',
@@ -1492,8 +1493,10 @@ suite ('PageParser', function () {
     //                 '[{ "id": 12, "comment": "Hey there" }]']);
     //         const stub_ajax = stub($, 'ajax').resolves({ data: 'test data' });
     //
-    //         PageParser.extractPageData("test").then(() => {
-    //             expect(stub_ajax.calledOnce).to.be.true;
+    //         PageParser.extractPageData("test").then((data) => {
+    //             server.respond();
+    //             console.log("Data is " + data);
+    //             expect(stub_ajax.called).to.be.equal(true);
     //         });
     //     });
     // });
@@ -1501,11 +1504,28 @@ suite ('PageParser', function () {
 
 describe('callTranslation', function () {
 
-    it('Should return translated data', function () {
+    afterEach(function () {
+        restore();
+    });
 
-        const stub_translate = stub(Translator, 'translate').resolves({'text': 'translation'});
-        const result = callTranslation("test", "test", "test", "test");
+    it('Should return translated data', async function () {
+        const stub_translate = stub(Translator, 'translate').resolves({'code': 200, 'text': 'translation'});
+        const result = await callTranslation("test", "test", "test", "test");
         expect(stub_translate.callCount).to.be.equal(4);
         expect(result).to.be.deep.equal(['translation', 'translation', 'translation', 'translation']);
+    });
+
+    it('Should return nothing if an error occurred', async function () {
+        let stub_translate = stub(Translator, 'translate').resolves({'code': 500});
+        let result = await callTranslation("test", "test", "test", "test");
+        expect(stub_translate.callCount).to.be.equal(4);
+        expect(result).to.be.equal(undefined);
+
+        restore();
+
+        stub_translate = stub(Translator, 'translate').resolves(undefined);
+        result = await callTranslation("test", "test", "test", "test");
+        expect(stub_translate.callCount).to.be.equal(4);
+        expect(result).to.be.equal(undefined);
     });
 });

@@ -1429,8 +1429,6 @@ export class PageParser
         {
         });    //not convinced this actually returns or throws an error
     }
-
-
 }
 
 export async function callTranslation(publisher, topic, headline, text)

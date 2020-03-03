@@ -26,6 +26,8 @@ var _summarise = require("../dist/summarise.js");
 
 var _translator = require("../dist/translator.js");
 
+global.$ = require('jquery');
+global.window = window;
 var valid_test_smmry_json = {
   'sm_api_title': 'test-headline',
   'sm_api_content': 'test-content',
@@ -1635,29 +1637,93 @@ var topic = Object.keys(_preferences.topics)[Math.floor(Math.random() * Object.k
         }
       }, _callee18);
     })));
-  }); // describe('extractPageData', function () {
-  //
-  //     it('Should return results from the web server', function () {
-  //
-  //         const server = createFakeServer();
-  //         server.respondWith("GET", "*",
-  //             [200, { "Content-Type": "application/json" },
-  //                 '[{ "id": 12, "comment": "Hey there" }]']);
-  //         const stub_ajax = stub($, 'ajax').resolves({ data: 'test data' });
-  //
-  //         PageParser.extractPageData("test").then(() => {
-  //             expect(stub_ajax.calledOnce).to.be.true;
-  //         });
-  //     });
-  // });
+  });
+  (0, _mocha.describe)('extractPageData', function () {
+    (0, _mocha.it)('Should return results from the web server', function () {
+      var server = (0, _sinon.createFakeServer)();
+      server.respondWith("GET", "*", [200, {
+        "Content-Type": "application/json"
+      }, '[{ "id": 12, "comment": "Hey there" }]']);
+      var stub_ajax = (0, _sinon.stub)($, 'ajax').resolves({
+        data: 'test data'
+      });
+
+      _pageparser.PageParser.extractPageData("test").then(function (data) {
+        server.respond();
+        console.log("Data is " + data);
+        (0, _chai.expect)(stub_ajax.called).to.be.equal(true);
+      });
+    });
+  });
 });
 (0, _mocha.describe)('callTranslation', function () {
-  (0, _mocha.it)('Should return translated data', function () {
-    var stub_translate = (0, _sinon.stub)(_translator.Translator, 'translate').resolves({
-      'text': 'translation'
-    });
-    var result = (0, _pageparser.callTranslation)("test", "test", "test", "test");
-    (0, _chai.expect)(stub_translate.callCount).to.be.equal(4);
-    (0, _chai.expect)(result).to.be.deep.equal(['translation', 'translation', 'translation', 'translation']);
+  (0, _mocha.afterEach)(function () {
+    (0, _sinon.restore)();
   });
+  (0, _mocha.it)('Should return translated data',
+  /*#__PURE__*/
+  (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee19() {
+    var stub_translate, result;
+    return _regenerator["default"].wrap(function _callee19$(_context19) {
+      while (1) {
+        switch (_context19.prev = _context19.next) {
+          case 0:
+            stub_translate = (0, _sinon.stub)(_translator.Translator, 'translate').resolves({
+              'code': 200,
+              'text': 'translation'
+            });
+            _context19.next = 3;
+            return (0, _pageparser.callTranslation)("test", "test", "test", "test");
+
+          case 3:
+            result = _context19.sent;
+            (0, _chai.expect)(stub_translate.callCount).to.be.equal(4);
+            (0, _chai.expect)(result).to.be.deep.equal(['translation', 'translation', 'translation', 'translation']);
+
+          case 6:
+          case "end":
+            return _context19.stop();
+        }
+      }
+    }, _callee19);
+  })));
+  (0, _mocha.it)('Should return nothing if an error occurred',
+  /*#__PURE__*/
+  (0, _asyncToGenerator2["default"])(
+  /*#__PURE__*/
+  _regenerator["default"].mark(function _callee20() {
+    var stub_translate, result;
+    return _regenerator["default"].wrap(function _callee20$(_context20) {
+      while (1) {
+        switch (_context20.prev = _context20.next) {
+          case 0:
+            stub_translate = (0, _sinon.stub)(_translator.Translator, 'translate').resolves({
+              'code': 500
+            });
+            _context20.next = 3;
+            return (0, _pageparser.callTranslation)("test", "test", "test", "test");
+
+          case 3:
+            result = _context20.sent;
+            (0, _chai.expect)(stub_translate.callCount).to.be.equal(4);
+            (0, _chai.expect)(result).to.be.equal(undefined);
+            (0, _sinon.restore)();
+            stub_translate = (0, _sinon.stub)(_translator.Translator, 'translate').resolves(undefined);
+            _context20.next = 10;
+            return (0, _pageparser.callTranslation)("test", "test", "test", "test");
+
+          case 10:
+            result = _context20.sent;
+            (0, _chai.expect)(stub_translate.callCount).to.be.equal(4);
+            (0, _chai.expect)(result).to.be.equal(undefined);
+
+          case 13:
+          case "end":
+            return _context20.stop();
+        }
+      }
+    }, _callee20);
+  })));
 });
