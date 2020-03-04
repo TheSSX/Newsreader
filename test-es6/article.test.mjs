@@ -1,15 +1,18 @@
-import {describe, it} from "mocha";
+import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
-import {stub, createStubInstance} from "sinon";
+import {stub} from "sinon";
 import {Speech} from "../dist/speech.js";
 import {Article} from "../dist/article.js";
 
-describe('Article', function () {
+suite('Article', function () {
 
-    it('Should instantiate properly', function () {
-        const article = new Article("test", "test", "test", "test", "test");
-        expect(article).to.not.be.equal(null);
+    describe('constructor', function () {
+        it('Should instantiate properly', function () {
+            const article = new Article("test", "test", "test", "test", "test");
+            expect(article).to.not.be.equal(null);
+        });
     });
+
     //
     // it('Should read aloud its parameters', function () {
     //     new Article("test1", "test2", "test3", "test4", "test5").read();

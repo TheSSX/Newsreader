@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mocha Tests</title>
+    <link rel="stylesheet" href="node_modules/mocha/mocha.css">
+</head>
+<body>
+<div id="mocha"></div>
+<script src="node_modules/mocha/mocha.js"></script>
+<script src="node_modules/chai/chai.js"></script>
+<script class="mocha-init">
+    mocha.setup('bdd');
+    mocha.checkLeaks();
+</script>
+
+<script type="module" src="test-es6/article.test.mjs"></script>
+<script type="module" src="test-es6/articleextractor.test.mjs"></script>
+<script type="module" src="test-es6/bulletin.test.mjs"></script>
+<script type="module" src="test-es6/pageparser.test.mjs"></script>
+
+<script class="mocha-exec">
+    mocha.run();
+</script>
+</body>
+</html>

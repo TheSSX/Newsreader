@@ -10,10 +10,12 @@ var _speech = require("../dist/speech.js");
 
 var _article = require("../dist/article.js");
 
-(0, _mocha.describe)('Article', function () {
-  (0, _mocha.it)('Should instantiate properly', function () {
-    var article = new _article.Article("test", "test", "test", "test", "test");
-    (0, _chai.expect)(article).to.not.be.equal(null);
+(0, _mocha.suite)('Article', function () {
+  (0, _mocha.describe)('constructor', function () {
+    (0, _mocha.it)('Should instantiate properly', function () {
+      var article = new _article.Article("test", "test", "test", "test", "test");
+      (0, _chai.expect)(article).to.not.be.equal(null);
+    });
   }); //
   // it('Should read aloud its parameters', function () {
   //     new Article("test1", "test2", "test3", "test4", "test5").read();
