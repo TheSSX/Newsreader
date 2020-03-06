@@ -27,18 +27,21 @@ export class Bulletin
             }
 
             const topiclink = topics[topic][source];    // for the selected source, get the URL to the selected topic page
-            const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise down to
-
-            data.then(article => // returned in form of promise with value of article
+            try
             {
-                try
+                const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise down to
+                data.then(article => // returned in form of promise with value of article
                 {
                     article.read();
-                } catch (TypeError)
-                {
-                    Bulletin.retryTopic(topic, 2);      // retry fetching an article using recursion
-                }
-            })
+                })
+                .catch(function () {
+                    Bulletin.retryTopic(topic, 2);
+                });
+            }
+            catch (TypeError)
+            {
+                Bulletin.retryTopic(topic, 2);      // retry fetching an article using recursion
+            }
         }
     }
 
@@ -46,40 +49,27 @@ export class Bulletin
     {
         const source = Object.keys(sources)[Math.floor(Math.random() * Object.keys(sources).length)];  // get random source to contact
         const topiclink = topics[topic][source];
-        const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise to
-
-        data.then(article => // returned in form of promise with value of article
+        try
         {
-            try
+            const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise to
+            data.then(article => // returned in form of promise with value of article
             {
                 article.read();
-            } catch (TypeError)
+            })
+            .catch(function () {
+                Bulletin.retryTopic(topic, ++attempt);
+            });
+        }
+        catch (TypeError)
+        {
+            if (attempt === 10)     // stop recursive loop, not managed to fetch an article for the topic
             {
-                if (attempt === 10)     // stop recursive loop, not managed to fetch an article for the topic
-                {
-                    console.log("Failed on topic " + topic);
-                } else
-                {
-                    Bulletin.retryTopic(topic, ++attempt);      // try again, increase number of attempts
-                }
+                console.log("Failed on topic " + topic);
             }
-        })
+            else
+            {
+                Bulletin.retryTopic(topic, ++attempt);      // try again, increase number of attempts
+            }
+        }
     }
 }
-
-/**
- * Receives messages from popup.mjs
- * These messages let us know user function, e.g. playing or pausing a bulletin
- */
-chrome.runtime.onMessage.addListener(
-    function (request, sender, sendResponse)
-    {
-        if (request.greeting === "play")
-            Bulletin.fetchNews();
-        else if (request.greeting === "pause")
-            window.speechSynthesis.pause();
-        else if (request.greeting === "resume")
-            window.speechSynthesis.resume();
-        else if (request.greeting === "stop")
-            window.speechSynthesis.cancel();
-    });

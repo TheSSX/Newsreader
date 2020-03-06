@@ -65,7 +65,7 @@ var fake_cleanHTML, fake_cleanText;
     (0, _mocha.it)('Should return text between <p> tags', function () {
       var returned = _articleextractor.ArticleExtractor.extractGuardianText(guardian);
 
-      (0, _chai.expect)(fake_cleanText.calledOnce);
+      (0, _chai.expect)(fake_cleanText.calledOnce).to.be.equal(true);
       var argument = fake_cleanText.getCall(-1).args[0];
       (0, _chai.expect)(argument).to.not.be.equal("");
       (0, _chai.expect)(returned).to.equal("This works");
@@ -79,7 +79,7 @@ var fake_cleanHTML, fake_cleanText;
     (0, _mocha.it)('Should return text between <p> tags', function () {
       var returned = _articleextractor.ArticleExtractor.extractBBCText(bbc);
 
-      (0, _chai.expect)(fake_cleanText.calledOnce);
+      (0, _chai.expect)(fake_cleanText.calledOnce).to.be.equal(true);
       var argument = fake_cleanText.getCall(-1).args[0];
       (0, _chai.expect)(argument).to.not.be.equal("");
       (0, _chai.expect)(returned).to.equal("This works");
@@ -106,8 +106,8 @@ var fake_cleanHTML, fake_cleanText;
     (0, _mocha.it)('Should return text between <p> tags', function () {
       var returned = _articleextractor.ArticleExtractor.extractIndependentText(independent);
 
-      (0, _chai.expect)(fake_cleanHTML.calledOnce);
-      (0, _chai.expect)(fake_cleanText.calledOnce);
+      (0, _chai.expect)(fake_cleanHTML.calledOnce).to.be.equal(true);
+      (0, _chai.expect)(fake_cleanText.calledOnce).to.be.equal(true);
       var argument1 = fake_cleanHTML.getCall(-1).args[0];
       var argument2 = fake_cleanText.getCall(-1).args[0];
       (0, _chai.expect)(argument1).to.not.be.equal(undefined);
@@ -121,7 +121,7 @@ var fake_cleanHTML, fake_cleanText;
 
       var returned = _articleextractor.ArticleExtractor.extractReutersText(reuters);
 
-      (0, _chai.expect)(_articleextractor.DataCleaner.cleanText.calledOnce);
+      (0, _chai.expect)(_articleextractor.DataCleaner.cleanText.calledOnce).to.be.equal(true);
 
       var argument = _articleextractor.DataCleaner.cleanText.getCall(-1).args[0];
 
@@ -135,7 +135,7 @@ var fake_cleanHTML, fake_cleanText;
 
       var returned = _articleextractor.ArticleExtractor.extractAPText(ap);
 
-      (0, _chai.expect)(_articleextractor.DataCleaner.cleanText.calledOnce);
+      (0, _chai.expect)(_articleextractor.DataCleaner.cleanText.calledOnce).to.be.equal(true);
 
       var argument = _articleextractor.DataCleaner.cleanText.getCall(-1).args[0];
 
@@ -147,7 +147,7 @@ var fake_cleanHTML, fake_cleanText;
     (0, _mocha.it)('Should return text between <p> tags', function () {
       var returned = _articleextractor.ArticleExtractor.extractSkyText(sky);
 
-      (0, _chai.expect)(fake_cleanText.calledOnce);
+      (0, _chai.expect)(fake_cleanText.calledOnce).to.be.equal(true);
       var argument = fake_cleanText.getCall(-1).args[0];
       (0, _chai.expect)(argument).to.not.be.equal("");
       (0, _chai.expect)(returned).to.equal("This works");
@@ -167,8 +167,8 @@ var fake_cleanHTML, fake_cleanText;
     (0, _mocha.it)('Should return text between <p> tags', function () {
       var returned = _articleextractor.ArticleExtractor.extractEveningStandardText(eveningstandard);
 
-      (0, _chai.expect)(fake_cleanHTML.calledOnce);
-      (0, _chai.expect)(fake_cleanText.calledOnce);
+      (0, _chai.expect)(fake_cleanHTML.calledOnce).to.be.equal(true);
+      (0, _chai.expect)(fake_cleanText.calledOnce).to.be.equal(true);
       var argument1 = fake_cleanHTML.getCall(-1).args[0];
       var argument2 = fake_cleanText.getCall(-1).args[0];
       (0, _chai.expect)(argument1).to.not.be.equal(undefined);
@@ -186,8 +186,8 @@ var fake_cleanHTML, fake_cleanText;
     (0, _mocha.it)('Should return text between <p> tags', function () {
       var returned = _articleextractor.ArticleExtractor.extractITVText(itv);
 
-      (0, _chai.expect)(fake_cleanHTML.calledOnce);
-      (0, _chai.expect)(fake_cleanText.calledOnce);
+      (0, _chai.expect)(fake_cleanHTML.calledOnce).to.be.equal(true);
+      (0, _chai.expect)(fake_cleanText.calledOnce).to.be.equal(true);
       var argument1 = fake_cleanHTML.getCall(-1).args[0];
       var argument2 = fake_cleanText.getCall(-1).args[0];
       (0, _chai.expect)(argument1).to.not.be.equal(undefined);
@@ -215,8 +215,8 @@ var fake_cleanHTML, fake_cleanText;
     (0, _mocha.it)('Should return text between <p> tags', function () {
       var returned = _articleextractor.ArticleExtractor.extractAUEnd(newscomau);
 
-      (0, _chai.expect)(fake_cleanHTML.calledOnce);
-      (0, _chai.expect)(fake_cleanText.calledOnce);
+      (0, _chai.expect)(fake_cleanHTML.calledOnce).to.be.equal(true);
+      (0, _chai.expect)(fake_cleanText.calledOnce).to.be.equal(true);
       var argument1 = fake_cleanHTML.getCall(-1).args[0];
       var argument2 = fake_cleanText.getCall(-1).args[0];
       (0, _chai.expect)(argument1).to.not.be.equal('');

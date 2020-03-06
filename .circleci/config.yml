@@ -20,7 +20,6 @@ jobs:
       - run:
           name: build
           command: npm run-script build
-          
   test:
     docker:
       - image: circleci/node:10.16.3

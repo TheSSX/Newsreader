@@ -12,6 +12,10 @@
             "replace": "../dist/article"
           },
           {
+            "search": "./pageparser.mjs",
+            "replace": "../dist/pageparser"
+          },
+          {
             "search": "./articleextractor.mjs",
             "replace": "../dist/articleextractor"
           },
