@@ -1,6 +1,6 @@
 "use strict";
 
-var _bulletin = require("./bulletin.mjs");
+var _bulletin = require("../../dist/js/bulletin");
 
 /**
  * Receives messages from popup.mjs

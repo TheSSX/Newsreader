@@ -2,7 +2,7 @@ import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
 import {stub} from "sinon";
 
-import {ArticleExtractor, DataCleaner} from "../dist/articleextractor.js";
+import {ArticleExtractor, DataCleaner} from "../dist/js/articleextractor.js";
 const guardian = require('../test_articles/guardian.js');
 const bbc = require('../test_articles/BBC.js');
 const independent = require('../test_articles/independent.js');

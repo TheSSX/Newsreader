@@ -11,13 +11,19 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _pageparser = require("../dist/pageparser");
+var _pageparser = require("../../dist/js/pageparser");
 
 var _preferences = require("./preferences.js");
+
+var _article = require("../../dist/js/article");
+
+//only for testing purposes
 
 /**
  Class for object to query random sources for each topic
  */
+var articles = [];
+
 var Bulletin =
 /*#__PURE__*/
 function () {
@@ -36,6 +42,21 @@ function () {
      * 4) For each article, read the publication, topic, title and summarised article
      */
     value: function fetchNews() {
+      articles.push(new _article.Article("hello1", "hello", "hello", "hello", "This is a long sentence i have decided to play to eat up lots of time"));
+      articles.push(new _article.Article("hello2", "hello", "hello", "hello", "This is a long sentence i have decided to play to eat up lots of time"));
+      articles.push(new _article.Article("hello3", "hello", "hello", "hello", "This is a long sentence i have decided to play to eat up lots of time"));
+
+      while (articles.length > 0) {
+        var current = articles[0];
+        current.read();
+        articles.shift();
+
+        if (articles.length === 0) {//window.speechSynthesis.speak(new SpeechSynthesisUtterance(" ").onend = stop);
+        }
+      }
+
+      return true;
+
       var _loop = function _loop(i) {
         var source = Object.keys(_preferences.sources)[Math.floor(Math.random() * Object.keys(_preferences.sources).length)]; // get random source to contact
 
@@ -54,7 +75,8 @@ function () {
 
           data.then(function (article) // returned in form of promise with value of article
           {
-            article.read();
+            //article.read();
+            articles.push(article);
           })["catch"](function () {
             Bulletin.retryTopic(topic, 2);
           });
@@ -66,6 +88,21 @@ function () {
       for (var i = 0; i < Object.keys(_preferences.topics).length; i++) // change i< to prevent unnecessary credits being used up
       {
         _loop(i);
+      }
+
+      while (articles.length > 0) {
+        var _current = articles[0];
+
+        _current.read();
+
+        articles.shift();
+
+        if (articles.length === 0) {
+          //Attempt to trigger the stop function so as to change the pause icon to play icon
+          //Alternative is to speak "End of bulletin" or similar
+          //Regardless, stop must be called
+          window.speechSynthesis.speak(new SpeechSynthesisUtterance("...").onend = stop);
+        }
       }
     }
   }, {
@@ -81,13 +118,15 @@ function () {
 
         data.then(function (article) // returned in form of promise with value of article
         {
-          article.read();
+          //article.read();
+          articles.push(article);
         })["catch"](function () {
           Bulletin.retryTopic(topic, ++attempt);
         });
       } catch (TypeError) {
         if (attempt === 10) // stop recursive loop, not managed to fetch an article for the topic
           {
+            //TODO something different. Even if it's a different output message, like a meaningful error
             console.log("Failed on topic " + topic);
           } else {
           Bulletin.retryTopic(topic, ++attempt); // try again, increase number of attempts

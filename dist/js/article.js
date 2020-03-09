@@ -11,7 +11,7 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
-var _speech = require("../dist/speech");
+var _speech = require("../../dist/js/speech");
 
 /**
  Class for an article object

@@ -1,8 +1,8 @@
 import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
 import {stub} from "sinon";
-import {Speech} from "../dist/speech.js";
-import {Article} from "../dist/article.js";
+import {Speech} from "../dist/js/speech.js";
+import {Article} from "../dist/js/article.js";
 
 suite('Article', function () {
 

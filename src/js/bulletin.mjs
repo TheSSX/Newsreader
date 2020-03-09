@@ -1,9 +1,13 @@
 import {PageParser} from "./pageparser.mjs";
 import {sentences, sources, topics} from "./preferences.js";
+import {Article} from "./article.mjs";      //only for testing purposes
 
 /**
  Class for object to query random sources for each topic
  */
+
+let articles = [];
+
 export class Bulletin
 {
     /**
@@ -15,6 +19,24 @@ export class Bulletin
      */
     static fetchNews()
     {
+        articles.push(new Article("hello1", "hello", "hello", "hello", "This is a long sentence i have decided to play to eat up lots of time"));
+        articles.push(new Article("hello2", "hello", "hello", "hello", "This is a long sentence i have decided to play to eat up lots of time"));
+        articles.push(new Article("hello3", "hello", "hello", "hello", "This is a long sentence i have decided to play to eat up lots of time"));
+
+        while (articles.length > 0)
+        {
+            const current = articles[0];
+            current.read();
+            articles.shift();
+
+            if (articles.length === 0)
+            {
+                //window.speechSynthesis.speak(new SpeechSynthesisUtterance(" ").onend = stop);
+            }
+        }
+
+        return true;
+
         for (let i = 0; i < Object.keys(topics).length; i++)     // change i< to prevent unnecessary credits being used up
         {
             let source = Object.keys(sources)[Math.floor(Math.random() * Object.keys(sources).length)];  // get random source to contact
@@ -32,7 +54,8 @@ export class Bulletin
                 const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise down to
                 data.then(article => // returned in form of promise with value of article
                 {
-                    article.read();
+                    //article.read();
+                    articles.push(article);
                 })
                 .catch(function () {
                     Bulletin.retryTopic(topic, 2);
@@ -41,6 +64,21 @@ export class Bulletin
             catch (TypeError)
             {
                 Bulletin.retryTopic(topic, 2);      // retry fetching an article using recursion
+            }
+        }
+
+        while (articles.length > 0)
+        {
+            const current = articles[0];
+            current.read();
+            articles.shift();
+
+            if (articles.length === 0)
+            {
+                //Attempt to trigger the stop function so as to change the pause icon to play icon
+                //Alternative is to speak "End of bulletin" or similar
+                //Regardless, stop must be called
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance("...").onend = stop);
             }
         }
     }
@@ -54,7 +92,8 @@ export class Bulletin
             const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise to
             data.then(article => // returned in form of promise with value of article
             {
-                article.read();
+                //article.read();
+                articles.push(article);
             })
             .catch(function () {
                 Bulletin.retryTopic(topic, ++attempt);
@@ -64,6 +103,7 @@ export class Bulletin
         {
             if (attempt === 10)     // stop recursive loop, not managed to fetch an article for the topic
             {
+                //TODO something different. Even if it's a different output message, like a meaningful error
                 console.log("Failed on topic " + topic);
             }
             else

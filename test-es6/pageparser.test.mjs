@@ -1,13 +1,13 @@
 import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
 import {stub, restore, createFakeServer} from "sinon";
-import {PageParser, callTranslation} from "../dist/pageparser.js";
-import {Article} from "../dist/article.js";
-import {ArticleExtractor} from "../dist/articleextractor.js";
-import {topics, sources} from "../dist/preferences.js";
-import {Summarise} from "../dist/summarise.js";
-import {Translator} from "../dist/translator.js";
-//import {$} from "../dist/jquery.js";
+import {PageParser, callTranslation} from "../dist/js/pageparser.js";
+import {Article} from "../dist/js/article.js";
+import {ArticleExtractor} from "../dist/js/articleextractor.js";
+import {topics, sources} from "../dist/js/preferences.js";
+import {Summarise} from "../dist/js/summarise.js";
+import {Translator} from "../dist/js/translator.js";
+//import {$} from "../dist/js/jquery.js";
 
 const valid_test_smmry_json = {
     'sm_api_title': 'test-headline',

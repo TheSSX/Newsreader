@@ -14,7 +14,7 @@ export let sources =
         "BBC": "https://www.bbc.com/",                          // left wing
         "The Independent": "https://www.independent.co.uk/",    // left wing
         "Reuters": "https://www.reuters.com/",                  // neutral
-        "Sky News": "https://www.news.sky.com/",                // neutral
+        "Sky News": "https://news.sky.com/",                    // neutral
         "Associated Press": "https://apnews.com/",              // neutral
         "Evening Standard": "https://www.standard.co.uk/",      // right wing
         "ITV News": "https://www.itv.com/",                     // right wing

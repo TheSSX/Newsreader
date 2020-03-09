@@ -6,15 +6,15 @@ var _chai = require("chai");
 
 var _sinon = require("sinon");
 
-var _pageparser = require("../dist/pageparser.js");
+var _pageparser = require("../dist/js/pageparser.js");
 
-var _article = require("../dist/article.js");
+var _article = require("../dist/js/article.js");
 
-var _preferences = require("../dist/preferences.js");
+var _preferences = require("../dist/js/preferences.js");
 
-var _bulletin = require("../dist/bulletin.js");
+var _bulletin = require("../dist/js/bulletin.js");
 
-var _articleextractor = require("../dist/articleextractor");
+var _articleextractor = require("../dist/js/articleextractor.js");
 
 (0, _mocha.suite)('Bulletin', function () {
   (0, _mocha.afterEach)(function () {

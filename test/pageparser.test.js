@@ -14,19 +14,19 @@ var _chai = require("chai");
 
 var _sinon = require("sinon");
 
-var _pageparser = require("../dist/pageparser.js");
+var _pageparser = require("../dist/js/pageparser.js");
 
-var _article = require("../dist/article.js");
+var _article = require("../dist/js/article.js");
 
-var _articleextractor = require("../dist/articleextractor.js");
+var _articleextractor = require("../dist/js/articleextractor.js");
 
-var _preferences = require("../dist/preferences.js");
+var _preferences = require("../dist/js/preferences.js");
 
-var _summarise = require("../dist/summarise.js");
+var _summarise = require("../dist/js/summarise.js");
 
-var _translator = require("../dist/translator.js");
+var _translator = require("../dist/js/translator.js");
 
-//import {$} from "../dist/jquery.js";
+//import {$} from "../dist/js/jquery.js";
 var valid_test_smmry_json = {
   'sm_api_title': 'test-headline',
   'sm_api_content': 'test-content',

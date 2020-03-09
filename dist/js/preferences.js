@@ -24,7 +24,7 @@ var sources = {
   // left wing
   "Reuters": "https://www.reuters.com/",
   // neutral
-  "Sky News": "https://www.news.sky.com/",
+  "Sky News": "https://news.sky.com/",
   // neutral
   "Associated Press": "https://apnews.com/",
   // neutral

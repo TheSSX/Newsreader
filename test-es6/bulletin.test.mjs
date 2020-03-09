@@ -1,11 +1,11 @@
 import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
 import {stub, spy, restore} from "sinon";
-import {PageParser} from "../dist/pageparser.js";
-import {Article} from "../dist/article.js";
-import {topics} from "../dist/preferences.js";
-import {Bulletin} from "../dist/bulletin.js";
-import {DataCleaner} from "../dist/articleextractor";
+import {PageParser} from "../dist/js/pageparser.js";
+import {Article} from "../dist/js/article.js";
+import {topics} from "../dist/js/preferences.js";
+import {Bulletin} from "../dist/js/bulletin.js";
+import {DataCleaner} from "../dist/js/articleextractor.js";
 
 suite('Bulletin', function () {
 
