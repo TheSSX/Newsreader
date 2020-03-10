@@ -1,0 +1,791 @@
+[33mcommit 0788d4d8adda20c5160488b65b1d5cd0b456f948[m[33m ([m[1;36mHEAD -> [m[1;32mui-revamp[m[33m)[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Mon Mar 9 20:33:11 2020 +0000
+
+    Got a dynamic form, only missing correct values being set on clicking icon
+    
+    Currently, whenever the icon is set, the page is in its default state, i.e. if a bulletin is playing then the play button is shown as not playing when we need it to show the pause option.
+    
+    Still making use of messages in popup.mjs but can probably change this to straight up replacing uifunction.mjs functionality soon.
+    
+    Also modified the way bulletin.mjs works in order to more dynamically interact with elements in it (hopefully). Articles, when fetched, are added to a list. Once all articles are fetched, the list is read in order. Ideally, if a change is received during playback, the remaining articles can reflect this change.
+
+[33mcommit d6dc87dbc32b887aeb7a3320bf78e6197c7bb9e9[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Merge: 2127baf 18b7bdd
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Fri Mar 6 15:03:19 2020 +0000
+
+    Merge pull request #15 from TheSSX/testing
+    
+    Added unit tests for half the code. Will return later
+
+[33mcommit 18b7bdd3374cecc380e8729892932506033b8c8d[m[33m ([m[1;31morigin/testing[m[33m, [m[1;32mtesting[m[33m)[m
+Merge: d35cd63 156e84e
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Mar 6 14:57:07 2020 +0000
+
+    Merge branch 'testing' of https://github.com/TheSSX/Newsreader into testing
+
+[33mcommit d35cd633c4517ae78c612fd5879c687c76459459[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Mar 6 14:56:18 2020 +0000
+
+    Leaving testing for now until I can figure out running in browser
+    
+    Halfway through it, will return later
+
+[33mcommit 156e84e1e903cf311c1ad8c42e25b562879fb32f[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Wed Mar 4 19:37:46 2020 +0000
+
+    Experimenting with Babelify
+
+[33mcommit c3a5e589d4d0f07ed5ad646cea95ce53c0327c00[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Wed Mar 4 16:00:18 2020 +0000
+
+    Working on testing popup
+
+[33mcommit 597ce6860ca8af5ae62ed16ef42745f51f72f4f2[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Tue Mar 3 19:56:12 2020 +0000
+
+    Update pageparser.test.js
+
+[33mcommit e93cc96fddfc127b815a3e6efb51edb015c25bb8[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Tue Mar 3 19:55:49 2020 +0000
+
+    Finished testing pageparser for now, struggling to stub ajax
+    
+    Will return to later
+
+[33mcommit cc47c47b9dd4d0327bba04747842dce2b93f2ec6[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Mar 3 17:02:31 2020 +0000
+
+    I lied, I'm not finished on it. Working on testing callTranslation and then mocking AJAX calls
+
+[33mcommit 27dcb9073cd987dcfeb31b0678b7e0ac18be28c4[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Mar 3 16:22:23 2020 +0000
+
+    Finished testing pageparser. 48 unit tests so far
+
+[33mcommit 4c6a6dd1f01ed8c95aafa418fe43880ad6124d91[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Sun Mar 1 18:17:14 2020 +0000
+
+    Finished testing Standard and fixed bug with extractGuardian
+
+[33mcommit 3d28f695fe21ba8a8f1dd4f068c55a149b6dcbb8[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Sat Feb 29 18:42:15 2020 +0000
+
+    Just over halfway through testing pageparser
+
+[33mcommit 6016e64daa6d5ce6f68b03541e027042f2739001[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 28 17:01:32 2020 +0000
+
+    Nearly done testing extractBBC. Annoying bug
+
+[33mcommit 0953a2bec05f2db8862c11c4da033e19e57236bf[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 28 12:56:46 2020 +0000
+
+    Midway through testing extractGuardian
+
+[33mcommit b52999280f655dbce944351bae77fe5077248121[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Feb 27 17:38:46 2020 +0000
+
+    Partway through testing pageparser
+
+[33mcommit 6858bdc1f846c3ab62eddf2ad321dc3e9f6f62c6[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Feb 27 17:02:13 2020 +0000
+
+    Now finished bulletin testing
+
+[33mcommit 1c5eabe6bce0a8916befb9105f0e6e220ee638ec[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Feb 27 17:01:07 2020 +0000
+
+    Finished off bulletin testing as best I can
+
+[33mcommit dabfa7f4c359a6b28c4a3cddd685dfe8669578f4[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Tue Feb 25 19:57:52 2020 +0000
+
+    Minor edit
+
+[33mcommit 9db3bc9d1e0b0e73ec866fba69dec74b7f9676ef[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Feb 25 16:49:47 2020 +0000
+
+    Can't figure out stubbing dynamic classes. So haven't made much progress
+
+[33mcommit 02820b658697dfa130889859e5cf912cbe82547f[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Feb 25 14:02:42 2020 +0000
+
+    Testing bulletin
+
+[33mcommit 03e67926e9411328e78c3512bcad480f3815c82a[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Sat Feb 22 19:26:35 2020 +0000
+
+    Attempted to get local circleci builds running, not possible on Windows
+    
+    Attempts to trigger circleci builds locally concluded, resulting in learning circleci doesn't support it for Windows. Config is there to attempt on Linux later on. Requires docker so that a local node image can be run.
+
+[33mcommit 2127baf0efcab7dc638c30713b386f37b4e09864[m
+Merge: 123cde6 be50540
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Sat Feb 22 18:08:25 2020 +0000
+
+    Merge pull request #14 from TheSSX/testing
+    
+    Testing and project restructuring
+
+[33mcommit be50540dc3ebd90289f9343f9dfe3ad80799f529[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 18:48:58 2020 +0000
+
+    Added workflows
+
+[33mcommit 01c9b7ce1e7615438de40add69c70c607e7d14d9[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:45:57 2020 +0000
+
+    Scratch that rename
+
+[33mcommit 22a7e48cb0738744a917d3284d9cb9c6cfed5b88[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:44:04 2020 +0000
+
+    Renaming job
+
+[33mcommit 6d32c697f0bd56a15a1630891ded90f8568e564b[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:35:35 2020 +0000
+
+    Update config.yml
+
+[33mcommit 00fdbd868ab5dc0f712340f3c33c8d73462f3b5a[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:33:45 2020 +0000
+
+    Update config.yml
+
+[33mcommit 1bc753759c37d94a5bdf5dd311f09c9c86fddd3b[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:32:39 2020 +0000
+
+    Update config.yml
+
+[33mcommit 30041559e99d383c3920d27c548d697352146487[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:28:17 2020 +0000
+
+    Update config.yml
+
+[33mcommit bf410c3c7c9c80467b4475a8318cbe447e1cd911[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:26:53 2020 +0000
+
+    one more time
+
+[33mcommit 354b23b31e25e276b7a2fb0bd78485a30f82487e[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:26:11 2020 +0000
+
+    Using config template
+
+[33mcommit 0ac25fb336e30eb3348ce3fec8e43dc067a9e277[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:17:16 2020 +0000
+
+    Update config.yml
+
+[33mcommit 14d2b37e5cb2079d3188459a629da2b0630b99d4[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:16:18 2020 +0000
+
+    Update config.yml
+
+[33mcommit 0e20e393137df5f16515bb2c6a1c5b2b4f84895f[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:07:37 2020 +0000
+
+    Amending circleci config
+
+[33mcommit db504bb656d2789dc9500a56c31db5fa7acffcf2[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 17:02:07 2020 +0000
+
+    Finished testing articleextractor
+    
+    27 tests in article and articleextractor so far
+
+[33mcommit aa1db2547c65f1258343b54cf3da8d17b3bb2768[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 21 15:16:53 2020 +0000
+
+    Finally got tests and modular code working together
+    
+    Browser NEEDS ES6 code to run so runs from src folder. It cannot make use of require statement in files in dist folder
+    Tests NEED ES5 code to run so run from dist folder where Babel transpiles from src folder. It cannot make use of import statement in files in src folder
+    Biggest problem was fixing paths in import statements. mjs files need their paths to end in .mjs and these cannot be transpiled to .js files because that incorrect path remains. So a plugin for Babel called search-and-replace automatically replaces references to .mjs code with their transpiled code path.
+
+[33mcommit 2cc0347f82e104293a3025b9b044020763875c46[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Feb 20 13:10:55 2020 +0000
+
+    Nearly done testing articleextractor. Need to amend other files as can't load extension anymore
+
+[33mcommit cc3d6856be45e6e8970d790764ce1bf8a00a5594[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Wed Feb 19 17:56:21 2020 +0000
+
+    Still testing articleextractor. 3 sources to go
+
+[33mcommit 4a0a52a72d710275c38e8cafe1504f090ff1aacf[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Tue Feb 18 20:17:42 2020 +0000
+
+    Figured out stubbing. Working well so far with testing articleextractor
+
+[33mcommit 4f46bdb9f818466d703169c19ffed2a6a883d2b4[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Feb 18 17:01:45 2020 +0000
+
+    Added sinon for stubbing and spying. Also added test articles
+
+[33mcommit 4c61feecaf59dad9ff7acb4e43e528ef9e0d9c85[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Feb 18 13:52:13 2020 +0000
+
+    Figured it out! Testing in progress
+
+[33mcommit d2729edf8ab36674f5c33e4362d7825a8493c07b[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Feb 17 23:12:19 2020 +0000
+
+    I wanna die
+
+[33mcommit 9cdd170fc4b646eee44f51d9415bbb5ba44bc210[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Mon Feb 17 15:20:54 2020 +0000
+
+    Testing sucks
+
+[33mcommit 2f0fb11c951cc297dfe7ea6c66498f1677fc0214[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Sat Feb 15 18:18:52 2020 +0000
+
+    Experimenting with testing
+    
+    Will likely have to stick to ES5 imports and testing. ES6 imports, I believe, are impossible. Some people write the tests in ES6 and then use another package like Babel maybe to transpile it down. Screw that, as long as I can wrap my head around ES5 it shouldn't be too bad.
+    
+    Started making use of Node, added a package.json, dependencies are just mocha and chai so far, experimenting with a test file or two
+
+[33mcommit 123cde603a13a9fcee40fd88c0aa8148803bdaea[m
+Merge: d807479 5e40557
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Fri Feb 14 16:15:41 2020 +0000
+
+    Merge pull request #13 from TheSSX/code-cleanup
+    
+    Code cleanup
+
+[33mcommit 5e405572ed3aacb3ebea5d993734878c953c90ef[m[33m ([m[1;31morigin/code-cleanup[m[33m, [m[1;32mcode-cleanup[m[33m)[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 14 16:14:31 2020 +0000
+
+    Few indents
+
+[33mcommit 78bd34398034011f1294c855b2ffaefa1a104de4[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 14 16:04:46 2020 +0000
+
+    Class for cleaning strings, cleaned up pageparser
+    
+    Did as much as I could with pageparser, can't really cut it down. Moved the function to call a translation outwith the class. Made a class designated for cleaning strings, with the respective functions for removing surrounding text and then cleaning text
+
+[33mcommit 47f0bb3dd188e20ef31a0c99acf1521b9a2fa867[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 14 13:19:42 2020 +0000
+
+    Pageparser in progress, done translating
+
+[33mcommit 9cb95def5eec527376092b2f2ce0269ccfec2ac8[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 14 12:29:55 2020 +0000
+
+    Before pageparser
+
+[33mcommit 73d2be7345571ea4346524fb6aee7d3bb3b2f3f6[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Feb 13 15:49:34 2020 +0000
+
+    Still in progress, only pageparser still to do
+    
+    Moved some code to new files
+
+[33mcommit c9bc47366c5d5abffacf9e3d5cf1eca157a9a24e[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Feb 13 13:54:29 2020 +0000
+
+    In progress. Working on summarise.mjs
+
+[33mcommit d80747911b29691fe3dcaec9164e867518b4dc70[m
+Merge: e1624a9 ab3fa23
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Thu Feb 13 10:59:39 2020 +0000
+
+    Merge pull request #12 from TheSSX/news.com.au
+    
+    News.com.au
+
+[33mcommit ab3fa236ee73368b308a89a5c60e739ea4b70ae3[m[33m ([m[1;31morigin/news.com.au[m[33m, [m[1;32mnews.com.au[m[33m)[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Wed Feb 12 16:46:12 2020 +0000
+
+    Amended headline parsing spiel
+
+[33mcommit 1cba9d874ed0e722e0c3e2695dee73672a04dccd[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Wed Feb 12 16:29:27 2020 +0000
+
+    Finished News.com.au. Awkward <div> meant two tags were required for manual extraction
+    
+    Finished adding News.com.au. The structure of the articles is very unorthodox and meant that two functions were required for retrieving the text. One for the start introduction and one for the rest of the article. These are combined.
+
+[33mcommit 8fbbe7e97f665824a7738e6594ce08b5e51d3708[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Feb 11 16:50:06 2020 +0000
+
+    Adding of News.com.au in progress. Tricky <p> tags
+    
+    Currently adding News.com.au. There's some inconsistent <p> tags to account for but currently working quite well. Article order is out of wack though
+
+[33mcommit cee158edb2abe6a179b24a939f76e544c942cf1e[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Feb 11 16:12:01 2020 +0000
+
+    Adding links in preferences.js
+    
+    See above
+
+[33mcommit e1624a9c1cd5827aa09d7e9327a98bc3edaf2e23[m
+Merge: c14b3b3 3c60b5a
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Tue Feb 11 15:38:55 2020 +0000
+
+    Merge pull request #11 from TheSSX/itv-news
+    
+    Added ITV News. No significant issues
+
+[33mcommit 3c60b5a234bf6eec6bfe5f45cdd1846e40f8e6ec[m[33m ([m[1;31morigin/itv-news[m[33m, [m[1;32mitv-news[m[33m)[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Feb 11 15:33:53 2020 +0000
+
+    Removed a line of code for testing
+
+[33mcommit f73127a752f8cc4f31cac73f7838aa5f21bb4f43[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Mon Feb 10 16:29:59 2020 +0000
+
+    Found an unrelated error, TODO'd to fix later
+
+[33mcommit b056d032bfc0cb38e6c047f1a3958fe7e4e088eb[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Mon Feb 10 16:19:27 2020 +0000
+
+    Added ITV News. No significant issues
+    
+    Added ITV News as a source. Didn't put up too much of a fight. Have a few checks to make sure article links are chosen. They require news/ and a number in the format YYYY-MM-DD. This is checked for with /\d/.test(current)
+
+[33mcommit c14b3b319f2085375155d24e1f2c5c8d0f27bba3[m
+Merge: 401b4bf 234f32f
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Feb 10 14:38:52 2020 +0000
+
+    Merge pull request #10 from TheSSX/independent
+    
+    Added Independent
+
+[33mcommit 234f32f2b3ae527771e07bc30363fd559d2f4bd9[m[33m ([m[1;31morigin/independent[m[33m, [m[1;32mindependent[m[33m)[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Sat Feb 8 18:19:17 2020 +0000
+
+    Got it working. Put up a fight with weird links and inconsistency
+    
+    Text now extracted. Some headlines have an inconsistent structure which is now accounted for. Removed the trailing italics text at the end of lots of articles. Removed articles of some bizarre things like top 10 lists and recipes. Also now accouting for <p> tags with special additions.
+
+[33mcommit 630d6556f699dbaecf4d4560ecb455ff169f707b[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Feb 7 16:03:18 2020 +0000
+
+    Independent in progress. <p> tag issues
+    
+    Mostly works but fails when an article uses <p> tags that include additional descriptors. In this case, it's <p dir="ltr">
+    Also need to improve checks for <strong> tag
+
+[33mcommit 401b4bf8f705e1fee222b62764359a0e43d96d9d[m
+Merge: 1034f88 c7d5609
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Fri Feb 7 14:53:50 2020 +0000
+
+    Merge pull request #9 from TheSSX/evening-standard
+    
+    Evening standard, fixed do-while loop, fixed AP bugs, etc.
+
+[33mcommit c7d560934f43fb43edb68646d0930428b792aef0[m[33m ([m[1;31morigin/evening-standard[m[33m, [m[1;32mevening-standard[m[33m)[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Wed Feb 5 16:47:05 2020 +0000
+
+    Fixed issue with some topics not being covered. Also fixed AP issues
+    
+    There was a long-standing issue in bulletin where, if an article could not be found for a topic, the do-while loop wouldn't work, likely because of async code. Fixed this so that the error is caught and then a recursive function is called to retry until a success or a timeout of 10 tries.
+    
+    Also found a bug where SMMRY wasn't extracting a headline from an AP article. This is because AP does not make use of the <title> tag. Made a function in summarise.mjs specifically to extract an AP headline.
+
+[33mcommit be5654a732766b98c9bbc01683a5c94f1af3783d[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Mon Feb 3 18:12:58 2020 +0000
+
+    Figured out text extraction for Standard
+    
+    Managed to get rid of <figure> and &nbsp; coming up. SMMRY ran out of credits so added some code for what would happen if that happens again. Currently it just uses the headline and extracted text but later this won't happen at all as my own engine will just summarise instead
+
+[33mcommit 957ed9a09818314f5dd7202c42556be8d3b765fd[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Sat Feb 1 17:44:06 2020 +0000
+
+    Evening Standard in progress, working on text extraction
+    
+    Currently working on manual text extraction. Formatting needs work, cheat code doesn't remove &nbsp; with links and figures with galleries
+
+[33mcommit 1034f8898005c6294090e9e13eab61bf139e9cd6[m
+Merge: 7b3b7cf a032151
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Sat Feb 1 16:32:41 2020 +0000
+
+    Merge pull request #8 from TheSSX/associated-press
+    
+    Associated press
+
+[33mcommit a0321515ecfcfe4d2a3a2ac1722e708f8791803c[m[33m ([m[1;31morigin/associated-press[m[33m, [m[1;32massociated-press[m[33m)[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Sat Feb 1 16:32:13 2020 +0000
+
+    Few additional tweaks
+    
+    Improved headline extraction, removed additional blips in manual text extraction. BBC Science and Technology article chosen is still sometimes that Global Business splash page
+
+[33mcommit 7339ccefcd8914a09e9c8ae2c5140de550a5f988[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Jan 31 17:09:06 2020 +0000
+
+    Finished extracting AP text. Made breakthrough with HTML tag removal
+    
+    Found a piece of code online that seems to do the job 100% of the time in removing tags from text containing HTML. This includes tags with classes and additional attributes. Tested it on other functions struggling to remove links to amazing success.
+    Had a downside whereby Reuters is now returning additional text at the end it shouldn't. Also noticed now that old news is being fetched from some pages but that's just cos the page is showing it. For example, got an article from December 13. Might be worth reading out the date of the article in TTS
+
+[33mcommit e6aab7cf81db9dbfc05234a0d8b5658b58645b60[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Jan 27 17:31:06 2020 +0000
+
+    Associated Press halfway there. Working on text extraction
+    
+    Fetching of article links works mostly fine, although there's no surefire way of telling if a link is for an article as they don't follow a structure like apnews.com/story/something and instead can be recognised like apnews.com/ab3345sjn with a mixture of letters AND numbers. If I can figure out a regular expression for making sure current has letters AND numbers, this will work.
+    
+    Currently working on article text extraction. This is awkward due to the fact that <p> tags have their own class which differs between articles
+
+[33mcommit 7b3b7cffa0c7c4e33395a356d29120479c474629[m
+Merge: 674af82 b9d2827
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Jan 27 15:49:46 2020 +0000
+
+    Merge pull request #7 from TheSSX/sky-news
+    
+    Sky News added. Still having ongoing problem of removing links from a…
+
+[33mcommit b9d2827b5eacc76ba48fe868dc78960c8da371ea[m[33m ([m[1;31morigin/sky-news[m[33m)[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Jan 27 15:47:47 2020 +0000
+
+    Sky News added. Still having ongoing problem of removing links from article text. Apart from that, works fine.
+    
+    Sky News added as a source. Currently has a little bit of awkward code for sports news due to a different domain (skysports.com compared to news.sky.com). Still having issue with extracting links from article text without removing the link text as well. Will fix in a later update
+
+[33mcommit 674af82beed530f977612ff28b581f601fd6798e[m
+Merge: ed975ec 4bce295
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Jan 13 16:00:03 2020 +0000
+
+    Merge pull request #6 from TheSSX/bbc_reuters_sources
+    
+    Added BBC and Reuters as sources
+
+[33mcommit 4bce29532a3bb6b3dd87cab15e047de32494a638[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Jan 13 15:57:35 2020 +0000
+
+    Text extraction mostly working, works best for Reuters
+    
+    Currently, text for Guardian and BBC contains links I don't know how to get rid of. Added in ability to detect if received page is not an article (returns undefined with checking on the other end).
+
+[33mcommit 64c9cfdf590d2d3bf93d1c16e5e4884c45e84802[m
+Author: Sam <sam.glendenning@btinternet.com>
+Date:   Wed Jan 8 17:13:11 2020 +0000
+
+    Finished and refined extraction of article text
+    
+    Reuters is done and works well. In the middle of applying the same procedure to the Guardian but it's not happy with the links removal so I'm working on that.
+
+[33mcommit 392266ede74d1a2f97c97c2249b222bc5dea8d07[m
+Author: Sam <sam.glendenning@btinternet.com>
+Date:   Mon Jan 6 16:46:14 2020 +0000
+
+    Added Reuters and halfway through manual text extraction
+    
+    Reuters has been added and is being summarised and read fine. Only issue with that is that the Reuters articles themselves contain a place of publishing and a publisher at the start of every article but this can be removed.
+    
+    Halfway through the text extraction.
+    
+    Ran into issue where topic name was not the same for all sources, e.g. topic "uk" for Guardian is no good, it need to be "uk-news". May fix this later by having a map for this. Right now, is just hard-coded.
+
+[33mcommit 43b91e7d08f47acf2a7521c90f88d0bae4c9567d[m
+Author: Sam <sam.glendenning@btinternet.com>
+Date:   Mon Jan 6 14:24:56 2020 +0000
+
+    Reuters in progress
+
+[33mcommit f68b6e62b5f9275f82fcc44d9ee59af5822697cf[m
+Author: Sam <sam.glendenning@btinternet.com>
+Date:   Sun Jan 5 15:52:49 2020 +0000
+
+    Manual extraction of BBC article text (still work to be done)
+    
+    summarise.mjs contains a method to manually extract text from BBC article. Not complete, still needs to remove other tags, especially link tags like <a>
+
+[33mcommit b8adc768464d54406b57941872c246ff7b6c3f2f[m
+Author: Sam <sam.glendenning@btinternet.com>
+Date:   Sat Jan 4 14:55:47 2020 +0000
+
+    BBC links now extracted, articles being summarised
+    
+    Still need to remove Q&A articles and handle errors with invalid article being found (although this handling may already exist). Removed articles focused on a video. Articles are being summarised and read out.
+
+[33mcommit a9340bab217c494e35bc6521ffa7377ccb8ef7d1[m
+Author: Sam <sam.glendenning@btinternet.com>
+Date:   Fri Jan 3 16:40:49 2020 +0000
+
+    Topic data structure amended, in middle of parsing BBC
+    
+    The topics list has been amended to a dictionary of dictionaries. The keys are the topics themselves, which map to a dictionary of sources and the links to their specific pages dedicated to that topic. Functions to build these links in page parser have been removed subsequently, everything instead using extractPageData. Currently in middle of extracting BBC article links, this is proving harder because of articles appearing in multiple topic pages and not having a consistent link structure. Will likely move summarising and translating fuctionality to separate functions later
+
+[33mcommit ed975ec4dcadcdc024907320316b51cfe4babe41[m
+Merge: bdaaa40 320db8e
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Fri Jan 3 15:25:35 2020 +0000
+
+    Merge pull request #5 from TheSSX/translation
+    
+    Added translation with Yandex API. Translations are read in native dialect
+
+[33mcommit 320db8e58b4d3024434184603173c92ab08733c9[m[33m ([m[1;31morigin/translation[m[33m, [m[1;32mtranslation[m[33m)[m
+Author: Sam <sam.glendenning@btinternet.com>
+Date:   Fri Jan 3 15:21:29 2020 +0000
+
+    Topics.length for bulletin
+
+[33mcommit c16ffe7bad23af1b6181d8f137e30b155c14e0d2[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Nov 15 11:57:28 2019 +0000
+
+    Minor url change
+
+[33mcommit 53f93f233d9ccb397836b06d8781197ae9cee48b[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Nov 15 11:55:10 2019 +0000
+
+    Translates articles and reads them in dialect of that country
+
+[33mcommit bdaaa402f53dd71d10f651bcb1fb120e4a600f14[m
+Merge: c777a05 6ead239
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Tue Nov 12 16:32:35 2019 +0000
+
+    Merge pull request #4 from TheSSX/tts-class
+    
+    Implemented Speech class for reading text
+
+[33mcommit 6ead239821384ed71f3a069ed5e74c46c3722748[m[33m ([m[1;31morigin/tts-class[m[33m, [m[1;32mtts-class[m[33m)[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Nov 12 16:35:26 2019 +0000
+
+    Preferences languages fetched from language_config.js
+
+[33mcommit 999abd2e5516c1a7f47680e7ac4137e2ef2684a7[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Nov 12 16:29:53 2019 +0000
+
+    Wee comment
+
+[33mcommit cd28e31476f7239fccd901708873c557e4e876ee[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Nov 12 16:26:51 2019 +0000
+
+    Speech object in separate class. Languages mapped in config file. Added pause and resume functionality
+
+[33mcommit 2ec5b351f1827bd67626e4969abb0140ca645098[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Nov 7 14:02:30 2019 +0000
+
+    Plays in the background fine. Uses chrome runtime messages
+
+[33mcommit c8ea5fdd4c4b1520d0d73b015614548851de42a2[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Wed Nov 6 14:03:57 2019 +0000
+
+    Plays in background
+
+[33mcommit 23609ab286b1b80c17dce5b9eb0ec2da57eb7cbe[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Nov 5 17:38:38 2019 +0000
+
+    Still kinda in progress
+
+[33mcommit 89f7a970110832393e8207382b86bbe294bc0ec4[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Nov 4 18:39:17 2019 +0000
+
+    Built play and stop button. Not yet working with background script
+
+[33mcommit 3b20e115588af25ffdc0f6e355b5306518abd309[m[33m ([m[1;31morigin/class-creation[m[33m, [m[1;32mclass-creation[m[33m)[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Mon Nov 4 14:51:23 2019 +0000
+
+    Minor updates to config.yml and pageparser
+
+[33mcommit c777a051c57b492c1be46e3349c36b8f19d776ba[m
+Merge: af27275 1c126c9
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Nov 4 14:48:47 2019 +0000
+
+    Merge pull request #3 from TheSSX/class-creation
+    
+    Class creation, commenting and SMMRY API added
+
+[33mcommit 1c126c95e8216656e7c5ebd749b24d14ac874194[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Oct 29 15:59:02 2019 +0000
+
+    Added comments and backup article text extractor
+
+[33mcommit 771a92b52cdde9dadb7c5540e69674150a5ddc35[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Tue Oct 29 14:05:45 2019 +0000
+
+    Implemented SMMRY
+
+[33mcommit 282246470c482ce909b4c5ca861ac9abe35d1c7e[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Mon Oct 28 17:47:13 2019 +0000
+
+    Classes organised, may need to refactor promises at a later date
+
+[33mcommit 9aedd3761b41c6059e656bc9e8f68f86b180920c[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Fri Oct 25 17:59:44 2019 +0100
+
+    Created article.js and making pageparser.js
+
+[33mcommit af2727508ef60b326dc7cb0ab096ab14b195ee9b[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Wed Oct 23 13:50:41 2019 +0100
+
+    Rename config.yaml to config.yml
+
+[33mcommit 8bed14f69ffabd38f96231dbd6390056f750824b[m
+Merge: 71797e7 da0a166
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Wed Oct 23 13:42:19 2019 +0100
+
+    Merge pull request #2 from TheSSX/circleci-integration
+    
+    Create circleci yaml
+
+[33mcommit da0a166b694a0221a7e60c32956ab4ae4feb6382[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Wed Oct 23 13:28:47 2019 +0100
+
+    Create circleci yaml
+
+[33mcommit 71797e77bbeb8bd096e515bf538e3c6f83b24602[m
+Merge: 075a4eb fcdeac6
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Wed Oct 23 13:27:27 2019 +0100
+
+    Merge pull request #1 from TheSSX/guardian-text-extractor
+    
+    Guardian text extractor
+
+[33mcommit fcdeac64321ee20bee4244964a89935e1e57858e[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Wed Oct 23 13:29:47 2019 +0100
+
+    Minor logic fix
+
+[33mcommit 09f212d0b5910d0996af1ab4ffd2e29d8728df79[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Wed Oct 23 13:18:44 2019 +0100
+
+    Added comments and tested with politics to work
+
+[33mcommit e15dde8082f9eac9392eac652b3c7083c211310f[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Tue Oct 22 19:20:49 2019 +0100
+
+    Added async and await for validating article data. Basic error handling for failed Ajax request
+
+[33mcommit 8ba0704ae7672c3b7d08bfb3d5f8ceaaa2c6bb86[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Tue Oct 22 17:16:22 2019 +0100
+
+    Splitting by '.' no longer has issues with decimal. TTS uses sentences
+
+[33mcommit b5e85c113809bcee55f9445de878e4d71d354b92[m
+Author: Sam Glendenning <sam.glendenning@btinternet.com>
+Date:   Mon Oct 21 19:27:46 2019 +0100
+
+    Hacky solution for removing <aside>
+
+[33mcommit e39c15c421de973d0d1ede5e3cd1c5a946d1ee0d[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Mon Oct 21 15:59:51 2019 +0100
+
+    Improving headline grabbing
+
+[33mcommit e5ea7241e9a84349dc106aafbf50a6da9470417e[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Oct 17 17:57:10 2019 +0100
+
+    Extracts headline and article text but still contains other article links
+
+[33mcommit 4e271a5feeccacceed1debe7a27bca0df31d33e9[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Oct 17 13:22:19 2019 +0100
+
+    Added package.json. Removed idea from VC
+
+[33mcommit 075a4eb9bff8406a6ffe02dbd40e5fbd043622d6[m
+Author: CriTicalSSX <sam.glendenning@btinternet.com>
+Date:   Thu Oct 17 13:12:30 2019 +0100
+
+    Extracts links from Guardian page

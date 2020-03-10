@@ -19,9 +19,7 @@ export class Bulletin
      */
     static fetchNews()
     {
-        articles.push(new Article("hello1", "hello", "hello", "hello", "This is a long sentence i have decided to play to eat up lots of time"));
-        articles.push(new Article("hello2", "hello", "hello", "hello", "This is a long sentence i have decided to play to eat up lots of time"));
-        articles.push(new Article("hello3", "hello", "hello", "hello", "This is a long sentence i have decided to play to eat up lots of time"));
+        articles.push(new Article("We're no strangers to love", "You know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "You wouldn't get this from any other guy"));
 
         while (articles.length > 0)
         {

@@ -1,11 +1,24 @@
-import {Bulletin} from "./bulletin.mjs";
-
 /**
  * The starting script which triggers when the user clicks the extension icon
  */
 
-window.onload = function ()
+document.addEventListener("DOMContentLoaded", setUp);
+
+async function setUp()
 {
+    //Setting play/pause button state
+
+    chrome.storage.local.get(['playing', 'paused'], function(result) {
+        const currentlyplaying = result['playing'];
+        const currentlypaused = result['paused'];
+
+        if (currentlyplaying && !currentlypaused) {
+            document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
+        }
+    });
+
+    //Add event listeners for when buttons are clicked
+
     const playPauseButton = document.getElementById('playPauseBtn');
     const stopButton = document.getElementById('stopBtn');
 
@@ -18,37 +31,30 @@ window.onload = function ()
     {
         //TODO something broke, what do we do, add something later
     }
-
-    try {
-        const currentlypaused = chrome.storage.local.get(['paused']);
-
-        if (!currentlypaused)
-        {
-            document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
-        }
-    }
-    catch (TypeError)
-    {
-        //stop();
-        chrome.storage.local.set({"playing": false});
-        chrome.storage.local.set({"paused": false});
-    }
-};
+}
 
 async function playPauseToggle() {
     chrome.storage.local.get(['playing', 'paused'], function(result) {
-        const currentlyplaying = result['playing'];
-        const currentlypaused = result['paused'];
+        let currentlypaused, currentlyplaying;
+        try {
+            currentlyplaying = result['playing'];
+            currentlypaused = result['paused'];
+        }
+        catch (TypeError)
+        {
+            play();
+            return;
+        }
 
         if (!currentlyplaying)
         {
             play();
         }
-        else if (currentlyplaying && currentlypaused)
+        else if (currentlyplaying && !currentlypaused)
         {
             pause();
         }
-        else if (currentlyplaying && !currentlypaused)
+        else if (currentlyplaying && currentlypaused)
         {
             resume();
         }
@@ -57,7 +63,6 @@ async function playPauseToggle() {
 
 async function play()
 {
-    //Bulletin.fetchNews();
     document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
     chrome.storage.local.set({"playing": true});
     chrome.storage.local.set({"paused": false});
@@ -68,7 +73,7 @@ async function pause()
 {
     document.getElementById('playPauseBtnIcon').className = "icon-play btn";
     chrome.storage.local.set({"playing": true});
-    chrome.storage.local.set({"paused": false});
+    chrome.storage.local.set({"paused": true});
     chrome.runtime.sendMessage({greeting: "pause"});
 }
 
@@ -76,7 +81,7 @@ async function resume()
 {
     document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
     chrome.storage.local.set({"playing": true});
-    chrome.storage.local.set({"paused": true});
+    chrome.storage.local.set({"paused": false});
     chrome.runtime.sendMessage({greeting: "resume"});
 }
 
