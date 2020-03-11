@@ -1,13 +1,31 @@
 import {PageParser} from "./pageparser.mjs";
 import {sentences, sources, topics} from "./preferences.js";
-import {Article} from "./article.mjs";      //only for testing purposes
+import {Article} from "./article.mjs";
+
+let articles = [];
+
+async function readArticles()
+{
+    while (articles.length > 0)
+    {
+        const current = articles[0];
+
+        const message = {
+            "headline": current.title,
+            "publisher": current.publisher,
+            "topic": current.topic
+        };
+
+        chrome.runtime.sendMessage({greeting: message});
+
+        await current.read();
+        articles.shift();
+    }
+}
 
 /**
  Class for object to query random sources for each topic
  */
-
-let articles = [];
-
 export class Bulletin
 {
     /**
@@ -17,22 +35,12 @@ export class Bulletin
      * 3) Send that article to the SMMRY API, inputting the number of sentences to summarise down to
      * 4) For each article, read the publication, topic, title and summarised article
      */
-    static fetchNews()
+    static async fetchNews()
     {
         articles.push(new Article("We're no strangers to love", "You know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "You wouldn't get this from any other guy"));
+        articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "While chasing the clouds away"));
 
-        while (articles.length > 0)
-        {
-            const current = articles[0];
-            current.read();
-            articles.shift();
-
-            if (articles.length === 0)
-            {
-                //window.speechSynthesis.speak(new SpeechSynthesisUtterance(" ").onend = stop);
-            }
-        }
-
+        await readArticles();
         return true;
 
         for (let i = 0; i < Object.keys(topics).length; i++)     // change i< to prevent unnecessary credits being used up
