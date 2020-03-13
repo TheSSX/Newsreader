@@ -97,6 +97,7 @@ async function stop() {
     chrome.storage.local.set({"playing": false});
     chrome.storage.local.set({"paused": false});
     chrome.runtime.sendMessage({greeting: "stop"});
+    chrome.storage.local.clear();
 }
 
 //Thanks to user Steve Harrison on Stack Overflow
