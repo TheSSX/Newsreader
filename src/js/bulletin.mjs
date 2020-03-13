@@ -2,26 +2,7 @@ import {PageParser} from "./pageparser.mjs";
 import {sentences, sources, topics} from "./preferences.js";
 import {Article} from "./article.mjs";
 
-let articles = [];
-
-async function readArticles()
-{
-    while (articles.length > 0)
-    {
-        const current = articles[0];
-
-        const message = {
-            "headline": current.title,
-            "publisher": current.publisher,
-            "topic": current.topic
-        };
-
-        chrome.runtime.sendMessage({greeting: message});
-
-        await current.read();
-        articles.shift();
-    }
-}
+let articles, remaining;
 
 /**
  Class for object to query random sources for each topic
@@ -37,11 +18,17 @@ export class Bulletin
      */
     static async fetchNews()
     {
-        articles.push(new Article("We're no strangers to love", "You know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "You wouldn't get this from any other guy"));
+        articles = [];
+        remaining = 2;
+
+        articles.push(new Article("We're no strangers to love", "you know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "You wouldn't get this from any other guy"));
         articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "While chasing the clouds away"));
 
-        await readArticles();
+        Bulletin.readArticles(articles.shift(), articles);
         return true;
+
+        articles = [];
+        remaining = Object.keys(topics).length;
 
         for (let i = 0; i < Object.keys(topics).length; i++)     // change i< to prevent unnecessary credits being used up
         {
@@ -60,8 +47,13 @@ export class Bulletin
                 const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise down to
                 data.then(article => // returned in form of promise with value of article
                 {
-                    //article.read();
                     articles.push(article);
+                    remaining--;
+
+                    if (remaining === 0)
+                    {
+                        Bulletin.readArticles(articles.shift(), articles);
+                    }
                 })
                 .catch(function () {
                     Bulletin.retryTopic(topic, 2);
@@ -70,21 +62,6 @@ export class Bulletin
             catch (TypeError)
             {
                 Bulletin.retryTopic(topic, 2);      // retry fetching an article using recursion
-            }
-        }
-
-        while (articles.length > 0)
-        {
-            const current = articles[0];
-            current.read();
-            articles.shift();
-
-            if (articles.length === 0)
-            {
-                //Attempt to trigger the stop function so as to change the pause icon to play icon
-                //Alternative is to speak "End of bulletin" or similar
-                //Regardless, stop must be called
-                window.speechSynthesis.speak(new SpeechSynthesisUtterance("...").onend = stop);
             }
         }
     }
@@ -98,8 +75,13 @@ export class Bulletin
             const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise to
             data.then(article => // returned in form of promise with value of article
             {
-                //article.read();
                 articles.push(article);
+                remaining--;
+
+                if (remaining === 0)
+                {
+                    Bulletin.readArticles(articles.shift(), articles);
+                }
             })
             .catch(function () {
                 Bulletin.retryTopic(topic, ++attempt);
@@ -109,8 +91,12 @@ export class Bulletin
         {
             if (attempt === 10)     // stop recursive loop, not managed to fetch an article for the topic
             {
-                //TODO something different. Even if it's a different output message, like a meaningful error
-                console.log("Failed on topic " + topic);
+                remaining--;
+
+                if (remaining === 0)
+                {
+                    Bulletin.readArticles(articles.shift(), articles);
+                }
             }
             else
             {
@@ -118,4 +104,29 @@ export class Bulletin
             }
         }
     }
+
+    static readArticles(current, articles)
+{
+    if (current === undefined)
+    {
+        return true;
+    }
+
+    const message = {
+        "headline": current.title,
+        "publisher": current.publisher,
+        "topic": current.topic
+    };
+
+    chrome.runtime.sendMessage({greeting: message});
+
+    current.read();
+
+    const utterance = new SpeechSynthesisUtterance("");
+    utterance.onend = function () {
+        Bulletin.readArticles(articles.shift(), articles);
+    };
+
+    window.speechSynthesis.speak(utterance);
+}
 }

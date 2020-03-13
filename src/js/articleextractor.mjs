@@ -242,7 +242,7 @@ export class ArticleExtractor
         return DataCleaner.cleanText(articletext);
     }
 
-    //TODO the second line returned an error at one point
+    //TODO this isn't actually getting the headline most of the time. Fix
     //Uncaught (in promise) TypeError: Cannot read property 'split' of undefined
     //     at Function.extractAPHeadline (articleextractor.mjs:306)
     //     at Function.extractAP (pageparser.mjs:733)
