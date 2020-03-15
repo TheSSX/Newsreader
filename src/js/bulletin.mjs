@@ -106,27 +106,36 @@ export class Bulletin
     }
 
     static readArticles(current, articles)
-{
-    if (current === undefined)
     {
-        return true;
+        if (current === undefined)
+        {
+            return true;
+        }
+
+        const message = {
+            "headline": current.title,
+            "publisher": current.publisher,
+            "topic": capitalizeFirstLetter(current.topic)
+        };
+
+        chrome.storage.local.set({"headline": message.headline});
+        chrome.storage.local.set({"publisher": message.publisher});
+        chrome.storage.local.set({"topic": message.topic});
+        chrome.runtime.sendMessage({greeting: message});
+
+        current.read();
+
+        const utterance = new SpeechSynthesisUtterance("");
+        utterance.onend = function () {
+            Bulletin.readArticles(articles.shift(), articles);
+        };
+
+        window.speechSynthesis.speak(utterance);
     }
-
-    const message = {
-        "headline": current.title,
-        "publisher": current.publisher,
-        "topic": current.topic
-    };
-
-    chrome.runtime.sendMessage({greeting: message});
-
-    current.read();
-
-    const utterance = new SpeechSynthesisUtterance("");
-    utterance.onend = function () {
-        Bulletin.readArticles(articles.shift(), articles);
-    };
-
-    window.speechSynthesis.speak(utterance);
 }
+
+//Thanks to user Steve Harrison on Stack Overflow
+//Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
