@@ -109,6 +109,8 @@ export class Bulletin
     {
         if (current === undefined)
         {
+            chrome.runtime.sendMessage({greeting: "stop"});
+            chrome.storage.local.clear();
             return true;
         }
 

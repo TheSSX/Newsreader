@@ -113,4 +113,8 @@ chrome.runtime.onMessage.addListener(
             document.getElementById('publisher').innerHTML = request.greeting.publisher;
             document.getElementById('topic').innerHTML = request.greeting.topic;
         }
+        else if (request.greeting === "stop")
+        {
+            stop();
+        }
     });
