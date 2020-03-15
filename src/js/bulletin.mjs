@@ -110,7 +110,7 @@ export class Bulletin
         if (current === undefined)
         {
             chrome.runtime.sendMessage({greeting: "stop"});
-            chrome.storage.local.clear();
+            chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
             return true;
         }
 

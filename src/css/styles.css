@@ -227,3 +227,13 @@ h3 {
     font-weight: 400;
     margin-bottom: 0.5em;
 }
+
+#language-div {
+     display: inline-block;
+     float: left;
+}
+
+#sentences-div {
+    display: inline-block;
+    float: right;
+}
