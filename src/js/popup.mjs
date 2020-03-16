@@ -39,7 +39,7 @@ async function setUp()
         }
         else
         {
-            chrome.local.storage.set({'language': Object.keys(languages)[0]});
+            chrome.storage.local.set({'language': Object.keys(languages)[0]});
         }
         
         const sentences_dropdown = document.getElementById('sentences');
@@ -50,7 +50,7 @@ async function setUp()
         }
         else
         {
-            chrome.local.storage.set({'sentences': 3});
+            chrome.storage.local.set({'sentences': 3});
         }
 
         document.getElementById('headline').innerHTML = headline || "";

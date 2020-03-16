@@ -1,9 +1,8 @@
 import {Article} from "./article.mjs";
 import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
 import {Translator} from "./translator.mjs";
-import {language_choice, sources} from "./preferences.js";
-import {languages, translation_unavailable} from "./language_config.js";
-import {Speech} from "./speech.mjs";
+import {sources} from "./preferences.js";
+import {languages} from "./language_config.js";
 import {Summarise} from "./summarise.mjs";
 
 /**
@@ -174,26 +173,26 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
         return new Article(publisher, topic, headline, randomlink, text);
     }
@@ -303,26 +302,26 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
         return new Article(publisher, topic, headline, randomlink, text);
     }
@@ -456,26 +455,26 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
         return new Article(publisher, topic, headline, randomlink, text);
     }
@@ -634,26 +633,26 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
         return new Article(publisher, topic, headline, randomlink, text);
     }
@@ -776,26 +775,26 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
         return new Article(publisher, topic, headline, randomlink, text);
     }
@@ -908,26 +907,26 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
         return new Article(publisher, topic, headline, randomlink, text);
     }
@@ -1049,26 +1048,26 @@ export class PageParser
 
         headline = DataCleaner.cleanText(headline);
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
         return new Article(publisher, topic, headline, randomlink, text);
     }
@@ -1211,26 +1210,26 @@ export class PageParser
 
         headline = DataCleaner.cleanText(headline);
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
         return new Article(publisher, topic, headline, randomlink, text);
     }
@@ -1392,26 +1391,26 @@ export class PageParser
 
         headline = DataCleaner.cleanText(headline);
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
         return new Article(publisher, topic, headline, randomlink, text);
     }
@@ -1428,32 +1427,5 @@ export class PageParser
         }).fail(function (ajaxError)
         {
         });    //not convinced this actually returns or throws an error
-    }
-}
-
-export async function callTranslation(publisher, topic, headline, text)
-{
-    const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-    const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-    const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-    const texttranslatedata = await Translator.translate(text, languages[language_choice]);
-
-    //If translation API not available
-    if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
-    {
-        return undefined;
-    }
-    else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-    {
-        return undefined;
-    }
-    else
-    {
-        publisher = publishertranslatedata['text'];
-        topic = topictranslatedata['text'];
-        headline = headlinetranslatedata['text'];
-        text = texttranslatedata['text'];
-
-        return [publisher, topic, headline, text];
     }
 }

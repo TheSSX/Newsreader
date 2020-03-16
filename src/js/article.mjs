@@ -13,13 +13,14 @@ export class Article
      * @param link - the link to the article
      * @param text - the summarised article text
      */
-    constructor(publisher, topic, title, link, text)
+    constructor(publisher, topic, title, link, text, language="English")
     {
         this.publisher = publisher;
         this.topic = topic;
         this.title = title;
         this.link = link;
         this.text = text;
+        this.language = language;
     }
 
     /**
@@ -27,9 +28,9 @@ export class Article
      */
     read()
     {
-        new Speech(this.publisher).speak();
-        new Speech(this.topic).speak();
-        new Speech(this.title).speak();
-        new Speech(this.text).speak();
+        new Speech(this.publisher, this.language).speak();
+        new Speech(this.topic, this.language).speak();
+        new Speech(this.title, this.language).speak();
+        new Speech(this.text, this.language).speak();
     }
 }

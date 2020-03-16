@@ -1,6 +1,9 @@
 import {PageParser} from "./pageparser.mjs";
 import {sentences, sources, topics} from "./preferences.js";
 import {Article} from "./article.mjs";
+import {Speech} from "./speech.mjs";
+import {languages, translation_unavailable} from "./language_config.js";
+import {Translator} from "./translator.mjs";
 
 let articles, remaining;
 
@@ -24,7 +27,22 @@ export class Bulletin
         articles.push(new Article("We're no strangers to love", "you know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "You wouldn't get this from any other guy"));
         articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "While chasing the clouds away"));
 
-        Bulletin.readArticles(articles.shift(), articles);
+        const utterance = new SpeechSynthesisUtterance("");
+        utterance.onend = async function () {
+            let nextArticle = articles.shift();
+            if (nextArticle === undefined)
+            {
+                chrome.runtime.sendMessage({greeting: "stop"});
+                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                return true;
+            }
+            Bulletin.checkTranslation(nextArticle).then(result => {
+                nextArticle = result;
+                Bulletin.readArticles(nextArticle, articles);
+            });
+        };
+
+        window.speechSynthesis.speak(utterance);
         return true;
 
         articles = [];
@@ -128,16 +146,89 @@ export class Bulletin
         current.read();
 
         const utterance = new SpeechSynthesisUtterance("");
-        utterance.onend = function () {
-            Bulletin.readArticles(articles.shift(), articles);
+        utterance.onend = async function () {
+            let nextArticle = articles.shift();
+            if (nextArticle === undefined)
+            {
+                chrome.runtime.sendMessage({greeting: "stop"});
+                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                return true;
+            }
+            Bulletin.checkTranslation(nextArticle).then(result => {
+                nextArticle = result;
+                Bulletin.readArticles(nextArticle, articles);
+            });
         };
 
         window.speechSynthesis.speak(utterance);
+    }
+
+    static async checkTranslation(article)
+    {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get(['language'], async function (result) {
+                const language_choice = result['language'];
+
+                if (language_choice)
+                {
+                    if (language_choice !== 'English')
+                    {
+                        const translatedArticle = await Bulletin.getTranslatedArticle(article, language_choice);
+
+                        if (translatedArticle !== undefined)
+                        {
+                            article = translatedArticle;
+                        }
+                        else
+                        {
+                            new Speech(translation_unavailable[language_choice], language_choice).speak();
+                        }
+                    }
+                }
+
+                resolve(article);
+            });
+        });
+    }
+
+    static async getTranslatedArticle(article, language_choice)
+    {
+        return new Article("This is " + language_choice, "", "", "", "", language_choice);
+        const publishertranslatedata = await Translator.translate(article.publisher, languages[language_choice]);
+        const topictranslatedata = await Translator.translate(article.topic, languages[language_choice]);
+        const headlinetranslatedata = await Translator.translate(article.title, languages[language_choice]);
+        const texttranslatedata = await Translator.translate(article.text, languages[language_choice]);
+
+        //If translation API not available
+        if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+        {
+            return undefined;
+        }
+        else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+        {
+            return undefined;
+        }
+        else
+        {
+            const publisher = publishertranslatedata['text'];
+            const topic = topictranslatedata['text'];
+            const headline = headlinetranslatedata['text'];
+            const text = texttranslatedata['text'];
+
+            return new Article(publisher, topic, headline, article.link, text, language_choice);
+        }
     }
 }
 
 //Thanks to user Steve Harrison on Stack Overflow
 //Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
 function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    try
+    {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    catch(TypeError)
+    {
+        return string;
+    }
 }
