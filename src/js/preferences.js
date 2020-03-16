@@ -3,10 +3,6 @@
  * sentences they want each article to be summarised down to
  */
 
-import {languages} from "./language_config.js";
-
-export const languagesdropdown = Object.keys(languages);      // dropdown menu for the user to select the language they want articles read aloud in
-
 // News sources and their respective homepage links
 export let sources =
     {
@@ -137,8 +133,8 @@ export let topics =
 /**
  * User preferences for speech and article size
  */
-export let sentences = 3;
-export let language_choice = "English";
+export const min_sentences = 2;
+export const max_sentences = 6;
 export let pitch = 1;
 export let volume = 1;
 export let rate = 1;

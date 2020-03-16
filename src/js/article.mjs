@@ -21,6 +21,7 @@ export class Article
         this.link = link;
         this.text = text;
         this.language = language;
+        this.originalText = text;
     }
 
     /**
@@ -32,5 +33,22 @@ export class Article
         new Speech(this.topic, this.language).speak();
         new Speech(this.title, this.language).speak();
         new Speech(this.text, this.language).speak();
+    }
+
+    amendLength(sentences)
+    {
+        const arrText = this.originalText.match( /[^\.!\?]+[\.!\?]+/g );
+        let newText = "";
+
+        try
+        {
+            for (let i=0; i<sentences; i++)
+            {
+                newText += arrText[i] + " ";
+            }
+
+            this.text = newText;
+        }
+        catch (TypeError){}
     }
 }

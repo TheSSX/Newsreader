@@ -1,5 +1,5 @@
 import {PageParser} from "./pageparser.mjs";
-import {sentences, sources, topics} from "./preferences.js";
+import {sources, topics} from "./preferences.js";
 import {Article} from "./article.mjs";
 import {Speech} from "./speech.mjs";
 import {languages, translation_unavailable} from "./language_config.js";
@@ -21,29 +21,31 @@ export class Bulletin
      */
     static async fetchNews()
     {
-        articles = [];
-        remaining = 2;
-
-        articles.push(new Article("We're no strangers to love", "you know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "You wouldn't get this from any other guy"));
-        articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "While chasing the clouds away"));
-
-        const utterance = new SpeechSynthesisUtterance("");
-        utterance.onend = async function () {
-            let nextArticle = articles.shift();
-            if (nextArticle === undefined)
-            {
-                chrome.runtime.sendMessage({greeting: "stop"});
-                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                return true;
-            }
-            Bulletin.checkTranslation(nextArticle).then(result => {
-                nextArticle = result;
-                Bulletin.readArticles(nextArticle, articles);
-            });
-        };
-
-        window.speechSynthesis.speak(utterance);
-        return true;
+        // articles = [];
+        // remaining = 2;
+        //
+        // articles.push(new Article("We're no strangers to love", "you know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
+        // articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
+        //
+        // const utterance = new SpeechSynthesisUtterance("");
+        // utterance.onend = async function () {
+        //     let nextArticle = articles.shift();
+        //     if (nextArticle === undefined)
+        //     {
+        //         chrome.runtime.sendMessage({greeting: "stop"});
+        //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+        //         return true;
+        //     }
+        //         Bulletin.checkSentences(nextArticle).then(newArticle => {
+        //             Bulletin.checkTranslation(newArticle).then(result => {
+        //                 nextArticle = result;
+        //                 Bulletin.readArticles(nextArticle, articles);
+        //             });
+        //         });
+        // };
+        //
+        // window.speechSynthesis.speak(utterance);
+        // return true;
 
         articles = [];
         remaining = Object.keys(topics).length;
@@ -62,7 +64,7 @@ export class Bulletin
             const topiclink = topics[topic][source];    // for the selected source, get the URL to the selected topic page
             try
             {
-                const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise down to
+                const data = PageParser.getArticle(source, topic, topiclink);          // send source, topic and number of sentences to summarise down to
                 data.then(article => // returned in form of promise with value of article
                 {
                     articles.push(article);
@@ -70,7 +72,26 @@ export class Bulletin
 
                     if (remaining === 0)
                     {
-                        Bulletin.readArticles(articles.shift(), articles);
+                        const utterance = new SpeechSynthesisUtterance("");
+                        utterance.onend = async function () {
+                            let nextArticle = articles.shift();
+                            if (nextArticle === undefined)
+                            {
+                                chrome.runtime.sendMessage({greeting: "stop"});
+                                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                                return true;
+                            }
+
+                            Bulletin.checkSentences(nextArticle).then(newArticle => {
+                                Bulletin.checkTranslation(newArticle).then(result => {
+                                    nextArticle = result;
+                                    Bulletin.readArticles(nextArticle, articles);
+                                });
+                            });
+                        };
+
+                        window.speechSynthesis.speak(utterance);
+                        return true;
                     }
                 })
                 .catch(function () {
@@ -98,7 +119,26 @@ export class Bulletin
 
                 if (remaining === 0)
                 {
-                    Bulletin.readArticles(articles.shift(), articles);
+                    const utterance = new SpeechSynthesisUtterance("");
+                    utterance.onend = async function () {
+                        let nextArticle = articles.shift();
+                        if (nextArticle === undefined)
+                        {
+                            chrome.runtime.sendMessage({greeting: "stop"});
+                            chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                            return true;
+                        }
+
+                        Bulletin.checkSentences(nextArticle).then(newArticle => {
+                            Bulletin.checkTranslation(newArticle).then(result => {
+                                nextArticle = result;
+                                Bulletin.readArticles(nextArticle, articles);
+                            });
+                        });
+                    };
+
+                    window.speechSynthesis.speak(utterance);
+                    return true;
                 }
             })
             .catch(function () {
@@ -113,7 +153,26 @@ export class Bulletin
 
                 if (remaining === 0)
                 {
-                    Bulletin.readArticles(articles.shift(), articles);
+                    const utterance = new SpeechSynthesisUtterance("");
+                    utterance.onend = async function () {
+                        let nextArticle = articles.shift();
+                        if (nextArticle === undefined)
+                        {
+                            chrome.runtime.sendMessage({greeting: "stop"});
+                            chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                            return true;
+                        }
+
+                        Bulletin.checkSentences(nextArticle).then(newArticle => {
+                            Bulletin.checkTranslation(newArticle).then(result => {
+                                nextArticle = result;
+                                Bulletin.readArticles(nextArticle, articles);
+                            });
+                        });
+                    };
+
+                    window.speechSynthesis.speak(utterance);
+                    return true;
                 }
             }
             else
@@ -154,13 +213,32 @@ export class Bulletin
                 chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
                 return true;
             }
-            Bulletin.checkTranslation(nextArticle).then(result => {
-                nextArticle = result;
-                Bulletin.readArticles(nextArticle, articles);
+
+            Bulletin.checkSentences(nextArticle).then(newArticle => {
+                Bulletin.checkTranslation(newArticle).then(result => {
+                    nextArticle = result;
+                    Bulletin.readArticles(nextArticle, articles);
+                });
             });
         };
 
         window.speechSynthesis.speak(utterance);
+    }
+
+    static async checkSentences(article)
+    {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get(['sentences'], async function (result) {
+                const sentences = result['sentences'];
+
+                if (sentences)
+                {
+                    article.amendLength(sentences);
+                }
+
+                resolve(article);
+            });
+        });
     }
 
     static async checkTranslation(article)
@@ -193,7 +271,6 @@ export class Bulletin
 
     static async getTranslatedArticle(article, language_choice)
     {
-        return new Article("This is " + language_choice, "", "", "", "", language_choice);
         const publishertranslatedata = await Translator.translate(article.publisher, languages[language_choice]);
         const topictranslatedata = await Translator.translate(article.topic, languages[language_choice]);
         const headlinetranslatedata = await Translator.translate(article.title, languages[language_choice]);

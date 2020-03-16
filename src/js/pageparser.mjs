@@ -1,8 +1,6 @@
 import {Article} from "./article.mjs";
 import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
-import {Translator} from "./translator.mjs";
 import {sources} from "./preferences.js";
-import {languages} from "./language_config.js";
 import {Summarise} from "./summarise.mjs";
 
 /**
@@ -15,31 +13,30 @@ export class PageParser
      * @param source - the news source
      * @param topic- the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<*|Article>} - the article is contained in the promise value
      */
-    static getArticle(source, topic, topiclink, sentences)
+    static getArticle(source, topic, topiclink)
     {
         switch(source)
         {
             case "The Guardian":
-                return PageParser.extractGuardian(topic, topiclink, sentences);
+                return PageParser.extractGuardian(topic, topiclink);
             case "BBC":
-                return PageParser.extractBBC(topic, topiclink, sentences);
+                return PageParser.extractBBC(topic, topiclink);
             case "Reuters":
-                return PageParser.extractReuters(topic, topiclink, sentences);
+                return PageParser.extractReuters(topic, topiclink);
             case "Sky News":
-                return PageParser.extractSky(topic, topiclink, sentences);
+                return PageParser.extractSky(topic, topiclink);
             case "Associated Press":
-                return PageParser.extractAP(topic, topiclink, sentences);
+                return PageParser.extractAP(topic, topiclink);
             case "Evening Standard":
-                return PageParser.extractEveningStandard(topic, topiclink, sentences);
+                return PageParser.extractEveningStandard(topic, topiclink);
             case "The Independent":
-                return PageParser.extractIndependent(topic, topiclink, sentences);
+                return PageParser.extractIndependent(topic, topiclink);
             case "ITV News":
-                return PageParser.extractITV(topic, topiclink, sentences);
+                return PageParser.extractITV(topic, topiclink);
             case "News.com.au":
-                return PageParser.extractNewsAU(topic, topiclink, sentences);
+                return PageParser.extractNewsAU(topic, topiclink);
             default:
                 throw new TypeError('Invalid source');
         }
@@ -48,20 +45,14 @@ export class PageParser
     /**
      * Queries a topic page on the Guardian website and selects a random article from it
      * @param topic - the news topic
-     * @param sentences - the number of sentences to summarise down to
      * @param topiclink - the link to that topic on the specified website
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractGuardian(topic, topiclink, sentences)
+    static async extractGuardian(topic, topiclink)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
         
         if (topic === "uk")
         {
@@ -124,7 +115,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -201,19 +192,13 @@ export class PageParser
      * Queries a topic page on the BBC website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractBBC(topic, topiclink, sentences)
+    static async extractBBC(topic, topiclink)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "BBC";
 
@@ -260,7 +245,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -330,19 +315,13 @@ export class PageParser
      * Queries a topic page on the Reuters website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractReuters(topic, topiclink, sentences)
+    static async extractReuters(topic, topiclink)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "Reuters";
 
@@ -413,7 +392,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -483,19 +462,13 @@ export class PageParser
      * Queries a topic page on the Sky News website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractSky(topic, topiclink, sentences)
+    static async extractSky(topic, topiclink)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "Sky News";
 
@@ -585,7 +558,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -661,19 +634,13 @@ export class PageParser
      * Queries a topic page on the Associated Press website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractAP(topic, topiclink, sentences)
+    static async extractAP(topic, topiclink)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "Associated Press";
 
@@ -733,7 +700,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -803,19 +770,13 @@ export class PageParser
      * Queries a topic page on the Evening Standard website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractEveningStandard(topic, topiclink, sentences)
+    static async extractEveningStandard(topic, topiclink)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "Evening Standard";
 
@@ -875,7 +836,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -935,19 +896,13 @@ export class PageParser
      * Queries a topic page on the Independent website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractIndependent(topic, topiclink, sentences)
+    static async extractIndependent(topic, topiclink)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "The Independent";
 
@@ -1007,7 +962,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -1076,19 +1031,13 @@ export class PageParser
      * Queries a topic page on the News.com.au website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractNewsAU(topic, topiclink, sentences)
+    static async extractNewsAU(topic, topiclink)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "News.com.au";
 
@@ -1148,7 +1097,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -1238,19 +1187,13 @@ export class PageParser
      * Queries a topic page on the ITV News website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractITV(topic, topiclink, sentences)
+    static async extractITV(topic, topiclink)
     {
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "ITV News";
         const permadata = await PageParser.extractPageData(topiclink);
@@ -1309,7 +1252,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {

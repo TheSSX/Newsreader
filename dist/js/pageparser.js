@@ -5,7 +5,6 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.callTranslation = callTranslation;
 exports.PageParser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -20,22 +19,14 @@ var _article = require("../../dist/js/article");
 
 var _articleextractor = require("../../dist/js/articleextractor");
 
-var _translator = require("../../dist/js/translator");
-
 var _preferences = require("./preferences.js");
-
-var _language_config = require("./language_config.js");
-
-var _speech = require("../../dist/js/speech");
 
 var _summarise = require("../../dist/js/summarise");
 
 /**
  Class for object to parse source article pages
  */
-var PageParser =
-/*#__PURE__*/
-function () {
+var PageParser = /*#__PURE__*/function () {
   function PageParser() {
     (0, _classCallCheck2["default"])(this, PageParser);
   }
@@ -48,37 +39,36 @@ function () {
      * @param source - the news source
      * @param topic- the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<*|Article>} - the article is contained in the promise value
      */
-    value: function getArticle(source, topic, topiclink, sentences) {
+    value: function getArticle(source, topic, topiclink) {
       switch (source) {
         case "The Guardian":
-          return PageParser.extractGuardian(topic, topiclink, sentences);
+          return PageParser.extractGuardian(topic, topiclink);
 
         case "BBC":
-          return PageParser.extractBBC(topic, topiclink, sentences);
+          return PageParser.extractBBC(topic, topiclink);
 
         case "Reuters":
-          return PageParser.extractReuters(topic, topiclink, sentences);
+          return PageParser.extractReuters(topic, topiclink);
 
         case "Sky News":
-          return PageParser.extractSky(topic, topiclink, sentences);
+          return PageParser.extractSky(topic, topiclink);
 
         case "Associated Press":
-          return PageParser.extractAP(topic, topiclink, sentences);
+          return PageParser.extractAP(topic, topiclink);
 
         case "Evening Standard":
-          return PageParser.extractEveningStandard(topic, topiclink, sentences);
+          return PageParser.extractEveningStandard(topic, topiclink);
 
         case "The Independent":
-          return PageParser.extractIndependent(topic, topiclink, sentences);
+          return PageParser.extractIndependent(topic, topiclink);
 
         case "ITV News":
-          return PageParser.extractITV(topic, topiclink, sentences);
+          return PageParser.extractITV(topic, topiclink);
 
         case "News.com.au":
-          return PageParser.extractNewsAU(topic, topiclink, sentences);
+          return PageParser.extractNewsAU(topic, topiclink);
 
         default:
           throw new TypeError('Invalid source');
@@ -87,7 +77,6 @@ function () {
     /**
      * Queries a topic page on the Guardian website and selects a random article from it
      * @param topic - the news topic
-     * @param sentences - the number of sentences to summarise down to
      * @param topiclink - the link to that topic on the specified website
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
@@ -95,32 +84,25 @@ function () {
   }, {
     key: "extractGuardian",
     value: function () {
-      var _extractGuardian = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee(topic, topiclink, sentences) {
-        var publisher, linkdata, linksarr, i, currentlink, articlelinks, _i, current, links, randomlink, counter, data, headline, text, smmrydata, error, translations;
+      var _extractGuardian = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(topic, topiclink) {
+        var publisher, linkdata, linksarr, i, currentlink, articlelinks, _i, current, links, randomlink, counter, data, headline, text, smmrydata, error;
 
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!(sentences <= 0)) {
-                  _context.next = 2;
-                  break;
-                }
-
-                return _context.abrupt("return", undefined);
-
-              case 2:
+                /**
+                 * GETTING RANDOM LINK FOR TOPIC
+                 */
                 if (topic === "uk") {
                   topic = "uk-news";
                 }
 
                 publisher = "The Guardian";
-                _context.next = 6;
+                _context.next = 4;
                 return PageParser.extractPageData(topiclink);
 
-              case 6:
+              case 4:
                 linkdata = _context.sent;
                 linkdata = linkdata.split('<a href="');
                 linksarr = [];
@@ -144,13 +126,13 @@ function () {
                 links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context.next = 15;
+                  _context.next = 13;
                   break;
                 }
 
                 return _context.abrupt("return", undefined);
 
-              case 15:
+              case 13:
                 counter = 0;
 
                 do {
@@ -161,26 +143,26 @@ function () {
 
 
                 if (!randomlink.startsWith(_preferences.sources[publisher] + topic + '/video/')) {
-                  _context.next = 19;
+                  _context.next = 17;
                   break;
                 }
 
                 return _context.abrupt("return", undefined);
 
-              case 19:
-                _context.next = 21;
+              case 17:
+                _context.next = 19;
                 return PageParser.extractPageData(randomlink);
 
-              case 21:
+              case 19:
                 data = _context.sent;
-                _context.next = 24;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+                _context.next = 22;
+                return _summarise.Summarise.summarise(randomlink);
 
-              case 24:
+              case 22:
                 smmrydata = _context.sent;
 
                 if (!(smmrydata === undefined)) {
-                  _context.next = 36;
+                  _context.next = 34;
                   break;
                 }
 
@@ -189,7 +171,7 @@ function () {
                 text = _articleextractor.ArticleExtractor.extractGuardianText(data);
 
                 if (!(text !== undefined)) {
-                  _context.next = 33;
+                  _context.next = 31;
                   break;
                 }
 
@@ -198,17 +180,17 @@ function () {
                 }
 
                 text = "Not enough summary credits! " + text;
-                _context.next = 34;
+                _context.next = 32;
                 break;
 
-              case 33:
+              case 31:
                 return _context.abrupt("return", undefined);
 
-              case 34:
-                _context.next = 48;
+              case 32:
+                _context.next = 46;
                 break;
 
-              case 36:
+              case 34:
                 headline = smmrydata['sm_api_title']; //article headline returned
 
                 text = smmrydata['sm_api_content']; //summarised article returned
@@ -216,7 +198,7 @@ function () {
                 error = smmrydata['sm_api_error']; //detecting presence of error code
 
                 if (!(error === 2)) {
-                  _context.next = 48;
+                  _context.next = 46;
                   break;
                 }
 
@@ -225,7 +207,7 @@ function () {
                 text = _articleextractor.ArticleExtractor.extractGuardianText(data);
 
                 if (!(text !== undefined)) {
-                  _context.next = 47;
+                  _context.next = 45;
                   break;
                 }
 
@@ -234,45 +216,24 @@ function () {
                 }
 
                 text = "Not enough summary credits! " + text;
-                _context.next = 48;
+                _context.next = 46;
                 break;
 
-              case 47:
+              case 45:
+                return _context.abrupt("return", undefined);
+
+              case 46:
+                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                  _context.next = 48;
+                  break;
+                }
+
                 return _context.abrupt("return", undefined);
 
               case 48:
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context.next = 50;
-                  break;
-                }
-
-                return _context.abrupt("return", undefined);
-
-              case 50:
-                if (!(_preferences.language_choice !== "English")) {
-                  _context.next = 55;
-                  break;
-                }
-
-                _context.next = 53;
-                return callTranslation(publisher, topic, headline, text);
-
-              case 53:
-                translations = _context.sent;
-
-                if (translations !== undefined) {
-                  publisher = translations[0];
-                  topic = translations[1];
-                  headline = translations[2];
-                  text = translations[3];
-                } else {
-                  new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
-                }
-
-              case 55:
                 return _context.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 56:
+              case 49:
               case "end":
                 return _context.stop();
             }
@@ -280,7 +241,7 @@ function () {
         }, _callee);
       }));
 
-      function extractGuardian(_x, _x2, _x3) {
+      function extractGuardian(_x, _x2) {
         return _extractGuardian.apply(this, arguments);
       }
 
@@ -290,35 +251,27 @@ function () {
      * Queries a topic page on the BBC website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
 
   }, {
     key: "extractBBC",
     value: function () {
-      var _extractBBC = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee2(topic, topiclink, sentences) {
-        var publisher, linkdata, linksarr, i, currentlink, articlelinks, _i2, current, links, randomlink, data, headline, text, smmrydata, error, translations;
+      var _extractBBC = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(topic, topiclink) {
+        var publisher, linkdata, linksarr, i, currentlink, articlelinks, _i2, current, links, randomlink, data, headline, text, smmrydata, error;
 
         return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                if (!(sentences <= 0)) {
-                  _context2.next = 2;
-                  break;
-                }
-
-                return _context2.abrupt("return", undefined);
-
-              case 2:
+                /**
+                 * GETTING RANDOM LINK FOR TOPIC
+                 */
                 publisher = "BBC";
-                _context2.next = 5;
+                _context2.next = 3;
                 return PageParser.extractPageData(topiclink);
 
-              case 5:
+              case 3:
                 linkdata = _context2.sent;
                 linkdata = linkdata.split('<div role="region"')[0]; //Removes articles that are "featured" or unrelated to subject
 
@@ -344,28 +297,28 @@ function () {
                 links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context2.next = 15;
+                  _context2.next = 13;
                   break;
                 }
 
                 return _context2.abrupt("return", undefined);
 
-              case 15:
+              case 13:
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
                 /**
                  * Extracting article from article page
                  */
 
-                _context2.next = 18;
+                _context2.next = 16;
                 return PageParser.extractPageData(randomlink);
 
-              case 18:
+              case 16:
                 data = _context2.sent;
-                _context2.next = 21;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+                _context2.next = 19;
+                return _summarise.Summarise.summarise(randomlink);
 
-              case 21:
+              case 19:
                 smmrydata = _context2.sent;
 
                 //send article to SMMRY
@@ -405,37 +358,16 @@ function () {
                   }
 
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context2.next = 25;
+                  _context2.next = 23;
                   break;
                 }
 
                 return _context2.abrupt("return", undefined);
 
-              case 25:
-                if (!(_preferences.language_choice !== "English")) {
-                  _context2.next = 30;
-                  break;
-                }
-
-                _context2.next = 28;
-                return callTranslation(publisher, topic, headline, text);
-
-              case 28:
-                translations = _context2.sent;
-
-                if (translations !== undefined) {
-                  publisher = translations[0];
-                  topic = translations[1];
-                  headline = translations[2];
-                  text = translations[3];
-                } else {
-                  new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
-                }
-
-              case 30:
+              case 23:
                 return _context2.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 31:
+              case 24:
               case "end":
                 return _context2.stop();
             }
@@ -443,7 +375,7 @@ function () {
         }, _callee2);
       }));
 
-      function extractBBC(_x4, _x5, _x6) {
+      function extractBBC(_x3, _x4) {
         return _extractBBC.apply(this, arguments);
       }
 
@@ -453,35 +385,27 @@ function () {
      * Queries a topic page on the Reuters website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
 
   }, {
     key: "extractReuters",
     value: function () {
-      var _extractReuters = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee3(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, _i3, _currentlink, articlelinks, _i4, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+      var _extractReuters = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(topic, topiclink) {
+        var publisher, permadata, linkdata, linksarr, i, currentlink, _i3, _currentlink, articlelinks, _i4, current, links, randomlink, data, timeout, headline, text, smmrydata, error;
 
         return _regenerator["default"].wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                if (!(sentences <= 0)) {
-                  _context3.next = 2;
-                  break;
-                }
-
-                return _context3.abrupt("return", undefined);
-
-              case 2:
+                /**
+                 * GETTING RANDOM LINK FOR TOPIC
+                 */
                 publisher = "Reuters";
-                _context3.next = 5;
+                _context3.next = 3;
                 return PageParser.extractPageData(topiclink);
 
-              case 5:
+              case 3:
                 permadata = _context3.sent;
                 linkdata = permadata.split('<a href="' + _preferences.sources[publisher] + 'article/');
                 linksarr = [];
@@ -516,59 +440,59 @@ function () {
                 links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context3.next = 15;
+                  _context3.next = 13;
                   break;
                 }
 
                 return _context3.abrupt("return", undefined);
 
-              case 15:
+              case 13:
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
                 /**
                  * Extracting article from article page
                  */
 
-                _context3.next = 18;
+                _context3.next = 16;
                 return PageParser.extractPageData(randomlink);
 
-              case 18:
+              case 16:
                 data = _context3.sent;
                 //fetch data from article page
                 timeout = 0;
 
-              case 20:
+              case 18:
                 if (!(data === undefined && timeout < 3)) {
-                  _context3.next = 30;
+                  _context3.next = 28;
                   break;
                 }
 
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
-                _context3.next = 24;
+                _context3.next = 22;
                 return PageParser.extractPageData(randomlink);
 
-              case 24:
+              case 22:
                 data = _context3.sent;
                 //fetch data from article page
                 timeout += 1;
 
                 if (!(data === undefined && timeout === 3)) {
-                  _context3.next = 28;
+                  _context3.next = 26;
                   break;
                 }
 
                 return _context3.abrupt("return", undefined);
 
-              case 28:
-                _context3.next = 20;
+              case 26:
+                _context3.next = 18;
                 break;
 
-              case 30:
-                _context3.next = 32;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+              case 28:
+                _context3.next = 30;
+                return _summarise.Summarise.summarise(randomlink);
 
-              case 32:
+              case 30:
                 smmrydata = _context3.sent;
 
                 //send article to SMMRY
@@ -609,37 +533,16 @@ function () {
                   }
 
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context3.next = 36;
+                  _context3.next = 34;
                   break;
                 }
 
                 return _context3.abrupt("return", undefined);
 
-              case 36:
-                if (!(_preferences.language_choice !== "English")) {
-                  _context3.next = 41;
-                  break;
-                }
-
-                _context3.next = 39;
-                return callTranslation(publisher, topic, headline, text);
-
-              case 39:
-                translations = _context3.sent;
-
-                if (translations !== undefined) {
-                  publisher = translations[0];
-                  topic = translations[1];
-                  headline = translations[2];
-                  text = translations[3];
-                } else {
-                  new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
-                }
-
-              case 41:
+              case 34:
                 return _context3.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 42:
+              case 35:
               case "end":
                 return _context3.stop();
             }
@@ -647,7 +550,7 @@ function () {
         }, _callee3);
       }));
 
-      function extractReuters(_x7, _x8, _x9) {
+      function extractReuters(_x5, _x6) {
         return _extractReuters.apply(this, arguments);
       }
 
@@ -657,35 +560,27 @@ function () {
      * Queries a topic page on the Sky News website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
 
   }, {
     key: "extractSky",
     value: function () {
-      var _extractSky = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee4(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, _i5, _currentlink2, articlelinks, _i6, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+      var _extractSky = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(topic, topiclink) {
+        var publisher, permadata, linkdata, linksarr, i, currentlink, _i5, _currentlink2, articlelinks, _i6, current, links, randomlink, data, timeout, headline, text, smmrydata, error;
 
         return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                if (!(sentences <= 0)) {
-                  _context4.next = 2;
-                  break;
-                }
-
-                return _context4.abrupt("return", undefined);
-
-              case 2:
+                /**
+                 * GETTING RANDOM LINK FOR TOPIC
+                 */
                 publisher = "Sky News";
-                _context4.next = 5;
+                _context4.next = 3;
                 return PageParser.extractPageData(topiclink);
 
-              case 5:
+              case 3:
                 permadata = _context4.sent;
 
                 if (topic === "sport") {
@@ -732,59 +627,59 @@ function () {
                 links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context4.next = 15;
+                  _context4.next = 13;
                   break;
                 }
 
                 return _context4.abrupt("return", undefined);
 
-              case 15:
+              case 13:
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
                 /**
                  * Extracting article from article page
                  */
 
-                _context4.next = 18;
+                _context4.next = 16;
                 return PageParser.extractPageData(randomlink);
 
-              case 18:
+              case 16:
                 data = _context4.sent;
                 //fetch data from article page
                 timeout = 0;
 
-              case 20:
+              case 18:
                 if (!(data === undefined && timeout < 3)) {
-                  _context4.next = 30;
+                  _context4.next = 28;
                   break;
                 }
 
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
-                _context4.next = 24;
+                _context4.next = 22;
                 return PageParser.extractPageData(randomlink);
 
-              case 24:
+              case 22:
                 data = _context4.sent;
                 //fetch data from article page
                 timeout += 1;
 
                 if (!(data === undefined && timeout === 3)) {
-                  _context4.next = 28;
+                  _context4.next = 26;
                   break;
                 }
 
                 return _context4.abrupt("return", undefined);
 
-              case 28:
-                _context4.next = 20;
+              case 26:
+                _context4.next = 18;
                 break;
 
-              case 30:
-                _context4.next = 32;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+              case 28:
+                _context4.next = 30;
+                return _summarise.Summarise.summarise(randomlink);
 
-              case 32:
+              case 30:
                 smmrydata = _context4.sent;
 
                 //send article to SMMRY
@@ -825,6 +720,14 @@ function () {
                   }
 
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                  _context4.next = 34;
+                  break;
+                }
+
+                return _context4.abrupt("return", undefined);
+
+              case 34:
+                if (!(headline.includes("LIVE") || headline.includes("Live"))) {
                   _context4.next = 36;
                   break;
                 }
@@ -832,38 +735,9 @@ function () {
                 return _context4.abrupt("return", undefined);
 
               case 36:
-                if (!(headline.includes("LIVE") || headline.includes("Live"))) {
-                  _context4.next = 38;
-                  break;
-                }
-
-                return _context4.abrupt("return", undefined);
-
-              case 38:
-                if (!(_preferences.language_choice !== "English")) {
-                  _context4.next = 43;
-                  break;
-                }
-
-                _context4.next = 41;
-                return callTranslation(publisher, topic, headline, text);
-
-              case 41:
-                translations = _context4.sent;
-
-                if (translations !== undefined) {
-                  publisher = translations[0];
-                  topic = translations[1];
-                  headline = translations[2];
-                  text = translations[3];
-                } else {
-                  new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
-                }
-
-              case 43:
                 return _context4.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 44:
+              case 37:
               case "end":
                 return _context4.stop();
             }
@@ -871,7 +745,7 @@ function () {
         }, _callee4);
       }));
 
-      function extractSky(_x10, _x11, _x12) {
+      function extractSky(_x7, _x8) {
         return _extractSky.apply(this, arguments);
       }
 
@@ -881,35 +755,27 @@ function () {
      * Queries a topic page on the Associated Press website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
 
   }, {
     key: "extractAP",
     value: function () {
-      var _extractAP = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee5(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i7, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+      var _extractAP = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(topic, topiclink) {
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i7, current, links, randomlink, data, timeout, headline, text, smmrydata, error;
 
         return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                if (!(sentences <= 0)) {
-                  _context5.next = 2;
-                  break;
-                }
-
-                return _context5.abrupt("return", undefined);
-
-              case 2:
+                /**
+                 * GETTING RANDOM LINK FOR TOPIC
+                 */
                 publisher = "Associated Press";
-                _context5.next = 5;
+                _context5.next = 3;
                 return PageParser.extractPageData(topiclink);
 
-              case 5:
+              case 3:
                 permadata = _context5.sent;
                 linkdata = permadata.split('href="/');
                 linksarr = [];
@@ -933,59 +799,59 @@ function () {
                 links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context5.next = 14;
+                  _context5.next = 12;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 14:
+              case 12:
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
                 /**
                  * Extracting article from article page
                  */
 
-                _context5.next = 17;
+                _context5.next = 15;
                 return PageParser.extractPageData(randomlink);
 
-              case 17:
+              case 15:
                 data = _context5.sent;
                 //fetch data from article page
                 timeout = 0;
 
-              case 19:
+              case 17:
                 if (!(data === undefined && timeout < 3)) {
-                  _context5.next = 29;
+                  _context5.next = 27;
                   break;
                 }
 
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
-                _context5.next = 23;
+                _context5.next = 21;
                 return PageParser.extractPageData(randomlink);
 
-              case 23:
+              case 21:
                 data = _context5.sent;
                 //fetch data from article page
                 timeout += 1;
 
                 if (!(data === undefined && timeout === 3)) {
-                  _context5.next = 27;
+                  _context5.next = 25;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 27:
-                _context5.next = 19;
+              case 25:
+                _context5.next = 17;
                 break;
 
-              case 29:
-                _context5.next = 31;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+              case 27:
+                _context5.next = 29;
+                return _summarise.Summarise.summarise(randomlink);
 
-              case 31:
+              case 29:
                 smmrydata = _context5.sent;
 
                 //send article to SMMRY
@@ -1026,37 +892,16 @@ function () {
                   }
 
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context5.next = 35;
+                  _context5.next = 33;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 35:
-                if (!(_preferences.language_choice !== "English")) {
-                  _context5.next = 40;
-                  break;
-                }
-
-                _context5.next = 38;
-                return callTranslation(publisher, topic, headline, text);
-
-              case 38:
-                translations = _context5.sent;
-
-                if (translations !== undefined) {
-                  publisher = translations[0];
-                  topic = translations[1];
-                  headline = translations[2];
-                  text = translations[3];
-                } else {
-                  new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
-                }
-
-              case 40:
+              case 33:
                 return _context5.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 41:
+              case 34:
               case "end":
                 return _context5.stop();
             }
@@ -1064,7 +909,7 @@ function () {
         }, _callee5);
       }));
 
-      function extractAP(_x13, _x14, _x15) {
+      function extractAP(_x9, _x10) {
         return _extractAP.apply(this, arguments);
       }
 
@@ -1074,35 +919,27 @@ function () {
      * Queries a topic page on the Evening Standard website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
 
   }, {
     key: "extractEveningStandard",
     value: function () {
-      var _extractEveningStandard = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee6(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i8, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+      var _extractEveningStandard = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(topic, topiclink) {
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i8, current, links, randomlink, data, timeout, headline, text, smmrydata, error;
 
         return _regenerator["default"].wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                if (!(sentences <= 0)) {
-                  _context6.next = 2;
-                  break;
-                }
-
-                return _context6.abrupt("return", undefined);
-
-              case 2:
+                /**
+                 * GETTING RANDOM LINK FOR TOPIC
+                 */
                 publisher = "Evening Standard";
-                _context6.next = 5;
+                _context6.next = 3;
                 return PageParser.extractPageData(topiclink);
 
-              case 5:
+              case 3:
                 permadata = _context6.sent;
                 linkdata = permadata.split('href="/');
                 linksarr = [];
@@ -1126,59 +963,59 @@ function () {
                 links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context6.next = 14;
+                  _context6.next = 12;
                   break;
                 }
 
                 return _context6.abrupt("return", undefined);
 
-              case 14:
+              case 12:
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
                 /**
                  * Extracting article from article page
                  */
 
-                _context6.next = 17;
+                _context6.next = 15;
                 return PageParser.extractPageData(randomlink);
 
-              case 17:
+              case 15:
                 data = _context6.sent;
                 //fetch data from article page
                 timeout = 0;
 
-              case 19:
+              case 17:
                 if (!(data === undefined && timeout < 3)) {
-                  _context6.next = 29;
+                  _context6.next = 27;
                   break;
                 }
 
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
-                _context6.next = 23;
+                _context6.next = 21;
                 return PageParser.extractPageData(randomlink);
 
-              case 23:
+              case 21:
                 data = _context6.sent;
                 //fetch data from article page
                 timeout += 1;
 
                 if (!(data === undefined && timeout === 3 || randomlink === undefined && timeout === 3)) {
-                  _context6.next = 27;
+                  _context6.next = 25;
                   break;
                 }
 
                 return _context6.abrupt("return", undefined);
 
-              case 27:
-                _context6.next = 19;
+              case 25:
+                _context6.next = 17;
                 break;
 
-              case 29:
-                _context6.next = 31;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+              case 27:
+                _context6.next = 29;
+                return _summarise.Summarise.summarise(randomlink);
 
-              case 31:
+              case 29:
                 smmrydata = _context6.sent;
 
                 //send article to SMMRY
@@ -1211,37 +1048,16 @@ function () {
                   }
 
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context6.next = 35;
+                  _context6.next = 33;
                   break;
                 }
 
                 return _context6.abrupt("return", undefined);
 
-              case 35:
-                if (!(_preferences.language_choice !== "English")) {
-                  _context6.next = 40;
-                  break;
-                }
-
-                _context6.next = 38;
-                return callTranslation(publisher, topic, headline, text);
-
-              case 38:
-                translations = _context6.sent;
-
-                if (translations !== undefined) {
-                  publisher = translations[0];
-                  topic = translations[1];
-                  headline = translations[2];
-                  text = translations[3];
-                } else {
-                  new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
-                }
-
-              case 40:
+              case 33:
                 return _context6.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 41:
+              case 34:
               case "end":
                 return _context6.stop();
             }
@@ -1249,7 +1065,7 @@ function () {
         }, _callee6);
       }));
 
-      function extractEveningStandard(_x16, _x17, _x18) {
+      function extractEveningStandard(_x11, _x12) {
         return _extractEveningStandard.apply(this, arguments);
       }
 
@@ -1259,35 +1075,27 @@ function () {
      * Queries a topic page on the Independent website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
 
   }, {
     key: "extractIndependent",
     value: function () {
-      var _extractIndependent = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee7(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i9, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+      var _extractIndependent = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(topic, topiclink) {
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i9, current, links, randomlink, data, timeout, headline, text, smmrydata, error;
 
         return _regenerator["default"].wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                if (!(sentences <= 0)) {
-                  _context7.next = 2;
-                  break;
-                }
-
-                return _context7.abrupt("return", undefined);
-
-              case 2:
+                /**
+                 * GETTING RANDOM LINK FOR TOPIC
+                 */
                 publisher = "The Independent";
-                _context7.next = 5;
+                _context7.next = 3;
                 return PageParser.extractPageData(topiclink);
 
-              case 5:
+              case 3:
                 permadata = _context7.sent;
                 linkdata = permadata.split('href="/');
                 linksarr = [];
@@ -1311,59 +1119,59 @@ function () {
                 links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context7.next = 14;
+                  _context7.next = 12;
                   break;
                 }
 
                 return _context7.abrupt("return", undefined);
 
-              case 14:
+              case 12:
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
                 /**
                  * Extracting article from article page
                  */
 
-                _context7.next = 17;
+                _context7.next = 15;
                 return PageParser.extractPageData(randomlink);
 
-              case 17:
+              case 15:
                 data = _context7.sent;
                 //fetch data from article page
                 timeout = 0;
 
-              case 19:
+              case 17:
                 if (!(data === undefined && timeout < 3)) {
-                  _context7.next = 29;
+                  _context7.next = 27;
                   break;
                 }
 
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
-                _context7.next = 23;
+                _context7.next = 21;
                 return PageParser.extractPageData(randomlink);
 
-              case 23:
+              case 21:
                 data = _context7.sent;
                 //fetch data from article page
                 timeout += 1;
 
                 if (!(data === undefined && timeout === 3 || randomlink === undefined && timeout === 3)) {
-                  _context7.next = 27;
+                  _context7.next = 25;
                   break;
                 }
 
                 return _context7.abrupt("return", undefined);
 
-              case 27:
-                _context7.next = 19;
+              case 25:
+                _context7.next = 17;
                 break;
 
-              case 29:
-                _context7.next = 31;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+              case 27:
+                _context7.next = 29;
+                return _summarise.Summarise.summarise(randomlink);
 
-              case 31:
+              case 29:
                 smmrydata = _context7.sent;
 
                 //send article to SMMRY
@@ -1400,42 +1208,37 @@ function () {
                   }
 
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context7.next = 35;
+                  _context7.next = 33;
                   break;
                 }
 
                 return _context7.abrupt("return", undefined);
 
-              case 35:
-                headline = _articleextractor.DataCleaner.cleanText(headline);
-                /**
-                 * TRANSLATING
-                 */
+              case 33:
+                headline = _articleextractor.DataCleaner.cleanText(headline); // /**
+                //  * TRANSLATING
+                //  */
+                //
+                // if (language_choice !== "English")
+                // {
+                //     const translations = await callTranslation(publisher, topic, headline, text);
+                //
+                //     if (translations !== undefined)
+                //     {
+                //         publisher = translations[0];
+                //         topic = translations[1];
+                //         headline = translations[2];
+                //         text = translations[3];
+                //     }
+                //     else
+                //     {
+                //         new Speech(translation_unavailable[language_choice]).speak();
+                //     }
+                // }
 
-                if (!(_preferences.language_choice !== "English")) {
-                  _context7.next = 41;
-                  break;
-                }
-
-                _context7.next = 39;
-                return callTranslation(publisher, topic, headline, text);
-
-              case 39:
-                translations = _context7.sent;
-
-                if (translations !== undefined) {
-                  publisher = translations[0];
-                  topic = translations[1];
-                  headline = translations[2];
-                  text = translations[3];
-                } else {
-                  new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
-                }
-
-              case 41:
                 return _context7.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 42:
+              case 35:
               case "end":
                 return _context7.stop();
             }
@@ -1443,7 +1246,7 @@ function () {
         }, _callee7);
       }));
 
-      function extractIndependent(_x19, _x20, _x21) {
+      function extractIndependent(_x13, _x14) {
         return _extractIndependent.apply(this, arguments);
       }
 
@@ -1453,35 +1256,27 @@ function () {
      * Queries a topic page on the News.com.au website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
 
   }, {
     key: "extractNewsAU",
     value: function () {
-      var _extractNewsAU = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee8(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i10, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+      var _extractNewsAU = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(topic, topiclink) {
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i10, current, links, randomlink, data, timeout, headline, text, smmrydata, error;
 
         return _regenerator["default"].wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
-                if (!(sentences <= 0)) {
-                  _context8.next = 2;
-                  break;
-                }
-
-                return _context8.abrupt("return", undefined);
-
-              case 2:
+                /**
+                 * GETTING RANDOM LINK FOR TOPIC
+                 */
                 publisher = "News.com.au";
-                _context8.next = 5;
+                _context8.next = 3;
                 return PageParser.extractPageData(topiclink);
 
-              case 5:
+              case 3:
                 permadata = _context8.sent;
                 linkdata = permadata.split('href="https://www.news.com.au/');
                 linksarr = [];
@@ -1505,104 +1300,104 @@ function () {
                 links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context8.next = 14;
+                  _context8.next = 12;
                   break;
                 }
 
                 return _context8.abrupt("return", undefined);
 
-              case 14:
+              case 12:
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
                 /**
                  * Extracting article from article page
                  */
 
-                _context8.next = 17;
+                _context8.next = 15;
                 return PageParser.extractPageData(randomlink);
 
-              case 17:
+              case 15:
                 data = _context8.sent;
                 //fetch data from article page
                 timeout = 0;
 
-              case 19:
+              case 17:
                 if (!(data === undefined && timeout < 3)) {
-                  _context8.next = 29;
+                  _context8.next = 27;
                   break;
                 }
 
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
-                _context8.next = 23;
+                _context8.next = 21;
                 return PageParser.extractPageData(randomlink);
 
-              case 23:
+              case 21:
                 data = _context8.sent;
                 //fetch data from article page
                 timeout += 1;
 
                 if (!(data === undefined && timeout === 3 || randomlink === undefined && timeout === 3)) {
-                  _context8.next = 27;
+                  _context8.next = 25;
                   break;
                 }
 
                 return _context8.abrupt("return", undefined);
 
-              case 27:
-                _context8.next = 19;
+              case 25:
+                _context8.next = 17;
                 break;
 
-              case 29:
-                _context8.next = 31;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+              case 27:
+                _context8.next = 29;
+                return _summarise.Summarise.summarise(randomlink);
 
-              case 31:
+              case 29:
                 smmrydata = _context8.sent;
 
                 if (!(smmrydata === undefined)) {
-                  _context8.next = 47;
+                  _context8.next = 45;
                   break;
                 }
 
                 if (!data.split('<title>')[1]) {
-                  _context8.next = 42;
+                  _context8.next = 40;
                   break;
                 }
 
                 headline = data.split('<title>')[1];
 
                 if (!headline.split('</title>')[0]) {
-                  _context8.next = 39;
+                  _context8.next = 37;
                   break;
                 }
 
                 headline = headline.split('</title>')[0]; //get headline from article data
 
-                _context8.next = 40;
+                _context8.next = 38;
                 break;
 
-              case 39:
+              case 37:
                 return _context8.abrupt("return", undefined);
+
+              case 38:
+                _context8.next = 41;
+                break;
 
               case 40:
-                _context8.next = 43;
-                break;
-
-              case 42:
                 return _context8.abrupt("return", undefined);
 
-              case 43:
+              case 41:
                 text = _articleextractor.ArticleExtractor.extractNewsAUText(data);
 
                 if (text !== undefined) {
                   text = "Not enough summary credits! " + text;
                 }
 
-                _context8.next = 63;
+                _context8.next = 61;
                 break;
 
-              case 47:
+              case 45:
                 headline = smmrydata['sm_api_title']; //article headline returned
 
                 text = smmrydata['sm_api_content']; //summarised article returned
@@ -1610,82 +1405,77 @@ function () {
                 error = smmrydata['sm_api_error']; //detecting presence of error code
 
                 if (!(error === 2)) {
-                  _context8.next = 63;
+                  _context8.next = 61;
                   break;
                 }
 
                 if (!data.split('<title>')[1]) {
-                  _context8.next = 60;
+                  _context8.next = 58;
                   break;
                 }
 
                 headline = data.split('<title>')[1];
 
                 if (!headline.split('</title>')[0]) {
-                  _context8.next = 57;
+                  _context8.next = 55;
                   break;
                 }
 
                 headline = headline.split('</title>')[0]; //get headline from article data
 
-                _context8.next = 58;
+                _context8.next = 56;
                 break;
 
-              case 57:
+              case 55:
                 return _context8.abrupt("return", undefined);
+
+              case 56:
+                _context8.next = 59;
+                break;
 
               case 58:
-                _context8.next = 61;
-                break;
-
-              case 60:
                 return _context8.abrupt("return", undefined);
 
-              case 61:
+              case 59:
                 text = _articleextractor.ArticleExtractor.extractNewsAUText(data);
 
                 if (text !== undefined) {
                   text = "Not enough summary credits! " + text;
                 }
 
-              case 63:
+              case 61:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context8.next = 65;
+                  _context8.next = 63;
                   break;
                 }
 
                 return _context8.abrupt("return", undefined);
 
-              case 65:
-                headline = _articleextractor.DataCleaner.cleanText(headline);
-                /**
-                 * TRANSLATING
-                 */
+              case 63:
+                headline = _articleextractor.DataCleaner.cleanText(headline); // /**
+                //  * TRANSLATING
+                //  */
+                //
+                // if (language_choice !== "English")
+                // {
+                //     const translations = await callTranslation(publisher, topic, headline, text);
+                //
+                //     if (translations !== undefined)
+                //     {
+                //         publisher = translations[0];
+                //         topic = translations[1];
+                //         headline = translations[2];
+                //         text = translations[3];
+                //     }
+                //     else
+                //     {
+                //         new Speech(translation_unavailable[language_choice]).speak();
+                //     }
+                // }
 
-                if (!(_preferences.language_choice !== "English")) {
-                  _context8.next = 71;
-                  break;
-                }
-
-                _context8.next = 69;
-                return callTranslation(publisher, topic, headline, text);
-
-              case 69:
-                translations = _context8.sent;
-
-                if (translations !== undefined) {
-                  publisher = translations[0];
-                  topic = translations[1];
-                  headline = translations[2];
-                  text = translations[3];
-                } else {
-                  new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
-                }
-
-              case 71:
                 return _context8.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 72:
+              case 65:
               case "end":
                 return _context8.stop();
             }
@@ -1693,7 +1483,7 @@ function () {
         }, _callee8);
       }));
 
-      function extractNewsAU(_x22, _x23, _x24) {
+      function extractNewsAU(_x15, _x16) {
         return _extractNewsAU.apply(this, arguments);
       }
 
@@ -1703,35 +1493,27 @@ function () {
      * Queries a topic page on the ITV News website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
 
   }, {
     key: "extractITV",
     value: function () {
-      var _extractITV = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee9(topic, topiclink, sentences) {
-        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i11, current, links, randomlink, data, timeout, headline, text, smmrydata, error, translations;
+      var _extractITV = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee9(topic, topiclink) {
+        var publisher, permadata, linkdata, linksarr, i, currentlink, articlelinks, _i11, current, links, randomlink, data, timeout, headline, text, smmrydata, error;
 
         return _regenerator["default"].wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
-                if (!(sentences <= 0)) {
-                  _context9.next = 2;
-                  break;
-                }
-
-                return _context9.abrupt("return", undefined);
-
-              case 2:
+                /**
+                 * GETTING RANDOM LINK FOR TOPIC
+                 */
                 publisher = "ITV News";
-                _context9.next = 5;
+                _context9.next = 3;
                 return PageParser.extractPageData(topiclink);
 
-              case 5:
+              case 3:
                 permadata = _context9.sent;
                 linkdata = permadata.split('href="/');
                 linksarr = [];
@@ -1755,128 +1537,128 @@ function () {
                 links = Array.from(new Set(articlelinks)); //array of URLs for articles
 
                 if (!(links === undefined || links.length === 0)) {
-                  _context9.next = 14;
+                  _context9.next = 12;
                   break;
                 }
 
                 return _context9.abrupt("return", undefined);
 
-              case 14:
+              case 12:
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
                 /**
                  * Extracting article from article page
                  */
 
-                _context9.next = 17;
+                _context9.next = 15;
                 return PageParser.extractPageData(randomlink);
 
-              case 17:
+              case 15:
                 data = _context9.sent;
                 //fetch data from article page
                 timeout = 0;
 
-              case 19:
+              case 17:
                 if (!(data === undefined && timeout < 3)) {
-                  _context9.next = 29;
+                  _context9.next = 27;
                   break;
                 }
 
                 randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
-                _context9.next = 23;
+                _context9.next = 21;
                 return PageParser.extractPageData(randomlink);
 
-              case 23:
+              case 21:
                 data = _context9.sent;
                 //fetch data from article page
                 timeout += 1;
 
                 if (!(data === undefined && timeout === 3 || randomlink === undefined && timeout === 3)) {
-                  _context9.next = 27;
+                  _context9.next = 25;
                   break;
                 }
 
                 return _context9.abrupt("return", undefined);
 
-              case 27:
-                _context9.next = 19;
+              case 25:
+                _context9.next = 17;
                 break;
 
-              case 29:
-                _context9.next = 31;
-                return _summarise.Summarise.summarise(randomlink, sentences);
+              case 27:
+                _context9.next = 29;
+                return _summarise.Summarise.summarise(randomlink);
 
-              case 31:
+              case 29:
                 smmrydata = _context9.sent;
 
                 if (!(smmrydata === undefined)) {
-                  _context9.next = 56;
+                  _context9.next = 54;
                   break;
                 }
 
                 if (!data.split('<title>')[1]) {
-                  _context9.next = 42;
+                  _context9.next = 40;
                   break;
                 }
 
                 headline = data.split('<title>')[1];
 
                 if (!headline.split(' - ITV News')[0]) {
-                  _context9.next = 39;
+                  _context9.next = 37;
                   break;
                 }
 
                 headline = headline.split(' - ITV News')[0]; //get headline from article data
 
-                _context9.next = 40;
+                _context9.next = 38;
                 break;
 
-              case 39:
+              case 37:
                 return _context9.abrupt("return", undefined);
 
-              case 40:
-                _context9.next = 52;
+              case 38:
+                _context9.next = 50;
                 break;
 
-              case 42:
+              case 40:
                 if (!data.split('<h1 class="update__title update__title--large">')[1]) {
-                  _context9.next = 51;
+                  _context9.next = 49;
                   break;
                 }
 
                 headline = data.split('<h1 class="update__title update__title--large">')[1];
 
                 if (!headline.split('</h1>')[0]) {
-                  _context9.next = 48;
+                  _context9.next = 46;
                   break;
                 }
 
                 headline = headline.split('</h1>')[0];
-                _context9.next = 49;
+                _context9.next = 47;
                 break;
 
-              case 48:
+              case 46:
                 return _context9.abrupt("return", undefined);
+
+              case 47:
+                _context9.next = 50;
+                break;
 
               case 49:
-                _context9.next = 52;
-                break;
-
-              case 51:
                 return _context9.abrupt("return", undefined);
 
-              case 52:
+              case 50:
                 text = _articleextractor.ArticleExtractor.extractITVText(data);
 
                 if (text !== undefined) {
                   text = "Not enough summary credits! " + text;
                 }
 
-                _context9.next = 81;
+                _context9.next = 79;
                 break;
 
-              case 56:
+              case 54:
                 headline = smmrydata['sm_api_title']; //article headline returned
 
                 text = smmrydata['sm_api_content']; //summarised article returned
@@ -1884,106 +1666,101 @@ function () {
                 error = smmrydata['sm_api_error']; //detecting presence of error code
 
                 if (!(error === 2)) {
-                  _context9.next = 81;
+                  _context9.next = 79;
                   break;
                 }
 
                 if (!data.split('<title>')[1]) {
-                  _context9.next = 69;
+                  _context9.next = 67;
                   break;
                 }
 
                 headline = data.split('<title>')[1];
 
                 if (!headline.split(' - ITV News')[0]) {
-                  _context9.next = 66;
+                  _context9.next = 64;
                   break;
                 }
 
                 headline = headline.split(' - ITV News')[0]; //get headline from article data
 
-                _context9.next = 67;
+                _context9.next = 65;
                 break;
 
-              case 66:
+              case 64:
                 return _context9.abrupt("return", undefined);
 
-              case 67:
-                _context9.next = 79;
+              case 65:
+                _context9.next = 77;
                 break;
 
-              case 69:
+              case 67:
                 if (!data.split('<h1 class="update__title update__title--large">')[1]) {
-                  _context9.next = 78;
+                  _context9.next = 76;
                   break;
                 }
 
                 headline = data.split('<h1 class="update__title update__title--large">')[1];
 
                 if (!headline.split('</h1>')[0]) {
-                  _context9.next = 75;
+                  _context9.next = 73;
                   break;
                 }
 
                 headline = headline.split('</h1>')[0];
-                _context9.next = 76;
+                _context9.next = 74;
                 break;
 
-              case 75:
+              case 73:
                 return _context9.abrupt("return", undefined);
+
+              case 74:
+                _context9.next = 77;
+                break;
 
               case 76:
-                _context9.next = 79;
-                break;
-
-              case 78:
                 return _context9.abrupt("return", undefined);
 
-              case 79:
+              case 77:
                 text = _articleextractor.ArticleExtractor.extractITVText(data);
 
                 if (text !== undefined) {
                   text = "Not enough summary credits! " + text;
                 }
 
-              case 81:
+              case 79:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context9.next = 83;
+                  _context9.next = 81;
                   break;
                 }
 
                 return _context9.abrupt("return", undefined);
 
-              case 83:
-                headline = _articleextractor.DataCleaner.cleanText(headline);
-                /**
-                 * TRANSLATING
-                 */
+              case 81:
+                headline = _articleextractor.DataCleaner.cleanText(headline); // /**
+                //  * TRANSLATING
+                //  */
+                //
+                // if (language_choice !== "English")
+                // {
+                //     const translations = await callTranslation(publisher, topic, headline, text);
+                //
+                //     if (translations !== undefined)
+                //     {
+                //         publisher = translations[0];
+                //         topic = translations[1];
+                //         headline = translations[2];
+                //         text = translations[3];
+                //     }
+                //     else
+                //     {
+                //         new Speech(translation_unavailable[language_choice]).speak();
+                //     }
+                // }
 
-                if (!(_preferences.language_choice !== "English")) {
-                  _context9.next = 89;
-                  break;
-                }
-
-                _context9.next = 87;
-                return callTranslation(publisher, topic, headline, text);
-
-              case 87:
-                translations = _context9.sent;
-
-                if (translations !== undefined) {
-                  publisher = translations[0];
-                  topic = translations[1];
-                  headline = translations[2];
-                  text = translations[3];
-                } else {
-                  new _speech.Speech(_language_config.translation_unavailable[_preferences.language_choice]).speak();
-                }
-
-              case 89:
                 return _context9.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
 
-              case 90:
+              case 83:
               case "end":
                 return _context9.stop();
             }
@@ -1991,7 +1768,7 @@ function () {
         }, _callee9);
       }));
 
-      function extractITV(_x25, _x26, _x27) {
+      function extractITV(_x17, _x18) {
         return _extractITV.apply(this, arguments);
       }
 
@@ -2015,69 +1792,3 @@ function () {
 }();
 
 exports.PageParser = PageParser;
-
-function callTranslation(_x28, _x29, _x30, _x31) {
-  return _callTranslation.apply(this, arguments);
-}
-
-function _callTranslation() {
-  _callTranslation = (0, _asyncToGenerator2["default"])(
-  /*#__PURE__*/
-  _regenerator["default"].mark(function _callee10(publisher, topic, headline, text) {
-    var publishertranslatedata, topictranslatedata, headlinetranslatedata, texttranslatedata;
-    return _regenerator["default"].wrap(function _callee10$(_context10) {
-      while (1) {
-        switch (_context10.prev = _context10.next) {
-          case 0:
-            _context10.next = 2;
-            return _translator.Translator.translate(publisher, _language_config.languages[_preferences.language_choice]);
-
-          case 2:
-            publishertranslatedata = _context10.sent;
-            _context10.next = 5;
-            return _translator.Translator.translate(topic, _language_config.languages[_preferences.language_choice]);
-
-          case 5:
-            topictranslatedata = _context10.sent;
-            _context10.next = 8;
-            return _translator.Translator.translate(headline, _language_config.languages[_preferences.language_choice]);
-
-          case 8:
-            headlinetranslatedata = _context10.sent;
-            _context10.next = 11;
-            return _translator.Translator.translate(text, _language_config.languages[_preferences.language_choice]);
-
-          case 11:
-            texttranslatedata = _context10.sent;
-
-            if (!(publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)) {
-              _context10.next = 16;
-              break;
-            }
-
-            return _context10.abrupt("return", undefined);
-
-          case 16:
-            if (!(publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)) {
-              _context10.next = 20;
-              break;
-            }
-
-            return _context10.abrupt("return", undefined);
-
-          case 20:
-            publisher = publishertranslatedata['text'];
-            topic = topictranslatedata['text'];
-            headline = headlinetranslatedata['text'];
-            text = texttranslatedata['text'];
-            return _context10.abrupt("return", [publisher, topic, headline, text]);
-
-          case 25:
-          case "end":
-            return _context10.stop();
-        }
-      }
-    }, _callee10);
-  }));
-  return _callTranslation.apply(this, arguments);
-}

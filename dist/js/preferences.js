@@ -3,18 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.rate = exports.volume = exports.pitch = exports.language_choice = exports.sentences = exports.topics = exports.sources = exports.languagesdropdown = void 0;
-
-var _language_config = require("./language_config.js");
+exports.rate = exports.volume = exports.pitch = exports.max_sentences = exports.min_sentences = exports.topics = exports.sources = void 0;
 
 /**
  * Contains the user preferences, specifically which sources to query, which topics to hear from and the number of
  * sentences they want each article to be summarised down to
  */
-var languagesdropdown = Object.keys(_language_config.languages); // dropdown menu for the user to select the language they want articles read aloud in
 // News sources and their respective homepage links
-
-exports.languagesdropdown = languagesdropdown;
 var sources = {
   "The Guardian": "https://www.theguardian.com/",
   // left wing
@@ -143,10 +138,10 @@ var topics = {
  */
 
 exports.topics = topics;
-var sentences = 3;
-exports.sentences = sentences;
-var language_choice = "English";
-exports.language_choice = language_choice;
+var min_sentences = 2;
+exports.min_sentences = min_sentences;
+var max_sentences = 6;
+exports.max_sentences = max_sentences;
 var pitch = 1;
 exports.pitch = pitch;
 var volume = 1;

@@ -16,9 +16,7 @@ var _speech = require("../../dist/js/speech");
 /**
  Class for an article object
  */
-var Article =
-/*#__PURE__*/
-function () {
+var Article = /*#__PURE__*/function () {
   /**
    * Create an article
    * @param publisher - the news source
@@ -28,12 +26,15 @@ function () {
    * @param text - the summarised article text
    */
   function Article(publisher, topic, title, link, text) {
+    var language = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : "English";
     (0, _classCallCheck2["default"])(this, Article);
     this.publisher = publisher;
     this.topic = topic;
     this.title = title;
     this.link = link;
     this.text = text;
+    this.language = language;
+    this.originalText = text;
   }
   /**
    * Read each field of the article, excluding the link
@@ -43,10 +44,24 @@ function () {
   (0, _createClass2["default"])(Article, [{
     key: "read",
     value: function read() {
-      new _speech.Speech(this.publisher).speak();
-      new _speech.Speech(this.topic).speak();
-      new _speech.Speech(this.title).speak();
-      new _speech.Speech(this.text).speak();
+      new _speech.Speech(this.publisher, this.language).speak();
+      new _speech.Speech(this.topic, this.language).speak();
+      new _speech.Speech(this.title, this.language).speak();
+      new _speech.Speech(this.text, this.language).speak();
+    }
+  }, {
+    key: "amendLength",
+    value: function amendLength(sentences) {
+      var arrText = this.originalText.match(/[^\.!\?]+[\.!\?]+/g);
+      var newText = "";
+
+      try {
+        for (var i = 0; i < sentences; i++) {
+          newText += arrText[i] + " ";
+        }
+
+        this.text = newText;
+      } catch (TypeError) {}
     }
   }]);
   return Article;

@@ -3,6 +3,7 @@
  */
 
 import {languages} from "./language_config.js";
+import {min_sentences, max_sentences} from "./preferences.js";
 
 document.addEventListener("DOMContentLoaded", setUp);
 
@@ -43,10 +44,18 @@ async function setUp()
         }
         
         const sentences_dropdown = document.getElementById('sentences');
+        for (let i = min_sentences; i <= max_sentences; i++)
+        {
+            const option = i.toString();
+            const element = document.createElement("option");
+            element.textContent = option;
+            element.value = option;
+            sentences_dropdown.appendChild(element);
+        }
 
         if (sentences)
         {
-            sentences_dropdown.value = sentences;
+            sentences_dropdown.value = sentences.toString();
         }
         else
         {
@@ -67,7 +76,7 @@ async function setUp()
     const sentences_dropdown = document.getElementById('sentences');
     sentences_dropdown.onchange = function () {
         const newSelection = sentences_dropdown[sentences_dropdown.selectedIndex].text;
-        chrome.storage.local.set({'sentences': newSelection});
+        chrome.storage.local.set({'sentences': parseInt(newSelection)});
     };
 
     //Add event listeners for when buttons are clicked

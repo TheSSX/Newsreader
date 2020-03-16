@@ -21,9 +21,7 @@ var _yandex = require("./yandex.js");
  Class for translating articles via the Yandex free translation service.
  Yandex offers one million free characters translated every day.
  */
-var Translator =
-/*#__PURE__*/
-function () {
+var Translator = /*#__PURE__*/function () {
   function Translator() {
     (0, _classCallCheck2["default"])(this, Translator);
   }
@@ -38,9 +36,7 @@ function () {
      * @returns {Promise<undefined>} - the JSON response from Yandex
      */
     value: function () {
-      var _translate = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee(text, targetlang) {
+      var _translate = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(text, targetlang) {
         var url;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {

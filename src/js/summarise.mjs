@@ -4,6 +4,8 @@
  * Contains config info for querying the SMMRY API
  */
 
+import {max_sentences} from "./preferences.js";
+
 const smmryurl = "https://api.smmry.com/";
 const apikey = "D7F33A666C";
 
@@ -15,7 +17,7 @@ export class Summarise
      * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<void>} - the JSON response from SMMRY
      */
-    static async summarise(articleurl, sentences)
+    static async summarise(articleurl, sentences=max_sentences)
     {
         const url = this.constructsmmryurl(articleurl, sentences);
 
