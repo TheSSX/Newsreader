@@ -19,7 +19,7 @@ export let sources =
 
 // News topics, with each source having a webpage for each topic.
 // The only exception to this is News.com.au, which doesn't have a UK news page
-export let topics =
+export const topiclinks =
     {
         "sport":
             {

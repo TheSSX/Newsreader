@@ -1,5 +1,5 @@
 import {PageParser} from "./pageparser.mjs";
-import {sources, topics} from "./preferences.js";
+import {sources, topiclinks} from "./preferences.js";
 import {Article} from "./article.mjs";
 import {Speech} from "./speech.mjs";
 import {languages, translation_unavailable} from "./language_config.js";
@@ -19,49 +19,72 @@ export class Bulletin
      * 3) Send that article to the SMMRY API, inputting the number of sentences to summarise down to
      * 4) For each article, read the publication, topic, title and summarised article
      */
-    static async fetchNews()
+    static async fetchNews(topics)
     {
-        articles = [];
-        remaining = 2;
-
-        articles.push(new Article("We're no strangers to love", "you know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
-        articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
-
-        const utterance = new SpeechSynthesisUtterance("");
-        utterance.onend = async function () {
-            let nextArticle = articles.shift();
-            if (nextArticle === undefined)
-            {
-                chrome.runtime.sendMessage({greeting: "stop"});
-                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                return true;
-            }
-                Bulletin.checkSentences(nextArticle).then(newArticle => {
-                    Bulletin.checkTranslation(newArticle).then(result => {
-                        nextArticle = result;
-                        Bulletin.readArticles(nextArticle, articles);
-                    });
-                });
-        };
-
-        window.speechSynthesis.speak(utterance);
-        return true;
+        // articles = [];
+        // remaining = 2;
+        //
+        // articles.push(new Article("We're no strangers to love", "politics", "A full commitment's what I'm thinking of", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
+        // articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
+        // articles.push(new Article("Do you remember", "sport", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
+        //
+        // const utterance = new SpeechSynthesisUtterance("");
+        // utterance.onend = async function () {
+        //     let nextArticle = articles.shift();
+        //     if (nextArticle === undefined)
+        //     {
+        //         chrome.runtime.sendMessage({greeting: "stop"});
+        //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+        //         return true;
+        //     }
+        //
+        //     //Big oof with these nested promises
+        //     Bulletin.getTopics().then(topics => {
+        //
+        //         while (!topics[nextArticle.topic])
+        //         {
+        //             nextArticle = articles.shift();
+        //             if (nextArticle === undefined)
+        //             {
+        //                 chrome.runtime.sendMessage({greeting: "stop"});
+        //                 chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+        //                 return true;
+        //             }
+        //         }
+        //
+        //         Bulletin.checkSentences(nextArticle).then(newArticle => {
+        //             Bulletin.checkTranslation(newArticle).then(result => {
+        //                 nextArticle = result;
+        //                 Bulletin.readArticles(nextArticle, articles);
+        //             });
+        //         });
+        //     });
+        // };
+        //
+        // window.speechSynthesis.speak(utterance);
+        // return true;
 
         articles = [];
         remaining = Object.keys(topics).length;
 
         for (let i = 0; i < Object.keys(topics).length; i++)     // change i< to prevent unnecessary credits being used up
         {
+            if (!topics[Object.keys(topics)[i]]) {
+                remaining--;
+                continue;
+            }
+
             let source = Object.keys(sources)[Math.floor(Math.random() * Object.keys(sources).length)];  // get random source to contact
             const topic = Object.keys(topics)[i];       // topics are read in a random order every time
 
+            //TODO dangerous while sources and topics can be selected
             //News.com.au does not have UK news. Need a different source
             while (topic === "uk" && source === "News.com.au")
             {
                 source = Object.keys(sources)[Math.floor(Math.random() * Object.keys(sources).length)];
             }
 
-            const topiclink = topics[topic][source];    // for the selected source, get the URL to the selected topic page
+            const topiclink = topiclinks[topic][source];    // for the selected source, get the URL to the selected topic page
             try
             {
                 const data = PageParser.getArticle(source, topic, topiclink);          // send source, topic and number of sentences to summarise down to
@@ -108,7 +131,7 @@ export class Bulletin
     static retryTopic(topic, attempt)
     {
         const source = Object.keys(sources)[Math.floor(Math.random() * Object.keys(sources).length)];  // get random source to contact
-        const topiclink = topics[topic][source];
+        const topiclink = topiclinks[topic][source];
         try
         {
             const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise to
@@ -228,7 +251,7 @@ export class Bulletin
     static async checkSentences(article)
     {
         return new Promise((resolve, reject) => {
-            chrome.storage.local.get(['sentences'], async function (result) {
+            chrome.storage.local.get(['sentences'], function (result) {
                 const sentences = result['sentences'];
 
                 if (sentences)

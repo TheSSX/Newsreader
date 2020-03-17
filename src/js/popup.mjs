@@ -3,10 +3,10 @@
  */
 
 import {languages} from "./language_config.js";
-import {min_sentences, max_sentences, sources, topics} from "./preferences.js";
+import {min_sentences, max_sentences, sources, topiclinks} from "./preferences.js";
 
 const allsources = Object.keys(sources);
-const alltopics = Object.keys(topics);
+const alltopics = Object.keys(topiclinks);
 
 document.addEventListener("DOMContentLoaded", setUp);
 
@@ -166,7 +166,7 @@ async function setTopics(topics)
 
         for (let i=0; i<alltopics.length; i++)
         {
-            const current = capitalizeFirstLetter(alltopics[i]);
+            const current = alltopics[i];
             topics[current] = true;
         }
 
@@ -177,7 +177,7 @@ async function setTopics(topics)
 
     for (let i=0; i<alltopics.length; i++)
     {
-        const name = capitalizeFirstLetter(alltopics[i]);
+        const name = alltopics[i];
 
         const checkbox = document.createElement('input');
         checkbox.type = "checkbox";
@@ -198,7 +198,7 @@ async function setTopics(topics)
 
         const label = document.createElement('label');
         label.htmlFor = name;
-        label.appendChild(document.createTextNode(name));
+        label.appendChild(document.createTextNode(capitalizeFirstLetter(name)));
 
         const br = document.createElement('br');
 
