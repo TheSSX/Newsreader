@@ -237,3 +237,13 @@ h3 {
     display: inline-block;
     float: right;
 }
+
+#sources-checkboxes {
+    display: inline-block;
+    float: left;
+}
+
+#topics-checkboxes {
+    display: inline-block;
+    float: right;
+}

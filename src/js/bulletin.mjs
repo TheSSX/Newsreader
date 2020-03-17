@@ -21,31 +21,31 @@ export class Bulletin
      */
     static async fetchNews()
     {
-        // articles = [];
-        // remaining = 2;
-        //
-        // articles.push(new Article("We're no strangers to love", "you know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
-        // articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
-        //
-        // const utterance = new SpeechSynthesisUtterance("");
-        // utterance.onend = async function () {
-        //     let nextArticle = articles.shift();
-        //     if (nextArticle === undefined)
-        //     {
-        //         chrome.runtime.sendMessage({greeting: "stop"});
-        //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-        //         return true;
-        //     }
-        //         Bulletin.checkSentences(nextArticle).then(newArticle => {
-        //             Bulletin.checkTranslation(newArticle).then(result => {
-        //                 nextArticle = result;
-        //                 Bulletin.readArticles(nextArticle, articles);
-        //             });
-        //         });
-        // };
-        //
-        // window.speechSynthesis.speak(utterance);
-        // return true;
+        articles = [];
+        remaining = 2;
+
+        articles.push(new Article("We're no strangers to love", "you know the rules and so do I", "A full commitment's what I'm thinking of", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
+        articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
+
+        const utterance = new SpeechSynthesisUtterance("");
+        utterance.onend = async function () {
+            let nextArticle = articles.shift();
+            if (nextArticle === undefined)
+            {
+                chrome.runtime.sendMessage({greeting: "stop"});
+                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                return true;
+            }
+                Bulletin.checkSentences(nextArticle).then(newArticle => {
+                    Bulletin.checkTranslation(newArticle).then(result => {
+                        nextArticle = result;
+                        Bulletin.readArticles(nextArticle, articles);
+                    });
+                });
+        };
+
+        window.speechSynthesis.speak(utterance);
+        return true;
 
         articles = [];
         remaining = Object.keys(topics).length;
@@ -271,6 +271,7 @@ export class Bulletin
 
     static async getTranslatedArticle(article, language_choice)
     {
+        return new Article("This is " + language_choice, "This is " + article.topic, "", "", "", language_choice);
         const publishertranslatedata = await Translator.translate(article.publisher, languages[language_choice]);
         const topictranslatedata = await Translator.translate(article.topic, languages[language_choice]);
         const headlinetranslatedata = await Translator.translate(article.title, languages[language_choice]);
