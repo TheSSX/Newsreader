@@ -1,4 +1,5 @@
 import {Bulletin} from "./bulletin.mjs";
+import {getTopics} from "./popup.mjs";
 
 /**
  * Receives messages from popup.mjs
@@ -7,10 +8,23 @@ import {Bulletin} from "./bulletin.mjs";
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse)
     {
-        if (request.greeting === "play")
+        if (request.greeting === "play") {
             getTopics().then(topics => {
+                let found = false;
+                for (let i = 0; i < Object.keys(topics).length; i++) {
+                    if (topics[Object.keys(topics)[i]]) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    return false;
+                }
+
                 Bulletin.fetchNews(topics);
             });
+        }
         else if (request.greeting === "pause")
             window.speechSynthesis.pause();
         else if (request.greeting === "resume")
@@ -19,12 +33,5 @@ chrome.runtime.onMessage.addListener(
             window.speechSynthesis.cancel();
     });
 
-async function getTopics()
-{
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get(['topics'], function (result) {
-            const topics = result['topics'];
-            resolve(topics);
-        });
-    });
-}
+let topics = undefined;
+

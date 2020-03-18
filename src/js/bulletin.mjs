@@ -25,42 +25,25 @@ export class Bulletin
         // remaining = 2;
         //
         // articles.push(new Article("We're no strangers to love", "politics", "A full commitment's what I'm thinking of", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
-        // articles.push(new Article("Do you remember", "The twenty first night of September?", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
+        // articles.push(new Article("Do you remember", "world", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
         // articles.push(new Article("Do you remember", "sport", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
         //
         // const utterance = new SpeechSynthesisUtterance("");
         // utterance.onend = async function () {
         //     let nextArticle = articles.shift();
-        //     if (nextArticle === undefined)
-        //     {
+        //     if (nextArticle === undefined) {
         //         chrome.runtime.sendMessage({greeting: "stop"});
         //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
         //         return true;
         //     }
         //
-        //     //Big oof with these nested promises
-        //     Bulletin.getTopics().then(topics => {
-        //
-        //         while (!topics[nextArticle.topic])
-        //         {
-        //             nextArticle = articles.shift();
-        //             if (nextArticle === undefined)
-        //             {
-        //                 chrome.runtime.sendMessage({greeting: "stop"});
-        //                 chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-        //                 return true;
-        //             }
-        //         }
-        //
-        //         Bulletin.checkSentences(nextArticle).then(newArticle => {
-        //             Bulletin.checkTranslation(newArticle).then(result => {
-        //                 nextArticle = result;
-        //                 Bulletin.readArticles(nextArticle, articles);
-        //             });
+        //     Bulletin.checkSentences(nextArticle).then(newArticle => {
+        //         Bulletin.checkTranslation(newArticle).then(result => {
+        //             nextArticle = result;
+        //             Bulletin.readArticles(nextArticle, articles);
         //         });
         //     });
         // };
-        //
         // window.speechSynthesis.speak(utterance);
         // return true;
 

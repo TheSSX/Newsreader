@@ -249,11 +249,30 @@ async function playPauseToggle() {
 
 async function play()
 {
-    document.getElementById('headline').innerHTML = "Fetching news...";
-    document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
-    chrome.storage.local.set({"playing": true});
-    chrome.storage.local.set({"paused": false});
-    chrome.runtime.sendMessage({greeting: "play"});
+    getTopics().then(topics => {
+        let found = false;
+        for (let i=0; i<Object.keys(topics).length; i++)
+        {
+            if (topics[Object.keys(topics)[i]])
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            document.getElementById('headline').innerHTML = "Select a source + topic";
+            return false;
+        }
+
+        document.getElementById('headline').innerHTML = "Fetching news...";
+        document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
+        chrome.storage.local.set({"playing": true});
+        chrome.storage.local.set({"paused": false});
+        chrome.runtime.sendMessage({greeting: "play"});
+        return true;
+    });
 }
 
 async function pause()
@@ -292,6 +311,16 @@ function capitalizeFirstLetter(string) {
     {
         return string;
     }
+}
+
+export async function getTopics()
+{
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(['topics'], function (result) {
+            const topics = result['topics'];
+            resolve(topics);
+        });
+    });
 }
 
 //HTML stuff
