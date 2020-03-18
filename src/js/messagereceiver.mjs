@@ -1,5 +1,5 @@
 import {Bulletin} from "./bulletin.mjs";
-import {getTopics} from "./popup.mjs";
+import {getSources, getTopics} from "./popup.mjs";
 
 /**
  * Receives messages from popup.mjs
@@ -9,20 +9,10 @@ chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse)
     {
         if (request.greeting === "play") {
-            getTopics().then(topics => {
-                let found = false;
-                for (let i = 0; i < Object.keys(topics).length; i++) {
-                    if (topics[Object.keys(topics)[i]]) {
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    return false;
-                }
-
-                Bulletin.fetchNews(topics);
+            getSources().then(sources => {
+                getTopics().then(topics => {
+                    Bulletin.fetchNews(sources, topics);
+                });
             });
         }
         else if (request.greeting === "pause")

@@ -3,14 +3,19 @@
  */
 
 import {languages} from "./language_config.js";
-import {min_sentences, max_sentences, sources, topiclinks} from "./preferences.js";
+import {min_sentences, max_sentences, sourcelinks, topiclinks} from "./preferences.js";
+import {checkNewsAUUK} from "./bulletin.mjs";
 
-const allsources = Object.keys(sources);
+const allsources = Object.keys(sourcelinks);
 const alltopics = Object.keys(topiclinks);
 
-document.addEventListener("DOMContentLoaded", setUp);
+//document.addEventListener("DOMContentLoaded", setUp);
+document.addEventListener('readystatechange', function () {
+   if (document.readyState === "complete")
+       setUp();
+});
 
-async function setUp()
+function setUp()
 {
     //Setting up the UI with user preferences
 
@@ -22,8 +27,8 @@ async function setUp()
         const topic = result['topic'];
         const language = result['language'];
         const sentences = result['sentences'];
-        let sources = result['sources'];
-        let topics = result['topics'];
+        const sources = result['sources'];
+        const topics = result['topics'];
 
         if (currentlyplaying && !currentlypaused) {
             document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
@@ -55,7 +60,7 @@ async function setUp()
     }
 }
 
-async function setLanguages(language)
+function setLanguages(language)
 {
     const languages_dropdown = document.getElementById('languages');
     for (let i = 0; i < Object.keys(languages).length; i++)
@@ -82,7 +87,7 @@ async function setLanguages(language)
     };
 }
 
-async function setSentences(sentences)
+function setSentences(sentences)
 {
     const sentences_dropdown = document.getElementById('sentences');
     for (let i = min_sentences; i <= max_sentences; i++)
@@ -109,7 +114,7 @@ async function setSentences(sentences)
     };
 }
 
-async function setSources(sources)
+function setSources(sources)
 {
     if (!sources)
     {
@@ -158,7 +163,7 @@ async function setSources(sources)
     }
 }
 
-async function setTopics(topics)
+function setTopics(topics)
 {
     if (!topics)
     {
@@ -208,7 +213,7 @@ async function setTopics(topics)
     }
 }
 
-async function changeCheckboxValue(checkbox_name, item_name, value) {
+function changeCheckboxValue(checkbox_name, item_name, value) {
     chrome.storage.local.get([checkbox_name], function (result) {
         let replacement = result[checkbox_name];
         replacement[item_name] = value;
@@ -219,7 +224,7 @@ async function changeCheckboxValue(checkbox_name, item_name, value) {
     });
 }
 
-async function playPauseToggle() {
+function playPauseToggle() {
     chrome.storage.local.get(['playing', 'paused'], function(result) {
         let currentlypaused, currentlyplaying;
         try {
@@ -247,35 +252,59 @@ async function playPauseToggle() {
     });
 }
 
-async function play()
+function play()
 {
-    getTopics().then(topics => {
-        let found = false;
-        for (let i=0; i<Object.keys(topics).length; i++)
-        {
-            if (topics[Object.keys(topics)[i]])
+    getSources().then(sources => {
+        getTopics().then(topics => {
+            if (checkNewsAUUK(sources, topics))
             {
-                found = true;
-                break;
+                document.getElementById('headline').innerHTML = "News.com.au does not report UK news";
+                return false;
             }
-        }
 
-        if (!found)
-        {
-            document.getElementById('headline').innerHTML = "Select a source + topic";
-            return false;
-        }
+            let found = false;
+            for (let i=0; i<Object.keys(sources).length; i++)
+            {
+                if (sources[Object.keys(sources)[i]])
+                {
+                    found = true;
+                    break;
+                }
+            }
 
-        document.getElementById('headline').innerHTML = "Fetching news...";
-        document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
-        chrome.storage.local.set({"playing": true});
-        chrome.storage.local.set({"paused": false});
-        chrome.runtime.sendMessage({greeting: "play"});
-        return true;
+            if (!found)
+            {
+                document.getElementById('headline').innerHTML = "Select a source + topic";
+                return false;
+            }
+
+            found = false;
+            for (let i=0; i<Object.keys(topics).length; i++)
+            {
+                if (topics[Object.keys(topics)[i]])
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                document.getElementById('headline').innerHTML = "Select a source + topic";
+                return false;
+            }
+
+            document.getElementById('headline').innerHTML = "Fetching news...";
+            document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
+            chrome.storage.local.set({"playing": true});
+            chrome.storage.local.set({"paused": false});
+            chrome.runtime.sendMessage({greeting: "play"});
+            return true;
+        });
     });
 }
 
-async function pause()
+function pause()
 {
     document.getElementById('playPauseBtnIcon').className = "icon-play btn";
     chrome.storage.local.set({"playing": true});
@@ -283,7 +312,7 @@ async function pause()
     chrome.runtime.sendMessage({greeting: "pause"});
 }
 
-async function resume()
+function resume()
 {
     document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
     chrome.storage.local.set({"playing": true});
@@ -291,7 +320,7 @@ async function resume()
     chrome.runtime.sendMessage({greeting: "resume"});
 }
 
-async function stop() {
+function stop() {
     document.getElementById('headline').innerHTML = "";
     document.getElementById('publisher').innerHTML = "";
     document.getElementById('topic').innerHTML = "";
@@ -311,6 +340,16 @@ function capitalizeFirstLetter(string) {
     {
         return string;
     }
+}
+
+export async function getSources()
+{
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get(['sources'], function (result) {
+            const sources = result['sources'];
+            resolve(sources);
+        });
+    });
 }
 
 export async function getTopics()

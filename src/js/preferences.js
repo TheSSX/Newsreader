@@ -4,7 +4,7 @@
  */
 
 // News sources and their respective homepage links
-export let sources =
+export const sourcelinks =
     {
         "The Guardian": "https://www.theguardian.com/",         // left wing
         "BBC": "https://www.bbc.com/",                          // left wing

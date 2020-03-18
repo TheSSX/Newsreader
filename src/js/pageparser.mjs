@@ -1,6 +1,6 @@
 import {Article} from "./article.mjs";
 import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
-import {sources} from "./preferences.js";
+import {sourcelinks} from "./preferences.js";
 import {Summarise} from "./summarise.mjs";
 
 /**
@@ -50,6 +50,7 @@ export class PageParser
      */
     static async extractGuardian(topic, topiclink)
     {
+        return new Article("works", topic, "hey", "link", "hello");
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -96,9 +97,9 @@ export class PageParser
             randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
             counter++;
         }
-        while (randomlink.startsWith(sources[publisher] + topic + '/video/') && counter < 3);  //articles devoted to a video are no good
+        while (randomlink.startsWith(sourcelinks[publisher] + topic + '/video/') && counter < 3);  //articles devoted to a video are no good
 
-        if (randomlink.startsWith(sources[publisher] + topic + '/video/'))
+        if (randomlink.startsWith(sourcelinks[publisher] + topic + '/video/'))
         {
             return undefined;
         }
@@ -195,7 +196,8 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractBBC(topic, topiclink)
-    {
+    {        return new Article("works", topic, "hey", "link", "hello");
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -220,7 +222,7 @@ export class PageParser
             const current = linksarr[i];
             if (!current.includes('/') && current.includes('-') && !isNaN(current[current.length - 1]))
             {
-                articlelinks.push(sources[publisher] + 'news/' + current);
+                articlelinks.push(sourcelinks[publisher] + 'news/' + current);
             }
         }
 
@@ -318,7 +320,8 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractReuters(topic, topiclink)
-    {
+    {        return new Article("works", topic, "hey", "link", "hello");
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -326,7 +329,7 @@ export class PageParser
         let publisher = "Reuters";
 
         const permadata = await PageParser.extractPageData(topiclink);
-        let linkdata = permadata.split('<a href="' + sources[publisher] + 'article/');
+        let linkdata = permadata.split('<a href="' + sourcelinks[publisher] + 'article/');
 
         let linksarr = [];
         for (let i = 1; i < linkdata.length; i += 1)
@@ -465,7 +468,8 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractSky(topic, topiclink)
-    {
+    {        return new Article("works", topic, "hey", "link", "hello");
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -480,7 +484,7 @@ export class PageParser
             linkdata = permadata.split('<a class="news-list__headline-link" href="https://www.skysports.com/');
         } else
         {
-            linkdata = permadata.split('<a href="' + sources[publisher] + 'story/');
+            linkdata = permadata.split('<a href="' + sourcelinks[publisher] + 'story/');
         }
 
         let linksarr = [];
@@ -519,7 +523,7 @@ export class PageParser
                     articlelinks.push('https://www.skysports.com/' + current);
                 } else
                 {
-                    articlelinks.push(sources[publisher] + 'story/' + current);
+                    articlelinks.push(sourcelinks[publisher] + 'story/' + current);
                 }
             }
         }
@@ -637,7 +641,8 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractAP(topic, topiclink)
-    {
+    {        return new Article("works", topic, "hey", "link", "hello");
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -662,7 +667,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (!current.includes('-') && !current.includes('/') && !current.includes('.') && current.length && current !== "termsofservice" && current !== "privacystatement")
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 
@@ -773,7 +778,8 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractEveningStandard(topic, topiclink)
-    {
+    {        return new Article("works", topic, "hey", "link", "hello");
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -798,7 +804,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && (current.includes('news/') || current.includes('sport/') || current.includes('tech/')) && current.endsWith(".html"))
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 
@@ -899,7 +905,8 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractIndependent(topic, topiclink)
-    {
+    {        return new Article("works", topic, "hey", "link", "hello");
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -924,7 +931,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && current.endsWith(".html") && !current.includes('service/') && !current.includes('independentpremium/') && !current.includes('long_reads/') && !current.includes('extras/') && !current.includes('food-and-drink/recipes/'))
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 
@@ -1034,7 +1041,8 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractNewsAU(topic, topiclink)
-    {
+    {        return new Article("works", topic, "hey", "link", "hello");
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -1059,7 +1067,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && current.includes("/news-story/") && !current.includes('/game-reviews/'))
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 
@@ -1190,7 +1198,8 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractITV(topic, topiclink)
-    {
+    {        return new Article("works", topic, "hey", "link", "hello");
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -1214,7 +1223,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && current.includes("news/") && !current.includes("topic/") && !current.includes("meet-the-team/") && !current.includes("/uk-weather-forecast-") && !current.includes("/assets/") && /\d/.test(current))
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 

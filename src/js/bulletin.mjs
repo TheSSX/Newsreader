@@ -1,5 +1,5 @@
 import {PageParser} from "./pageparser.mjs";
-import {sources, topiclinks} from "./preferences.js";
+import {sourcelinks, topiclinks} from "./preferences.js";
 import {Article} from "./article.mjs";
 import {Speech} from "./speech.mjs";
 import {languages, translation_unavailable} from "./language_config.js";
@@ -8,7 +8,7 @@ import {Translator} from "./translator.mjs";
 let articles, remaining;
 
 /**
- Class for object to query random sources for each topic
+ Class for object to query random sourcelinks for each topic
  */
 export class Bulletin
 {
@@ -19,7 +19,7 @@ export class Bulletin
      * 3) Send that article to the SMMRY API, inputting the number of sentences to summarise down to
      * 4) For each article, read the publication, topic, title and summarised article
      */
-    static async fetchNews(topics)
+    static fetchNews(sources, topics)
     {
         // articles = [];
         // remaining = 2;
@@ -52,19 +52,28 @@ export class Bulletin
 
         for (let i = 0; i < Object.keys(topics).length; i++)     // change i< to prevent unnecessary credits being used up
         {
-            if (!topics[Object.keys(topics)[i]]) {
+            let source = Object.keys(sourcelinks)[Math.floor(Math.random() * Object.keys(sourcelinks).length)];  // get random source to contact
+            const topic = Object.keys(topics)[i];       // topics are read in a random order every time
+
+            if (!topics[topic]) {
                 remaining--;
                 continue;
             }
 
-            let source = Object.keys(sources)[Math.floor(Math.random() * Object.keys(sources).length)];  // get random source to contact
-            const topic = Object.keys(topics)[i];       // topics are read in a random order every time
+            //News.com.au does not have UK news.
+            if (topic === "uk" && source === "News.com.au")
+            {
+                if (checkNewsAUUK(sources, topics))
+                    continue
+            }
 
-            //TODO dangerous while sources and topics can be selected
-            //News.com.au does not have UK news. Need a different source
             while (topic === "uk" && source === "News.com.au")
             {
-                source = Object.keys(sources)[Math.floor(Math.random() * Object.keys(sources).length)];
+                source = Object.keys(sourcelinks)[Math.floor(Math.random() * Object.keys(sourcelinks).length)];
+            }
+
+            while (!sources[source]) {
+                source = Object.keys(sourcelinks)[Math.floor(Math.random() * Object.keys(sourcelinks).length)];
             }
 
             const topiclink = topiclinks[topic][source];    // for the selected source, get the URL to the selected topic page
@@ -113,7 +122,7 @@ export class Bulletin
 
     static retryTopic(topic, attempt)
     {
-        const source = Object.keys(sources)[Math.floor(Math.random() * Object.keys(sources).length)];  // get random source to contact
+        const source = Object.keys(sourcelinks)[Math.floor(Math.random() * Object.keys(sourcelinks).length)];  // get random source to contact
         const topiclink = topiclinks[topic][source];
         try
         {
@@ -315,4 +324,24 @@ function capitalizeFirstLetter(string) {
     {
         return string;
     }
+}
+
+export function checkNewsAUUK(sources, topics)
+{
+    if (!sources['News.com.au'] || !topics['uk'])
+        return false;
+
+    for (let i=0; i<Object.keys(sources).length; i++)
+    {
+        if (sources[Object.keys(sources)[i]] && Object.keys(sources)[i] !== 'News.com.au')
+            return false;
+    }
+
+    for (let i=0; i<Object.keys(topics).length; i++)
+    {
+        if (topics[Object.keys(topics)[i]] && Object.keys(topics)[i] !== 'uk')
+            return false;
+    }
+
+    return true;
 }
