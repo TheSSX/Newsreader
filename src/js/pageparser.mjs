@@ -3,6 +3,9 @@ import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
 import {sourcelinks} from "./preferences.js";
 import {Summarise} from "./summarise.mjs";
 
+export const longFrench = "Enfin, voici une phrase que je refuse de briser jusqu’à ce que je suis sûr qu’il a franchi la ligne de 200 caractères et c’est à partir de cette phrase en particulier que je vais m’assurer de tester ma fonction afin d’obtenir les bons résultats de sa fonctionnalité , bien qu’il en soit venu à y penser, il ya probablement des moyens beaucoup plus intelligents et sophistiqués que je ne suis pas au courant.";
+export const verylongFrench = "L’essai de 20 mètres de pacer débutera dans 30 secondes; aligner au début, la vitesse de course quelque chose ou autre et puis vous n’avez qu’une question de secondes avant qu’il augmente à nouveau, sur vos marques, obtenir ensemble, allez, enfin, voici une phrase que je refuse de briser jusqu’à ce que je suis sûr qu’il a franchi la ligne de 200 caractères et il est de cette phrase en particulier que je vais m’assurer de tester ma fonction afin d’obtenir les bons résultats de sa fonctionnalité, bien que venu à penser à elle il ya probablement des moyens beaucoup plus intelligents et sophistiqués que je ne suis pas au courant autrement.";
+
 /**
  Class for object to parse source article pages
  */
@@ -50,7 +53,7 @@ export class PageParser
      */
     static async extractGuardian(topic, topiclink)
     {
-        return new Article("works", topic, "hey", "link", "hello");
+        //return new Article("works", topic, "hey", "link", textSplitter("text"));
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -186,7 +189,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
     }
 
     /**
@@ -196,7 +199,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractBBC(topic, topiclink)
-    {        return new Article("works", topic, "hey", "link", "hello");
+    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -310,7 +313,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
     }
 
     /**
@@ -320,7 +323,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractReuters(topic, topiclink)
-    {        return new Article("works", topic, "hey", "link", "hello");
+    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -458,7 +461,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
     }
 
     /**
@@ -468,7 +471,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractSky(topic, topiclink)
-    {        return new Article("works", topic, "hey", "link", "hello");
+    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -631,7 +634,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
     }
 
     /**
@@ -641,7 +644,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractAP(topic, topiclink)
-    {        return new Article("works", topic, "hey", "link", "hello");
+    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -768,7 +771,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
     }
 
     /**
@@ -778,7 +781,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractEveningStandard(topic, topiclink)
-    {        return new Article("works", topic, "hey", "link", "hello");
+    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -895,7 +898,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
     }
 
     /**
@@ -905,7 +908,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractIndependent(topic, topiclink)
-    {        return new Article("works", topic, "hey", "link", "hello");
+    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -1031,7 +1034,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
     }
 
     /**
@@ -1041,7 +1044,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractNewsAU(topic, topiclink)
-    {        return new Article("works", topic, "hey", "link", "hello");
+    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -1188,7 +1191,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
     }
 
     /**
@@ -1198,7 +1201,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractITV(topic, topiclink)
-    {        return new Article("works", topic, "hey", "link", "hello");
+    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -1364,7 +1367,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
     }
 
     /**
@@ -1380,4 +1383,72 @@ export class PageParser
         {
         });    //not convinced this actually returns or throws an error
     }
+}
+
+export function textSplitter(text)
+{
+    let arr = [];
+
+    text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+    if (!text)
+    {
+        let current = text;
+        let segment = current;
+        if (current.length > 150)
+        {
+            while (current.length > 150)
+            {
+                segment = current.substr(0, 150);
+                current = current.substr(150);
+                while (isLetter(current.charAt(0)))
+                {
+                    segment += current.charAt(0);
+                    current = current.substr(1);
+                }
+
+                arr.push(segment);
+            }
+
+            arr.push(current);
+        }
+        else
+        {
+            arr.push(segment);
+        }
+    }
+    else
+    {
+        for (let i=0; i<text.length; i++)
+        {
+            let current = text[i];
+            let segment = current;
+            if (current.length > 150)
+            {
+                while (current.length > 150)
+                {
+                    segment = current.substr(0, 150);
+                    current = current.substr(150);
+                    while (isLetter(current.charAt(0)))
+                    {
+                        segment += current.charAt(0);
+                        current = current.substr(1);
+                    }
+
+                    arr.push(segment);
+                }
+
+                arr.push(current);
+            }
+            else
+            {
+                arr.push(segment);
+            }
+        }
+    }
+
+    return arr;
+}
+
+export function isLetter(str) {
+    return str.length === 1 && str.match(/[a-zA-Z]/i);
 }

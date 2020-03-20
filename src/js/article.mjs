@@ -32,23 +32,40 @@ export class Article
         new Speech(this.publisher, this.language).speak();
         new Speech(this.topic, this.language).speak();
         new Speech(this.title, this.language).speak();
-        new Speech(this.text, this.language).speak();
+
+        for (let i=0; i<this.text.length; i++)
+        {
+            new Speech(this.text[i], this.language).speak();
+        }
     }
 
     amendLength(sentences)
     {
-        const arrText = this.originalText.match( /[^\.!\?]+[\.!\?]+/g );
-        let newText = "";
+        let newText = [];
+        let temp = [];
+        let remaining = sentences;
 
-        try
+        for (let i=0; i<this.originalText.length; i++)
         {
-            for (let i=0; i<sentences; i++)
+            if (['.', '?', '!'].includes(this.originalText[i].charAt(this.originalText[i].length-1)))
             {
-                newText += arrText[i] + " ";
+                for (let j=0; j<temp.length; j++)
+                {
+                    newText.push(temp[j]);
+                }
+                newText.push(this.originalText[i]);
+                temp = [];
+                remaining--;
+                if (remaining === 0)
+                {
+                    this.text = newText;
+                    return;
+                }
             }
-
-            this.text = newText;
+            else
+            {
+                temp.push(this.originalText[i]);
+            }
         }
-        catch (TypeError){}
     }
 }

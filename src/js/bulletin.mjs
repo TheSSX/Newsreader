@@ -286,18 +286,25 @@ export class Bulletin
 
     static async getTranslatedArticle(article, language_choice)
     {
-        return new Article("This is " + language_choice, "This is " + article.topic, "", "", "", language_choice);
+        //return new Article("This is " + language_choice, "This is " + article.topic, "", "", ["translated text"], language_choice);
         const publishertranslatedata = await Translator.translate(article.publisher, languages[language_choice]);
         const topictranslatedata = await Translator.translate(article.topic, languages[language_choice]);
         const headlinetranslatedata = await Translator.translate(article.title, languages[language_choice]);
-        const texttranslatedata = await Translator.translate(article.text, languages[language_choice]);
+        let text = [];
+        for (let i=0; i<article.text.length; i++)
+        {
+            const current = await Translator.translate(article.text[i], languages[language_choice]);
+            if (current['code'] !== 200)
+                return undefined;
+            text.push(current['text']);
+        }
 
         //If translation API not available
-        if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+        if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || article.text.length !== text.length)
         {
             return undefined;
         }
-        else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
+        else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200)
         {
             return undefined;
         }
@@ -306,7 +313,6 @@ export class Bulletin
             const publisher = publishertranslatedata['text'];
             const topic = topictranslatedata['text'];
             const headline = headlinetranslatedata['text'];
-            const text = texttranslatedata['text'];
 
             return new Article(publisher, topic, headline, article.link, text, language_choice);
         }
