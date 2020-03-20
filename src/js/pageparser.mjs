@@ -53,7 +53,7 @@ export class PageParser
      */
     static async extractGuardian(topic, topiclink)
     {
-        //return new Article("works", topic, "hey", "link", textSplitter("text"));
+        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -189,7 +189,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
+        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
     }
 
     /**
@@ -199,7 +199,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractBBC(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -313,7 +313,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
+        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
     }
 
     /**
@@ -323,7 +323,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractReuters(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -461,7 +461,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
+        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
     }
 
     /**
@@ -471,7 +471,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractSky(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -634,7 +634,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
+        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
     }
 
     /**
@@ -644,7 +644,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractAP(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -771,7 +771,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
+        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
     }
 
     /**
@@ -781,7 +781,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractEveningStandard(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -898,7 +898,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
+        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
     }
 
     /**
@@ -908,7 +908,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractIndependent(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -1034,7 +1034,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
+        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
     }
 
     /**
@@ -1044,7 +1044,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractNewsAU(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -1191,7 +1191,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
+        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
     }
 
     /**
@@ -1201,7 +1201,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractITV(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -1367,7 +1367,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, textSplitter(text));
+        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
     }
 
     /**

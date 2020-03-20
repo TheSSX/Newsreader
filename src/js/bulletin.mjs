@@ -286,7 +286,7 @@ export class Bulletin
 
     static async getTranslatedArticle(article, language_choice)
     {
-        //return new Article("This is " + language_choice, "This is " + article.topic, "", "", ["translated text"], language_choice);
+        //return new Article("This is " + language_choice, "This is " + article.topic, "", "", "hello", ["translated text"], language_choice);
         const publishertranslatedata = await Translator.translate(article.publisher, languages[language_choice]);
         const topictranslatedata = await Translator.translate(article.topic, languages[language_choice]);
         const headlinetranslatedata = await Translator.translate(article.title, languages[language_choice]);
@@ -314,7 +314,7 @@ export class Bulletin
             const topic = topictranslatedata['text'];
             const headline = headlinetranslatedata['text'];
 
-            return new Article(publisher, topic, headline, article.link, text, language_choice);
+            return new Article(publisher, topic, headline, article.link, article.alltext, text, language_choice);
         }
     }
 }

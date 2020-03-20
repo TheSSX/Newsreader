@@ -13,12 +13,13 @@ export class Article
      * @param link - the link to the article
      * @param text - the summarised article text
      */
-    constructor(publisher, topic, title, link, text, language="English")
+    constructor(publisher, topic, title, link, alltext, text, language="English")
     {
         this.publisher = publisher;
         this.topic = topic;
         this.title = title;
         this.link = link;
+        this.alltext = alltext;
         this.text = text;
         this.language = language;
         this.originalText = text;
@@ -33,9 +34,16 @@ export class Article
         new Speech(this.topic, this.language).speak();
         new Speech(this.title, this.language).speak();
 
-        for (let i=0; i<this.text.length; i++)
+        if (this.language === "English")
         {
-            new Speech(this.text[i], this.language).speak();
+            new Speech(this.alltext, this.language).speak();
+        }
+        else
+        {
+            for (let i=0; i<this.text.length; i++)
+            {
+                new Speech(this.text[i], this.language).speak();
+            }
         }
     }
 
