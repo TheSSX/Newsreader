@@ -3,9 +3,6 @@ import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
 import {sourcelinks} from "./preferences.js";
 import {Summarise} from "./summarise.mjs";
 
-export const longFrench = "Enfin, voici une phrase que je refuse de briser jusqu’à ce que je suis sûr qu’il a franchi la ligne de 200 caractères et c’est à partir de cette phrase en particulier que je vais m’assurer de tester ma fonction afin d’obtenir les bons résultats de sa fonctionnalité , bien qu’il en soit venu à y penser, il ya probablement des moyens beaucoup plus intelligents et sophistiqués que je ne suis pas au courant.";
-export const verylongFrench = "L’essai de 20 mètres de pacer débutera dans 30 secondes; aligner au début, la vitesse de course quelque chose ou autre et puis vous n’avez qu’une question de secondes avant qu’il augmente à nouveau, sur vos marques, obtenir ensemble, allez, enfin, voici une phrase que je refuse de briser jusqu’à ce que je suis sûr qu’il a franchi la ligne de 200 caractères et il est de cette phrase en particulier que je vais m’assurer de tester ma fonction afin d’obtenir les bons résultats de sa fonctionnalité, bien que venu à penser à elle il ya probablement des moyens beaucoup plus intelligents et sophistiqués que je ne suis pas au courant autrement.";
-
 /**
  Class for object to parse source article pages
  */
@@ -189,7 +186,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -313,7 +310,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -413,6 +410,10 @@ export class PageParser
 
                 text = "Not enough summary credits! " + text;
             }
+            else
+            {
+                return undefined;
+            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -423,15 +424,23 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' - Reuters')[0];      //get headline from article data
                 text = ArticleExtractor.extractReutersText(data);
-                if (text !== undefined)
+                if (text === undefined)
                 {
-                    if (text.split(' - ')[1])
-                    {
-                        text = text.split(' - ')[1];
-                    }
-
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
+
+                text = "Not enough summary credits. " + text;
+            }
+
+            if (text !== undefined)
+            {
+                if (text.split(' - ')[1])
+                {
+                    text = text.split(' - ')[1];
+                }
+            }
+            else {
+                return undefined;
             }
         }
 
@@ -461,7 +470,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -634,7 +643,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -716,62 +725,70 @@ export class PageParser
             text = ArticleExtractor.extractAPText(data);
             if (text !== undefined)
             {
-                if (text.split(' - ')[1])
+                if (text.split(' — ')[1])
                 {
-                    text = text.split(' - ')[1];
+                    text = text.split(' — ')[1];
                 }
 
                 text = "Not enough summary credits! " + text;
             }
-        } else    //SMMRY API working fine
+            else
+            {
+                return undefined;
+            }
+        }
+        else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
             const error = smmrydata['sm_api_error'];    //detecting presence of error code
 
-            if (error === 2)
-            {
+            if (error === 2) {
                 headline = ArticleExtractor.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
                 text = ArticleExtractor.extractAPText(data);
-                if (text !== undefined)
-                {
-                    if (text.split(' — ')[1])
-                    {
-                        text = text.split(' — ')[1];
-                    }
-
-                    text = "Not enough summary credits! " + text;
+                if (text === undefined) {
+                    alert("No text");
+                    alert("Headline: " + headline);
+                    alert("Text: " + text);
+                    alert("Link: " + randomlink);
+                    return undefined;
                 }
+
+                text = "Not enough summary credits. " + text;
+            }
+
+            if (text !== undefined)
+            {
+                if (text.split(' — ')[1])
+                {
+                    text = text.split(' — ')[1];
+                }
+            }
+            else
+            {
+                alert("Failed down here");
+                alert("Headline: " + headline);
+                alert("Text: " + text);
+                alert("Link: " + randomlink);
+                return undefined;
+            }
+
+            if (!headline)
+            {
+                headline = ArticleExtractor.extractAPHeadline(data);
             }
         }
 
         if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
         {
+            alert("Are we here?");
+            alert("Headline: " + headline);
+            alert("Text: " + text);
+            alert("Link: " + randomlink);
             return undefined;
         }
 
-        // /**
-        //  * TRANSLATING
-        //  */
-        //
-        // if (language_choice !== "English")
-        // {
-        //     const translations = await callTranslation(publisher, topic, headline, text);
-        //
-        //     if (translations !== undefined)
-        //     {
-        //         publisher = translations[0];
-        //         topic = translations[1];
-        //         headline = translations[2];
-        //         text = translations[3];
-        //     }
-        //     else
-        //     {
-        //         new Speech(translation_unavailable[language_choice]).speak();
-        //     }
-        // }
-
-        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -898,7 +915,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -1034,7 +1051,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -1191,7 +1208,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -1367,7 +1384,7 @@ export class PageParser
         //     }
         // }
 
-        return new Article(publisher, topic, headline, randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -1389,6 +1406,7 @@ export function textSplitter(text)
 {
     let arr = [];
 
+    text = abbreviationConcatenation(text);
     text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
     if (!text)
     {
@@ -1449,6 +1467,31 @@ export function textSplitter(text)
     return arr;
 }
 
-export function isLetter(str) {
+export function isLetter(str, caseChoice='any') {
+    if (caseChoice === 'lowercase')
+        return str.length === 1 && str.match(/[a-z]/i);
+    if (caseChoice === 'uppercase')
+        return str.length === 1 && str.match(/[A-Z]/i);
+
     return str.length === 1 && str.match(/[a-zA-Z]/i);
+}
+
+function abbreviationConcatenation(str)
+{
+    let newText = "";
+
+    for (let i=0; i<str.length-1; i++)
+    {
+        const current = str.charAt(i);
+        const next = str.charAt(i+1);
+
+        if (current === '.' && isLetter(next, 'uppercase')){}
+        else
+        {
+            newText += current;
+        }
+    }
+
+    newText += str.charAt(str.length-1);
+    return newText;
 }

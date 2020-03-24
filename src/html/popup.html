@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<h1>Newsreader</h1>
+<h1 id="header">Newsreader</h1>
 
 <section class="container">
     <div id="player">
@@ -19,14 +19,14 @@
             <h3 id="publisher"></h3>
             <h3 id="topic"></h3>
         </div>
-        <div class="controls">
-            <ul>
-                <li><div class="icon-backward btn"></div></li>
-                <li id="stopBtn"><div class="icon-stop btn"></div></li>
-                <li id="playPauseBtn" class="play"><div id="playPauseBtnIcon" class="icon-play btn"></div></li>
-                <li><div class="icon-forward btn"></div></li>
-            </ul>
-        </div>
+            <div class="controls">
+                <ul>
+                    <!--                <li><div class="icon-backward btn"></div></li>-->
+                    <li id="stopBtn"><div class="icon-stop btn"></div></li>
+                    <li id="playPauseBtn" class="play"><div id="playPauseBtnIcon" class="icon-play btn"></div></li>
+                    <!--                <li><div class="icon-forward btn"></div></li>-->
+                </ul>
+            </div>
     </div>
 </section>
 </body>
@@ -37,7 +37,7 @@
         <select id="languages"></select>
     </div>
     <div id="sentences-div">
-        <label>Sentences:</label>
+        <label>Sentences per article:</label>
         <select id="sentences"></select>
     </div>
     <br>

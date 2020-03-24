@@ -55,6 +55,14 @@ body {
     font-size: 12px;
 }
 
+ul {
+    margin-left: 5em;
+}
+
+#header {
+    margin-left: 3.25em;
+}
+
 .container {
     width: 26em;
     margin: auto;
@@ -84,13 +92,18 @@ body {
     color: #8b9195;
 }
 
-/*.controls {*/
-/*    padding: 1em;*/
-/*}*/
+.center {
+    /*width:200px;*/
+    /*height:200px;*/
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
+}
 
 .controls ul li {
     display: inline-block;
-    margin-right: 0.17em;
     padding: 1.1em;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;

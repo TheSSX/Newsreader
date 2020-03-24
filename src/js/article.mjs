@@ -13,11 +13,12 @@ export class Article
      * @param link - the link to the article
      * @param text - the summarised article text
      */
-    constructor(publisher, topic, title, link, alltext, text, language="English")
+    constructor(publisher, topic, allheadline, headline, link, alltext, text, language="English")
     {
         this.publisher = publisher;
         this.topic = topic;
-        this.title = title;
+        this.allheadline = allheadline;
+        this.headline = headline;
         this.link = link;
         this.alltext = alltext;
         this.text = text;
@@ -32,14 +33,19 @@ export class Article
     {
         new Speech(this.publisher, this.language).speak();
         new Speech(this.topic, this.language).speak();
-        new Speech(this.title, this.language).speak();
 
         if (this.language === "English")
         {
+            new Speech(this.allheadline, this.language).speak();
             new Speech(this.alltext, this.language).speak();
         }
         else
         {
+            for (let i=0; i<this.headline.length; i++)
+            {
+                new Speech(this.headline[i], this.language).speak();
+            }
+
             for (let i=0; i<this.text.length; i++)
             {
                 new Speech(this.text[i], this.language).speak();
@@ -51,8 +57,6 @@ export class Article
     {
         let newText = [];
         let temp = [];
-        let remaining = sentences;
-
         for (let i=0; i<this.originalText.length; i++)
         {
             if (['.', '?', '!'].includes(this.originalText[i].charAt(this.originalText[i].length-1)))
@@ -63,8 +67,8 @@ export class Article
                 }
                 newText.push(this.originalText[i]);
                 temp = [];
-                remaining--;
-                if (remaining === 0)
+                sentences--;
+                if (sentences <= 0)
                 {
                     this.text = newText;
                     return;

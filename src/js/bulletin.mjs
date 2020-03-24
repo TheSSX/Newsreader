@@ -207,7 +207,7 @@ export class Bulletin
         }
 
         const message = {
-            "headline": current.title,
+            "headline": current.headline,
             "publisher": current.publisher,
             "topic": capitalizeFirstLetter(current.topic)
         };
@@ -289,7 +289,16 @@ export class Bulletin
         //return new Article("This is " + language_choice, "This is " + article.topic, "", "", "hello", ["translated text"], language_choice);
         const publishertranslatedata = await Translator.translate(article.publisher, languages[language_choice]);
         const topictranslatedata = await Translator.translate(article.topic, languages[language_choice]);
-        const headlinetranslatedata = await Translator.translate(article.title, languages[language_choice]);
+
+        let headline = [];
+        for (let i=0; i<article.headline.length; i++)
+        {
+            const current = await Translator.translate(article.headline[i], languages[language_choice]);
+            if (current['code'] !== 200)
+                return undefined;
+            headline.push(current['text']);
+        }
+
         let text = [];
         for (let i=0; i<article.text.length; i++)
         {
@@ -300,11 +309,11 @@ export class Bulletin
         }
 
         //If translation API not available
-        if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || article.text.length !== text.length)
+        if (publishertranslatedata === undefined || topictranslatedata === undefined || article.headline.length !== headline.length || article.text.length !== text.length)
         {
             return undefined;
         }
-        else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200)
+        else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200)
         {
             return undefined;
         }
@@ -312,9 +321,8 @@ export class Bulletin
         {
             const publisher = publishertranslatedata['text'];
             const topic = topictranslatedata['text'];
-            const headline = headlinetranslatedata['text'];
 
-            return new Article(publisher, topic, headline, article.link, article.alltext, text, language_choice);
+            return new Article(publisher, topic, article.headline, headline, article.link, article.alltext, text, language_choice);
         }
     }
 }
