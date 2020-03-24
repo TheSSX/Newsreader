@@ -126,7 +126,7 @@ export class Bulletin
         const topiclink = topiclinks[topic][source];
         try
         {
-            const data = PageParser.getArticle(source, topic, topiclink, sentences);          // send source, topic and number of sentences to summarise to
+            const data = PageParser.getArticle(source, topic, topiclink);          // send source, topic and number of sentences to summarise to
             data.then(article => // returned in form of promise with value of article
             {
                 articles.push(article);
@@ -162,7 +162,7 @@ export class Bulletin
         }
         catch (TypeError)
         {
-            if (attempt === 10)     // stop recursive loop, not managed to fetch an article for the topic
+            if (attempt >= 10)     // stop recursive loop, not managed to fetch an article for the topic
             {
                 remaining--;
 

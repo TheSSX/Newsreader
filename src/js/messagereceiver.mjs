@@ -22,6 +22,3 @@ chrome.runtime.onMessage.addListener(
         else if (request.greeting === "stop")
             window.speechSynthesis.cancel();
     });
-
-let topics = undefined;
-

@@ -165,27 +165,6 @@ export class PageParser
             return undefined;
         }
 
-        // /**
-        //  * TRANSLATING
-        //  */
-        //
-        // if (language_choice !== "English")
-        // {
-        //     const translations = await callTranslation(publisher, topic, headline, text);
-        //
-        //     if (translations !== undefined)
-        //     {
-        //         publisher = translations[0];
-        //         topic = translations[1];
-        //         headline = translations[2];
-        //         text = translations[3];
-        //     }
-        //     else
-        //     {
-        //         new Speech(translation_unavailable[language_choice]).speak();
-        //     }
-        // }
-
         return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
@@ -429,7 +408,7 @@ export class PageParser
                     return undefined;
                 }
 
-                text = "Not enough summary credits. " + text;
+                text = "Not enough summary credits! " + text;
             }
 
             if (text !== undefined)
@@ -747,14 +726,14 @@ export class PageParser
                 headline = ArticleExtractor.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
                 text = ArticleExtractor.extractAPText(data);
                 if (text === undefined) {
-                    alert("No text");
-                    alert("Headline: " + headline);
-                    alert("Text: " + text);
-                    alert("Link: " + randomlink);
+                    // alert("No text");
+                    // alert("Headline: " + headline);
+                    // alert("Text: " + text);
+                    // alert("Link: " + randomlink);
                     return undefined;
                 }
 
-                text = "Not enough summary credits. " + text;
+                text = "Not enough summary credits! " + text;
             }
 
             if (text !== undefined)
@@ -766,10 +745,10 @@ export class PageParser
             }
             else
             {
-                alert("Failed down here");
-                alert("Headline: " + headline);
-                alert("Text: " + text);
-                alert("Link: " + randomlink);
+                // alert("Failed down here");
+                // alert("Headline: " + headline);
+                // alert("Text: " + text);
+                // alert("Link: " + randomlink);
                 return undefined;
             }
 
@@ -781,10 +760,10 @@ export class PageParser
 
         if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
         {
-            alert("Are we here?");
-            alert("Headline: " + headline);
-            alert("Text: " + text);
-            alert("Link: " + randomlink);
+            // alert("Are we here?");
+            // alert("Headline: " + headline);
+            // alert("Text: " + text);
+            // alert("Link: " + randomlink);
             return undefined;
         }
 
@@ -1402,6 +1381,23 @@ export class PageParser
     }
 }
 
+/**
+ * Designed to split a paragraph of text into sentences.
+ * However, sentences longer than 150 characters are split into segments of ~150 characters and pushed
+ * one after the other to an array. Once all sentences are split and pushed on, the array is returned
+ *
+ * PURPOSE
+ * The reason for splitting sentences > 150 characters is to prevent the SpeechSynthesis module from
+ * randomly cutting out. This only happens when being spoken in a non-English language/dialect and only
+ * with utterances of 200-300 words. 150 characters is seen as a safety net for preventing this.
+ *
+ * EXAMPLE
+ * text - "sentence. sentence >150 chars. sentence."
+ * return - ['sentence.' 'partial sentence' 'partial sentence.' 'sentence.']
+ *
+ * @param text - the input paragraph
+ * @returns {[]} - the array of sentences
+ */
 export function textSplitter(text)
 {
     let arr = [];

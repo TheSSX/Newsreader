@@ -5,6 +5,8 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.textSplitter = textSplitter;
+exports.isLetter = isLetter;
 exports.PageParser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -91,6 +93,8 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -139,10 +143,10 @@ var PageParser = /*#__PURE__*/function () {
                   randomlink = links[Math.floor(Math.random() * links.length)]; //select a random article
 
                   counter++;
-                } while (randomlink.startsWith(_preferences.sources[publisher] + topic + '/video/') && counter < 3); //articles devoted to a video are no good
+                } while (randomlink.startsWith(_preferences.sourcelinks[publisher] + topic + '/video/') && counter < 3); //articles devoted to a video are no good
 
 
-                if (!randomlink.startsWith(_preferences.sources[publisher] + topic + '/video/')) {
+                if (!randomlink.startsWith(_preferences.sourcelinks[publisher] + topic + '/video/')) {
                   _context.next = 17;
                   break;
                 }
@@ -231,7 +235,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context.abrupt("return", undefined);
 
               case 48:
-                return _context.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
+                return _context.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
               case 49:
               case "end":
@@ -264,6 +268,8 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
+                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -290,7 +296,7 @@ var PageParser = /*#__PURE__*/function () {
                   current = linksarr[_i2];
 
                   if (!current.includes('/') && current.includes('-') && !isNaN(current[current.length - 1])) {
-                    articlelinks.push(_preferences.sources[publisher] + 'news/' + current);
+                    articlelinks.push(_preferences.sourcelinks[publisher] + 'news/' + current);
                   }
                 }
 
@@ -365,7 +371,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context2.abrupt("return", undefined);
 
               case 23:
-                return _context2.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
+                return _context2.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
               case 24:
               case "end":
@@ -398,6 +404,8 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
+                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -407,7 +415,7 @@ var PageParser = /*#__PURE__*/function () {
 
               case 3:
                 permadata = _context3.sent;
-                linkdata = permadata.split('<a href="' + _preferences.sources[publisher] + 'article/');
+                linkdata = permadata.split('<a href="' + _preferences.sourcelinks[publisher] + 'article/');
                 linksarr = [];
 
                 for (i = 1; i < linkdata.length; i += 1) {
@@ -495,54 +503,89 @@ var PageParser = /*#__PURE__*/function () {
               case 30:
                 smmrydata = _context3.sent;
 
-                //send article to SMMRY
-                if (smmrydata === undefined) //SMMRY API unavailable
-                  {
-                    headline = data.split('<title>')[1].split(' - Reuters')[0]; //get headline from article data
+                if (!(smmrydata === undefined)) {
+                  _context3.next = 42;
+                  break;
+                }
 
-                    text = _articleextractor.ArticleExtractor.extractReutersText(data);
+                headline = data.split('<title>')[1].split(' - Reuters')[0]; //get headline from article data
 
-                    if (text !== undefined) {
-                      if (text.split(' - ')[1]) {
-                        text = text.split(' - ')[1];
-                      }
+                text = _articleextractor.ArticleExtractor.extractReutersText(data);
 
-                      text = "Not enough summary credits! " + text;
-                    }
-                  } else //SMMRY API working fine
-                  {
-                    headline = smmrydata['sm_api_title']; //article headline returned
+                if (!(text !== undefined)) {
+                  _context3.next = 39;
+                  break;
+                }
 
-                    text = smmrydata['sm_api_content']; //summarised article returned
+                if (text.split(' - ')[1]) {
+                  text = text.split(' - ')[1];
+                }
 
-                    error = smmrydata['sm_api_error']; //detecting presence of error code
+                text = "Not enough summary credits! " + text;
+                _context3.next = 40;
+                break;
 
-                    if (error === 2) {
-                      headline = data.split('<title>')[1].split(' - Reuters')[0]; //get headline from article data
+              case 39:
+                return _context3.abrupt("return", undefined);
 
-                      text = _articleextractor.ArticleExtractor.extractReutersText(data);
+              case 40:
+                _context3.next = 56;
+                break;
 
-                      if (text !== undefined) {
-                        if (text.split(' - ')[1]) {
-                          text = text.split(' - ')[1];
-                        }
+              case 42:
+                headline = smmrydata['sm_api_title']; //article headline returned
 
-                        text = "Not enough summary credits! " + text;
-                      }
-                    }
-                  }
+                text = smmrydata['sm_api_content']; //summarised article returned
 
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context3.next = 34;
+                error = smmrydata['sm_api_error']; //detecting presence of error code
+
+                if (!(error === 2)) {
+                  _context3.next = 51;
+                  break;
+                }
+
+                headline = data.split('<title>')[1].split(' - Reuters')[0]; //get headline from article data
+
+                text = _articleextractor.ArticleExtractor.extractReutersText(data);
+
+                if (!(text === undefined)) {
+                  _context3.next = 50;
                   break;
                 }
 
                 return _context3.abrupt("return", undefined);
 
-              case 34:
-                return _context3.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
+              case 50:
+                text = "Not enough summary credits! " + text;
 
-              case 35:
+              case 51:
+                if (!(text !== undefined)) {
+                  _context3.next = 55;
+                  break;
+                }
+
+                if (text.split(' - ')[1]) {
+                  text = text.split(' - ')[1];
+                }
+
+                _context3.next = 56;
+                break;
+
+              case 55:
+                return _context3.abrupt("return", undefined);
+
+              case 56:
+                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                  _context3.next = 58;
+                  break;
+                }
+
+                return _context3.abrupt("return", undefined);
+
+              case 58:
+                return _context3.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+
+              case 59:
               case "end":
                 return _context3.stop();
             }
@@ -573,6 +616,8 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
+                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -586,7 +631,7 @@ var PageParser = /*#__PURE__*/function () {
                 if (topic === "sport") {
                   linkdata = permadata.split('<a class="news-list__headline-link" href="https://www.skysports.com/');
                 } else {
-                  linkdata = permadata.split('<a href="' + _preferences.sources[publisher] + 'story/');
+                  linkdata = permadata.split('<a href="' + _preferences.sourcelinks[publisher] + 'story/');
                 }
 
                 linksarr = [];
@@ -619,7 +664,7 @@ var PageParser = /*#__PURE__*/function () {
                     if (topic === "sport") {
                       articlelinks.push('https://www.skysports.com/' + current);
                     } else {
-                      articlelinks.push(_preferences.sources[publisher] + 'story/' + current);
+                      articlelinks.push(_preferences.sourcelinks[publisher] + 'story/' + current);
                     }
                   }
                 }
@@ -735,7 +780,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context4.abrupt("return", undefined);
 
               case 36:
-                return _context4.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
+                return _context4.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
               case 37:
               case "end":
@@ -768,6 +813,8 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
+                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -792,7 +839,7 @@ var PageParser = /*#__PURE__*/function () {
                   current = linksarr[_i7]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (!current.includes('-') && !current.includes('/') && !current.includes('.') && current.length && current !== "termsofservice" && current !== "privacystatement") {
-                    articlelinks.push(_preferences.sources[publisher] + current);
+                    articlelinks.push(_preferences.sourcelinks[publisher] + current);
                   }
                 }
 
@@ -854,54 +901,94 @@ var PageParser = /*#__PURE__*/function () {
               case 29:
                 smmrydata = _context5.sent;
 
-                //send article to SMMRY
-                if (smmrydata === undefined) //SMMRY API unavailable
-                  {
-                    headline = _articleextractor.ArticleExtractor.extractAPHeadline(data); //SMMRY can't find the headline in AP articles. So we extract it ourselves
+                if (!(smmrydata === undefined)) {
+                  _context5.next = 41;
+                  break;
+                }
 
-                    text = _articleextractor.ArticleExtractor.extractAPText(data);
+                headline = _articleextractor.ArticleExtractor.extractAPHeadline(data); //SMMRY can't find the headline in AP articles. So we extract it ourselves
 
-                    if (text !== undefined) {
-                      if (text.split(' - ')[1]) {
-                        text = text.split(' - ')[1];
-                      }
+                text = _articleextractor.ArticleExtractor.extractAPText(data);
 
-                      text = "Not enough summary credits! " + text;
-                    }
-                  } else //SMMRY API working fine
-                  {
-                    headline = smmrydata['sm_api_title']; //article headline returned
+                if (!(text !== undefined)) {
+                  _context5.next = 38;
+                  break;
+                }
 
-                    text = smmrydata['sm_api_content']; //summarised article returned
+                if (text.split(' — ')[1]) {
+                  text = text.split(' — ')[1];
+                }
 
-                    error = smmrydata['sm_api_error']; //detecting presence of error code
+                text = "Not enough summary credits! " + text;
+                _context5.next = 39;
+                break;
 
-                    if (error === 2) {
-                      headline = _articleextractor.ArticleExtractor.extractAPHeadline(data); //SMMRY can't find the headline in AP articles. So we extract it ourselves
+              case 38:
+                return _context5.abrupt("return", undefined);
 
-                      text = _articleextractor.ArticleExtractor.extractAPText(data);
+              case 39:
+                _context5.next = 56;
+                break;
 
-                      if (text !== undefined) {
-                        if (text.split(' — ')[1]) {
-                          text = text.split(' — ')[1];
-                        }
+              case 41:
+                headline = smmrydata['sm_api_title']; //article headline returned
 
-                        text = "Not enough summary credits! " + text;
-                      }
-                    }
-                  }
+                text = smmrydata['sm_api_content']; //summarised article returned
 
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context5.next = 33;
+                error = smmrydata['sm_api_error']; //detecting presence of error code
+
+                if (!(error === 2)) {
+                  _context5.next = 50;
+                  break;
+                }
+
+                headline = _articleextractor.ArticleExtractor.extractAPHeadline(data); //SMMRY can't find the headline in AP articles. So we extract it ourselves
+
+                text = _articleextractor.ArticleExtractor.extractAPText(data);
+
+                if (!(text === undefined)) {
+                  _context5.next = 49;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 33:
-                return _context5.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
+              case 49:
+                text = "Not enough summary credits! " + text;
 
-              case 34:
+              case 50:
+                if (!(text !== undefined)) {
+                  _context5.next = 54;
+                  break;
+                }
+
+                if (text.split(' — ')[1]) {
+                  text = text.split(' — ')[1];
+                }
+
+                _context5.next = 55;
+                break;
+
+              case 54:
+                return _context5.abrupt("return", undefined);
+
+              case 55:
+                if (!headline) {
+                  headline = _articleextractor.ArticleExtractor.extractAPHeadline(data);
+                }
+
+              case 56:
+                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                  _context5.next = 58;
+                  break;
+                }
+
+                return _context5.abrupt("return", undefined);
+
+              case 58:
+                return _context5.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+
+              case 59:
               case "end":
                 return _context5.stop();
             }
@@ -932,6 +1019,8 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
+                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -956,7 +1045,7 @@ var PageParser = /*#__PURE__*/function () {
                   current = linksarr[_i8]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (current.includes('-') && (current.includes('news/') || current.includes('sport/') || current.includes('tech/')) && current.endsWith(".html")) {
-                    articlelinks.push(_preferences.sources[publisher] + current);
+                    articlelinks.push(_preferences.sourcelinks[publisher] + current);
                   }
                 }
 
@@ -1055,7 +1144,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context6.abrupt("return", undefined);
 
               case 33:
-                return _context6.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
+                return _context6.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
               case 34:
               case "end":
@@ -1088,6 +1177,8 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
+                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -1112,7 +1203,7 @@ var PageParser = /*#__PURE__*/function () {
                   current = linksarr[_i9]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (current.includes('-') && current.endsWith(".html") && !current.includes('service/') && !current.includes('independentpremium/') && !current.includes('long_reads/') && !current.includes('extras/') && !current.includes('food-and-drink/recipes/')) {
-                    articlelinks.push(_preferences.sources[publisher] + current);
+                    articlelinks.push(_preferences.sourcelinks[publisher] + current);
                   }
                 }
 
@@ -1236,7 +1327,7 @@ var PageParser = /*#__PURE__*/function () {
                 //     }
                 // }
 
-                return _context7.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
+                return _context7.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
               case 35:
               case "end":
@@ -1269,6 +1360,8 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
+                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -1293,7 +1386,7 @@ var PageParser = /*#__PURE__*/function () {
                   current = linksarr[_i10]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (current.includes('-') && current.includes("/news-story/") && !current.includes('/game-reviews/')) {
-                    articlelinks.push(_preferences.sources[publisher] + current);
+                    articlelinks.push(_preferences.sourcelinks[publisher] + current);
                   }
                 }
 
@@ -1473,7 +1566,7 @@ var PageParser = /*#__PURE__*/function () {
                 //     }
                 // }
 
-                return _context8.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
+                return _context8.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
               case 65:
               case "end":
@@ -1506,6 +1599,8 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
+                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -1530,7 +1625,7 @@ var PageParser = /*#__PURE__*/function () {
                   current = linksarr[_i11]; //if (current.matches("/^[a-z0-9]+$/"))
 
                   if (current.includes('-') && current.includes("news/") && !current.includes("topic/") && !current.includes("meet-the-team/") && !current.includes("/uk-weather-forecast-") && !current.includes("/assets/") && /\d/.test(current)) {
-                    articlelinks.push(_preferences.sources[publisher] + current);
+                    articlelinks.push(_preferences.sourcelinks[publisher] + current);
                   }
                 }
 
@@ -1758,7 +1853,7 @@ var PageParser = /*#__PURE__*/function () {
                 //     }
                 // }
 
-                return _context9.abrupt("return", new _article.Article(publisher, topic, headline, randomlink, text));
+                return _context9.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
               case 83:
               case "end":
@@ -1790,5 +1885,100 @@ var PageParser = /*#__PURE__*/function () {
   }]);
   return PageParser;
 }();
+/**
+ * Designed to split a paragraph of text into sentences.
+ * However, sentences longer than 150 characters are split into segments of ~150 characters and pushed
+ * one after the other to an array. Once all sentences are split and pushed on, the array is returned
+ *
+ * PURPOSE
+ * The reason for splitting sentences > 150 characters is to prevent the SpeechSynthesis module from
+ * randomly cutting out. This only happens when being spoken in a non-English language/dialect and only
+ * with utterances of 200-300 words. 150 characters is seen as a safety net for preventing this.
+ *
+ * EXAMPLE
+ * text - "sentence. sentence >150 chars. sentence."
+ * return - ['sentence.' 'partial sentence' 'partial sentence.' 'sentence.']
+ *
+ * @param text - the input paragraph
+ * @returns {[]} - the array of sentences
+ */
+
 
 exports.PageParser = PageParser;
+
+function textSplitter(text) {
+  var arr = [];
+  text = abbreviationConcatenation(text);
+  text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+
+  if (!text) {
+    var current = text;
+    var segment = current;
+
+    if (current.length > 150) {
+      while (current.length > 150) {
+        segment = current.substr(0, 150);
+        current = current.substr(150);
+
+        while (isLetter(current.charAt(0))) {
+          segment += current.charAt(0);
+          current = current.substr(1);
+        }
+
+        arr.push(segment);
+      }
+
+      arr.push(current);
+    } else {
+      arr.push(segment);
+    }
+  } else {
+    for (var i = 0; i < text.length; i++) {
+      var _current = text[i];
+      var _segment = _current;
+
+      if (_current.length > 150) {
+        while (_current.length > 150) {
+          _segment = _current.substr(0, 150);
+          _current = _current.substr(150);
+
+          while (isLetter(_current.charAt(0))) {
+            _segment += _current.charAt(0);
+            _current = _current.substr(1);
+          }
+
+          arr.push(_segment);
+        }
+
+        arr.push(_current);
+      } else {
+        arr.push(_segment);
+      }
+    }
+  }
+
+  return arr;
+}
+
+function isLetter(str) {
+  var caseChoice = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'any';
+  if (caseChoice === 'lowercase') return str.length === 1 && str.match(/[a-z]/i);
+  if (caseChoice === 'uppercase') return str.length === 1 && str.match(/[A-Z]/i);
+  return str.length === 1 && str.match(/[a-zA-Z]/i);
+}
+
+function abbreviationConcatenation(str) {
+  var newText = "";
+
+  for (var i = 0; i < str.length - 1; i++) {
+    var current = str.charAt(i);
+    var next = str.charAt(i + 1);
+
+    if (current === '.' && isLetter(next, 'uppercase')) {} else {
+      newText += current;
+    }
+  }
+
+  newText += str.charAt(str.length - 1);
+  return newText;
+}
