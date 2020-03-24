@@ -159,8 +159,8 @@ suite ('PageParser', function () {
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
             expect(result.headline).to.be.deep.equal(['Test headline']);
-            expect(result.alltext).to.be.equal('Not enough summary credits! Test article');
-            expect(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+            expect(result.alltext).to.be.equal('Test article');
+            expect(result.text).to.be.deep.equal(['Test article']);
         });
 
         it('Should not return an article if an error occurs', async function () {
@@ -300,8 +300,8 @@ suite ('PageParser', function () {
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
             expect(result.headline).to.be.deep.equal(['Test headline']);
-            expect(result.alltext).to.be.equal('Not enough summary credits! Test article');
-            expect(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+            expect(result.alltext).to.be.equal('Test article');
+            expect(result.text).to.be.deep.equal(['Test article']);
         });
 
         it('Should not return an article if an error occurs', async function () {
@@ -441,8 +441,8 @@ suite ('PageParser', function () {
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
             expect(result.headline).to.be.deep.equal(['Test headline']);
-            expect(result.alltext).to.be.equal('Not enough summary credits! Test article');
-            expect(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+            expect(result.alltext).to.be.equal('Test article');
+            expect(result.text).to.be.deep.equal(['Test article']);
         });
 
         it('Should not return an article if an error occurs', async function () {
@@ -585,8 +585,8 @@ suite ('PageParser', function () {
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
             expect(result.headline).to.be.deep.equal(['Test headline']);
-            expect(result.alltext).to.be.equal('Not enough summary credits! Test article');
-            expect(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+            expect(result.alltext).to.be.equal('Test article');
+            expect(result.text).to.be.deep.equal(['Test article']);
         });
 
         it('Should not return an article if an error occurs', async function () {
@@ -731,8 +731,8 @@ suite ('PageParser', function () {
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
             expect(result.headline).to.be.deep.equal(['Test headline']);
-            expect(result.alltext).to.be.equal('Not enough summary credits! Test article');
-            expect(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+            expect(result.alltext).to.be.equal('Test article');
+            expect(result.text).to.be.deep.equal(['Test article']);
         });
 
         it('Should not return an article if an error occurs', async function () {
@@ -876,8 +876,8 @@ suite ('PageParser', function () {
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
             expect(result.headline).to.be.deep.equal(['Test headline']);
-            expect(result.alltext).to.be.equal('Not enough summary credits! Test article');
-            expect(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+            expect(result.alltext).to.be.equal('Test article');
+            expect(result.text).to.be.deep.equal(['Test article']);
         });
 
         it('Should not return an article if an error occurs', async function () {
@@ -1017,8 +1017,8 @@ suite ('PageParser', function () {
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
             expect(result.headline).to.be.deep.equal(['Test headline']);
-            expect(result.alltext).to.be.equal('Not enough summary credits! Test article');
-            expect(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+            expect(result.alltext).to.be.equal('Test article');
+            expect(result.text).to.be.deep.equal(['Test article']);
         });
 
         it('Should not return an article if an error occurs', async function () {
@@ -1157,8 +1157,8 @@ suite ('PageParser', function () {
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
             expect(result.headline).to.be.deep.equal(['Test headline']);
-            expect(result.alltext).to.be.equal('Not enough summary credits! Test article');
-            expect(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+            expect(result.alltext).to.be.equal('Test article');
+            expect(result.text).to.be.deep.equal(['Test article']);
         });
 
         it('Should not return an article if an error occurs', async function () {
@@ -1297,8 +1297,8 @@ suite ('PageParser', function () {
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
             expect(result.headline).to.be.deep.equal(['Test headline']);
-            expect(result.alltext).to.be.equal('Not enough summary credits! Test article');
-            expect(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+            expect(result.alltext).to.be.equal('Test article');
+            expect(result.text).to.be.deep.equal(['Test article']);
         });
 
         it('Should not return an article if an error occurs', async function () {

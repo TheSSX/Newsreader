@@ -206,11 +206,23 @@ export class Bulletin
             return true;
         }
 
-        const message = {
-            "headline": current.headline,
-            "publisher": current.publisher,
-            "topic": capitalizeFirstLetter(current.topic)
-        };
+        let message;
+        if (current.language === 'English')
+        {
+            message = {
+                "headline": current.allheadline,
+                "publisher": current.publisher,
+                "topic": capitalizeFirstLetter(current.topic)
+            };
+        }
+        else
+        {
+            message = {
+                "headline": current.headline,
+                "publisher": current.publisher,
+                "topic": capitalizeFirstLetter(current.topic)
+            };
+        }
 
         chrome.storage.local.set({"headline": message.headline});
         chrome.storage.local.set({"publisher": message.publisher});

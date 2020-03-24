@@ -283,11 +283,22 @@ var Bulletin = /*#__PURE__*/function () {
         return true;
       }
 
-      var message = {
-        "headline": current.headline,
-        "publisher": current.publisher,
-        "topic": capitalizeFirstLetter(current.topic)
-      };
+      var message;
+
+      if (current.language === 'English') {
+        message = {
+          "headline": current.allheadline,
+          "publisher": current.publisher,
+          "topic": capitalizeFirstLetter(current.topic)
+        };
+      } else {
+        message = {
+          "headline": current.headline,
+          "publisher": current.publisher,
+          "topic": capitalizeFirstLetter(current.topic)
+        };
+      }
+
       chrome.storage.local.set({
         "headline": message.headline
       });

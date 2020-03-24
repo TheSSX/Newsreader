@@ -47,20 +47,29 @@ var Article = /*#__PURE__*/function () {
     key: "read",
     value: function read() {
       new _speech.Speech(this.publisher, this.language).speak();
-      new _speech.Speech(this.topic, this.language).speak();
+      new _speech.Speech(this.topic, this.language).speak(); //TODO find some way to get this working
+      //If SMMRY isn't available, this reads out the entirety of the article because that's what is stored in alltext
+      //If SMMRY is available, that's fine because alltext contains max_sentences worth of the article.
+      //As a result, it can sound very clunky and it will be more noticeable as most evaluators will speak English
+      //The for loop is necessary for non-English articles. Can't get around it
+      //Possibilites: amend textSplitter to return an array of a requested size
+      //Also amend amendLength to take an input array
+      // if (this.language === "English")
+      // {
+      //     new Speech(this.allheadline, this.language).speak();
+      //     new Speech(this.alltext, this.language).speak();
+      // }
+      // else
+      // {
 
-      if (this.language === "English") {
-        new _speech.Speech(this.allheadline, this.language).speak();
-        new _speech.Speech(this.alltext, this.language).speak();
-      } else {
-        for (var i = 0; i < this.headline.length; i++) {
-          new _speech.Speech(this.headline[i], this.language).speak();
-        }
-
-        for (var _i = 0; _i < this.text.length; _i++) {
-          new _speech.Speech(this.text[_i], this.language).speak();
-        }
+      for (var i = 0; i < this.headline.length; i++) {
+        new _speech.Speech(this.headline[i], this.language).speak();
       }
+
+      for (var _i = 0; _i < this.text.length; _i++) {
+        new _speech.Speech(this.text[_i], this.language).speak();
+      } //}
+
     }
   }, {
     key: "amendLength",

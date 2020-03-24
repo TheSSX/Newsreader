@@ -128,8 +128,6 @@ export class PageParser
                 {
                     text = text.split(' - ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
             }
             else {
                 return undefined;
@@ -150,8 +148,6 @@ export class PageParser
                     {
                         text = text.split(' - ')[1];
                     }
-
-                    text = "Not enough summary credits! " + text;
                 }
                 else
                 {
@@ -238,8 +234,10 @@ export class PageParser
                 {
                     text = text.split(' - ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
+            }
+            else
+            {
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -257,8 +255,10 @@ export class PageParser
                     {
                         text = text.split(' - ')[1];
                     }
-
-                    text = "Not enough summary credits! " + text;
+                }
+                else
+                {
+                    return undefined;
                 }
             }
         }
@@ -386,8 +386,6 @@ export class PageParser
                 {
                     text = text.split(' - ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
             }
             else
             {
@@ -407,8 +405,6 @@ export class PageParser
                 {
                     return undefined;
                 }
-
-                text = "Not enough summary credits! " + text;
             }
 
             if (text !== undefined)
@@ -565,8 +561,10 @@ export class PageParser
                 {
                     text = text.split(' - ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
+            }
+            else
+            {
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -584,8 +582,10 @@ export class PageParser
                     {
                         text = text.split(' - ')[1];
                     }
-
-                    text = "Not enough summary credits! " + text;
+                }
+                else
+                {
+                    return  undefined;
                 }
             }
         }
@@ -708,8 +708,6 @@ export class PageParser
                 {
                     text = text.split(' — ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
             }
             else
             {
@@ -726,14 +724,8 @@ export class PageParser
                 headline = ArticleExtractor.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
                 text = ArticleExtractor.extractAPText(data);
                 if (text === undefined) {
-                    // alert("No text");
-                    // alert("Headline: " + headline);
-                    // alert("Text: " + text);
-                    // alert("Link: " + randomlink);
                     return undefined;
                 }
-
-                text = "Not enough summary credits! " + text;
             }
 
             if (text !== undefined)
@@ -745,10 +737,6 @@ export class PageParser
             }
             else
             {
-                // alert("Failed down here");
-                // alert("Headline: " + headline);
-                // alert("Text: " + text);
-                // alert("Link: " + randomlink);
                 return undefined;
             }
 
@@ -760,10 +748,6 @@ export class PageParser
 
         if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
         {
-            // alert("Are we here?");
-            // alert("Headline: " + headline);
-            // alert("Text: " + text);
-            // alert("Link: " + randomlink);
             return undefined;
         }
 
@@ -847,9 +831,9 @@ export class PageParser
         {
             headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
             text = ArticleExtractor.extractEveningStandardText(data);
-            if (text !== undefined)
+            if (text === undefined)
             {
-                text = "Not enough summary credits! " + text;
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -861,9 +845,9 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
                 text = ArticleExtractor.extractEveningStandardText(data);
-                if (text !== undefined)
+                if (text == undefined)
                 {
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
             }
         }
@@ -981,9 +965,9 @@ export class PageParser
             }
 
             text = ArticleExtractor.extractIndependentText(data);
-            if (text !== undefined)
+            if (text === undefined)
             {
-                text = "Not enough summary credits! " + text;
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -995,9 +979,9 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
                 text = ArticleExtractor.extractIndependentText(data);
-                if (text !== undefined)
+                if (text === undefined)
                 {
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
             }
         }
@@ -1124,9 +1108,9 @@ export class PageParser
             }
 
             text = ArticleExtractor.extractNewsAUText(data);
-            if (text !== undefined)
+            if (text === undefined)
             {
-                text = "Not enough summary credits! " + text;
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -1152,9 +1136,9 @@ export class PageParser
                 }
 
                 text = ArticleExtractor.extractNewsAUText(data);
-                if (text !== undefined)
+                if (text === undefined)
                 {
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
             }
         }
@@ -1290,9 +1274,9 @@ export class PageParser
             }
 
             text = ArticleExtractor.extractITVText(data);
-            if (text !== undefined)
+            if (text === undefined)
             {
-                text = "Not enough summary credits! " + text;
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -1328,9 +1312,9 @@ export class PageParser
                 }
 
                 text = ArticleExtractor.extractITVText(data);
-                if (text !== undefined)
+                if (text === undefined)
                 {
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
             }
         }
@@ -1414,7 +1398,7 @@ export function textSplitter(text)
             {
                 segment = current.substr(0, 150);
                 current = current.substr(150);
-                while (isLetter(current.charAt(0)))
+                while (isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && isCharacter(current.charAt(1)))
                 {
                     segment += current.charAt(0);
                     current = current.substr(1);
@@ -1442,7 +1426,7 @@ export function textSplitter(text)
                 {
                     segment = current.substr(0, 150);
                     current = current.substr(150);
-                    while (isLetter(current.charAt(0)))
+                    while (isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && isCharacter(current.charAt(1)))
                     {
                         segment += current.charAt(0);
                         current = current.substr(1);
@@ -1463,13 +1447,13 @@ export function textSplitter(text)
     return arr;
 }
 
-export function isLetter(str, caseChoice='any') {
+export function isCharacter(str, caseChoice='any') {
     if (caseChoice === 'lowercase')
-        return str.length === 1 && str.match(/[a-z]/i);
+        return str.length === 1 && str.match(/[a-z0-9]/i);
     if (caseChoice === 'uppercase')
-        return str.length === 1 && str.match(/[A-Z]/i);
+        return str.length === 1 && str.match(/[A-Z0-9]/i);
 
-    return str.length === 1 && str.match(/[a-zA-Z]/i);
+    return str.length === 1 && str.match(/[a-zA-Z0-9]/i);
 }
 
 function abbreviationConcatenation(str)
@@ -1481,7 +1465,7 @@ function abbreviationConcatenation(str)
         const current = str.charAt(i);
         const next = str.charAt(i+1);
 
-        if (current === '.' && isLetter(next, 'uppercase')){}
+        if (current === '.' && isCharacter(next, 'uppercase')){}
         else
         {
             newText += current;

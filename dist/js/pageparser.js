@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.textSplitter = textSplitter;
-exports.isLetter = isLetter;
+exports.isCharacter = isCharacter;
 exports.PageParser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -166,7 +166,7 @@ var PageParser = /*#__PURE__*/function () {
                 smmrydata = _context.sent;
 
                 if (!(smmrydata === undefined)) {
-                  _context.next = 34;
+                  _context.next = 33;
                   break;
                 }
 
@@ -175,7 +175,7 @@ var PageParser = /*#__PURE__*/function () {
                 text = _articleextractor.ArticleExtractor.extractGuardianText(data);
 
                 if (!(text !== undefined)) {
-                  _context.next = 31;
+                  _context.next = 30;
                   break;
                 }
 
@@ -183,18 +183,17 @@ var PageParser = /*#__PURE__*/function () {
                   text = text.split(' - ')[1];
                 }
 
-                text = "Not enough summary credits! " + text;
-                _context.next = 32;
+                _context.next = 31;
                 break;
 
-              case 31:
+              case 30:
                 return _context.abrupt("return", undefined);
 
-              case 32:
-                _context.next = 46;
+              case 31:
+                _context.next = 44;
                 break;
 
-              case 34:
+              case 33:
                 headline = smmrydata['sm_api_title']; //article headline returned
 
                 text = smmrydata['sm_api_content']; //summarised article returned
@@ -202,7 +201,7 @@ var PageParser = /*#__PURE__*/function () {
                 error = smmrydata['sm_api_error']; //detecting presence of error code
 
                 if (!(error === 2)) {
-                  _context.next = 46;
+                  _context.next = 44;
                   break;
                 }
 
@@ -211,7 +210,7 @@ var PageParser = /*#__PURE__*/function () {
                 text = _articleextractor.ArticleExtractor.extractGuardianText(data);
 
                 if (!(text !== undefined)) {
-                  _context.next = 45;
+                  _context.next = 43;
                   break;
                 }
 
@@ -219,25 +218,24 @@ var PageParser = /*#__PURE__*/function () {
                   text = text.split(' - ')[1];
                 }
 
-                text = "Not enough summary credits! " + text;
-                _context.next = 46;
+                _context.next = 44;
                 break;
 
-              case 45:
+              case 43:
                 return _context.abrupt("return", undefined);
 
-              case 46:
+              case 44:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context.next = 48;
+                  _context.next = 46;
                   break;
                 }
 
                 return _context.abrupt("return", undefined);
 
-              case 48:
+              case 46:
                 return _context.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
-              case 49:
+              case 47:
               case "end":
                 return _context.stop();
             }
@@ -327,53 +325,76 @@ var PageParser = /*#__PURE__*/function () {
               case 19:
                 smmrydata = _context2.sent;
 
-                //send article to SMMRY
-                if (smmrydata === undefined) //SMMRY API unavailable
-                  {
-                    headline = data.split('<title>')[1].split(' - BBC News')[0];
-                    text = _articleextractor.ArticleExtractor.extractBBCText(data);
+                if (!(smmrydata === undefined)) {
+                  _context2.next = 30;
+                  break;
+                }
 
-                    if (text !== undefined) {
-                      if (text.split(' - ')[1]) {
-                        text = text.split(' - ')[1];
-                      }
+                headline = data.split('<title>')[1].split(' - BBC News')[0];
+                text = _articleextractor.ArticleExtractor.extractBBCText(data);
 
-                      text = "Not enough summary credits! " + text;
-                    }
-                  } else //SMMRY API working fine
-                  {
-                    headline = smmrydata['sm_api_title']; //article headline returned
+                if (!(text !== undefined)) {
+                  _context2.next = 27;
+                  break;
+                }
 
-                    text = smmrydata['sm_api_content']; //summarised article returned
+                if (text.split(' - ')[1]) {
+                  text = text.split(' - ')[1];
+                }
 
-                    error = smmrydata['sm_api_error']; //detecting presence of error code
+                _context2.next = 28;
+                break;
 
-                    if (error === 2) {
-                      headline = data.split('<title>')[1].split(' - BBC News')[0]; //get headline from article data
+              case 27:
+                return _context2.abrupt("return", undefined);
 
-                      text = _articleextractor.ArticleExtractor.extractBBCText(data);
+              case 28:
+                _context2.next = 41;
+                break;
 
-                      if (text !== undefined) {
-                        if (text.split(' - ')[1]) {
-                          text = text.split(' - ')[1];
-                        }
+              case 30:
+                headline = smmrydata['sm_api_title']; //article headline returned
 
-                        text = "Not enough summary credits! " + text;
-                      }
-                    }
-                  }
+                text = smmrydata['sm_api_content']; //summarised article returned
 
+                error = smmrydata['sm_api_error']; //detecting presence of error code
+
+                if (!(error === 2)) {
+                  _context2.next = 41;
+                  break;
+                }
+
+                headline = data.split('<title>')[1].split(' - BBC News')[0]; //get headline from article data
+
+                text = _articleextractor.ArticleExtractor.extractBBCText(data);
+
+                if (!(text !== undefined)) {
+                  _context2.next = 40;
+                  break;
+                }
+
+                if (text.split(' - ')[1]) {
+                  text = text.split(' - ')[1];
+                }
+
+                _context2.next = 41;
+                break;
+
+              case 40:
+                return _context2.abrupt("return", undefined);
+
+              case 41:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context2.next = 23;
+                  _context2.next = 43;
                   break;
                 }
 
                 return _context2.abrupt("return", undefined);
 
-              case 23:
+              case 43:
                 return _context2.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
-              case 24:
+              case 44:
               case "end":
                 return _context2.stop();
             }
@@ -504,7 +525,7 @@ var PageParser = /*#__PURE__*/function () {
                 smmrydata = _context3.sent;
 
                 if (!(smmrydata === undefined)) {
-                  _context3.next = 42;
+                  _context3.next = 41;
                   break;
                 }
 
@@ -513,7 +534,7 @@ var PageParser = /*#__PURE__*/function () {
                 text = _articleextractor.ArticleExtractor.extractReutersText(data);
 
                 if (!(text !== undefined)) {
-                  _context3.next = 39;
+                  _context3.next = 38;
                   break;
                 }
 
@@ -521,18 +542,17 @@ var PageParser = /*#__PURE__*/function () {
                   text = text.split(' - ')[1];
                 }
 
-                text = "Not enough summary credits! " + text;
-                _context3.next = 40;
+                _context3.next = 39;
                 break;
 
-              case 39:
+              case 38:
                 return _context3.abrupt("return", undefined);
 
-              case 40:
-                _context3.next = 56;
+              case 39:
+                _context3.next = 54;
                 break;
 
-              case 42:
+              case 41:
                 headline = smmrydata['sm_api_title']; //article headline returned
 
                 text = smmrydata['sm_api_content']; //summarised article returned
@@ -540,7 +560,7 @@ var PageParser = /*#__PURE__*/function () {
                 error = smmrydata['sm_api_error']; //detecting presence of error code
 
                 if (!(error === 2)) {
-                  _context3.next = 51;
+                  _context3.next = 49;
                   break;
                 }
 
@@ -549,18 +569,15 @@ var PageParser = /*#__PURE__*/function () {
                 text = _articleextractor.ArticleExtractor.extractReutersText(data);
 
                 if (!(text === undefined)) {
-                  _context3.next = 50;
+                  _context3.next = 49;
                   break;
                 }
 
                 return _context3.abrupt("return", undefined);
 
-              case 50:
-                text = "Not enough summary credits! " + text;
-
-              case 51:
+              case 49:
                 if (!(text !== undefined)) {
-                  _context3.next = 55;
+                  _context3.next = 53;
                   break;
                 }
 
@@ -568,24 +585,24 @@ var PageParser = /*#__PURE__*/function () {
                   text = text.split(' - ')[1];
                 }
 
-                _context3.next = 56;
+                _context3.next = 54;
                 break;
 
-              case 55:
+              case 53:
                 return _context3.abrupt("return", undefined);
 
-              case 56:
+              case 54:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context3.next = 58;
+                  _context3.next = 56;
                   break;
                 }
 
                 return _context3.abrupt("return", undefined);
 
-              case 58:
+              case 56:
                 return _context3.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
-              case 59:
+              case 57:
               case "end":
                 return _context3.stop();
             }
@@ -727,62 +744,85 @@ var PageParser = /*#__PURE__*/function () {
               case 30:
                 smmrydata = _context4.sent;
 
-                //send article to SMMRY
-                if (smmrydata === undefined) //SMMRY API unavailable
-                  {
-                    headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
+                if (!(smmrydata === undefined)) {
+                  _context4.next = 41;
+                  break;
+                }
 
-                    text = _articleextractor.ArticleExtractor.extractSkyText(data);
+                headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
 
-                    if (text !== undefined) {
-                      if (text.split(' - ')[1]) {
-                        text = text.split(' - ')[1];
-                      }
+                text = _articleextractor.ArticleExtractor.extractSkyText(data);
 
-                      text = "Not enough summary credits! " + text;
-                    }
-                  } else //SMMRY API working fine
-                  {
-                    headline = smmrydata['sm_api_title']; //article headline returned
+                if (!(text !== undefined)) {
+                  _context4.next = 38;
+                  break;
+                }
 
-                    text = smmrydata['sm_api_content']; //summarised article returned
+                if (text.split(' - ')[1]) {
+                  text = text.split(' - ')[1];
+                }
 
-                    error = smmrydata['sm_api_error']; //detecting presence of error code
+                _context4.next = 39;
+                break;
 
-                    if (error === 2) {
-                      headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
+              case 38:
+                return _context4.abrupt("return", undefined);
 
-                      text = _articleextractor.ArticleExtractor.extractSkyText(data);
+              case 39:
+                _context4.next = 52;
+                break;
 
-                      if (text !== undefined) {
-                        if (text.split(' - ')[1]) {
-                          text = text.split(' - ')[1];
-                        }
+              case 41:
+                headline = smmrydata['sm_api_title']; //article headline returned
 
-                        text = "Not enough summary credits! " + text;
-                      }
-                    }
-                  }
+                text = smmrydata['sm_api_content']; //summarised article returned
 
+                error = smmrydata['sm_api_error']; //detecting presence of error code
+
+                if (!(error === 2)) {
+                  _context4.next = 52;
+                  break;
+                }
+
+                headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
+
+                text = _articleextractor.ArticleExtractor.extractSkyText(data);
+
+                if (!(text !== undefined)) {
+                  _context4.next = 51;
+                  break;
+                }
+
+                if (text.split(' - ')[1]) {
+                  text = text.split(' - ')[1];
+                }
+
+                _context4.next = 52;
+                break;
+
+              case 51:
+                return _context4.abrupt("return", undefined);
+
+              case 52:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context4.next = 34;
+                  _context4.next = 54;
                   break;
                 }
 
                 return _context4.abrupt("return", undefined);
 
-              case 34:
+              case 54:
                 if (!(headline.includes("LIVE") || headline.includes("Live"))) {
-                  _context4.next = 36;
+                  _context4.next = 56;
                   break;
                 }
 
                 return _context4.abrupt("return", undefined);
 
-              case 36:
+              case 56:
                 return _context4.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
-              case 37:
+              case 57:
               case "end":
                 return _context4.stop();
             }
@@ -902,7 +942,7 @@ var PageParser = /*#__PURE__*/function () {
                 smmrydata = _context5.sent;
 
                 if (!(smmrydata === undefined)) {
-                  _context5.next = 41;
+                  _context5.next = 40;
                   break;
                 }
 
@@ -911,7 +951,7 @@ var PageParser = /*#__PURE__*/function () {
                 text = _articleextractor.ArticleExtractor.extractAPText(data);
 
                 if (!(text !== undefined)) {
-                  _context5.next = 38;
+                  _context5.next = 37;
                   break;
                 }
 
@@ -919,18 +959,17 @@ var PageParser = /*#__PURE__*/function () {
                   text = text.split(' — ')[1];
                 }
 
-                text = "Not enough summary credits! " + text;
-                _context5.next = 39;
+                _context5.next = 38;
                 break;
 
-              case 38:
+              case 37:
                 return _context5.abrupt("return", undefined);
 
-              case 39:
-                _context5.next = 56;
+              case 38:
+                _context5.next = 54;
                 break;
 
-              case 41:
+              case 40:
                 headline = smmrydata['sm_api_title']; //article headline returned
 
                 text = smmrydata['sm_api_content']; //summarised article returned
@@ -938,7 +977,7 @@ var PageParser = /*#__PURE__*/function () {
                 error = smmrydata['sm_api_error']; //detecting presence of error code
 
                 if (!(error === 2)) {
-                  _context5.next = 50;
+                  _context5.next = 48;
                   break;
                 }
 
@@ -947,18 +986,15 @@ var PageParser = /*#__PURE__*/function () {
                 text = _articleextractor.ArticleExtractor.extractAPText(data);
 
                 if (!(text === undefined)) {
-                  _context5.next = 49;
+                  _context5.next = 48;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 49:
-                text = "Not enough summary credits! " + text;
-
-              case 50:
+              case 48:
                 if (!(text !== undefined)) {
-                  _context5.next = 54;
+                  _context5.next = 52;
                   break;
                 }
 
@@ -966,29 +1002,29 @@ var PageParser = /*#__PURE__*/function () {
                   text = text.split(' — ')[1];
                 }
 
-                _context5.next = 55;
+                _context5.next = 53;
                 break;
 
-              case 54:
+              case 52:
                 return _context5.abrupt("return", undefined);
 
-              case 55:
+              case 53:
                 if (!headline) {
                   headline = _articleextractor.ArticleExtractor.extractAPHeadline(data);
                 }
 
-              case 56:
+              case 54:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context5.next = 58;
+                  _context5.next = 56;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 58:
+              case 56:
                 return _context5.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
-              case 59:
+              case 57:
               case "end":
                 return _context5.stop();
             }
@@ -1107,46 +1143,61 @@ var PageParser = /*#__PURE__*/function () {
               case 29:
                 smmrydata = _context6.sent;
 
-                //send article to SMMRY
-                if (smmrydata === undefined) //SMMRY API unavailable
-                  {
-                    headline = data.split('<title>')[1].split(' | London Evening Standard')[0]; //get headline from article data
+                if (!(smmrydata === undefined)) {
+                  _context6.next = 37;
+                  break;
+                }
 
-                    text = _articleextractor.ArticleExtractor.extractEveningStandardText(data);
+                headline = data.split('<title>')[1].split(' | London Evening Standard')[0]; //get headline from article data
 
-                    if (text !== undefined) {
-                      text = "Not enough summary credits! " + text;
-                    }
-                  } else //SMMRY API working fine
-                  {
-                    headline = smmrydata['sm_api_title']; //article headline returned
+                text = _articleextractor.ArticleExtractor.extractEveningStandardText(data);
 
-                    text = smmrydata['sm_api_content']; //summarised article returned
-
-                    error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                    if (error === 2) {
-                      headline = data.split('<title>')[1].split(' | London Evening Standard')[0]; //get headline from article data
-
-                      text = _articleextractor.ArticleExtractor.extractEveningStandardText(data);
-
-                      if (text !== undefined) {
-                        text = "Not enough summary credits! " + text;
-                      }
-                    }
-                  }
-
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context6.next = 33;
+                if (!(text === undefined)) {
+                  _context6.next = 35;
                   break;
                 }
 
                 return _context6.abrupt("return", undefined);
 
-              case 33:
+              case 35:
+                _context6.next = 45;
+                break;
+
+              case 37:
+                headline = smmrydata['sm_api_title']; //article headline returned
+
+                text = smmrydata['sm_api_content']; //summarised article returned
+
+                error = smmrydata['sm_api_error']; //detecting presence of error code
+
+                if (!(error === 2)) {
+                  _context6.next = 45;
+                  break;
+                }
+
+                headline = data.split('<title>')[1].split(' | London Evening Standard')[0]; //get headline from article data
+
+                text = _articleextractor.ArticleExtractor.extractEveningStandardText(data);
+
+                if (!(text == undefined)) {
+                  _context6.next = 45;
+                  break;
+                }
+
+                return _context6.abrupt("return", undefined);
+
+              case 45:
+                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                  _context6.next = 47;
+                  break;
+                }
+
+                return _context6.abrupt("return", undefined);
+
+              case 47:
                 return _context6.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
-              case 34:
+              case 48:
               case "end":
                 return _context6.stop();
             }
@@ -1265,47 +1316,62 @@ var PageParser = /*#__PURE__*/function () {
               case 29:
                 smmrydata = _context7.sent;
 
-                //send article to SMMRY
-                if (smmrydata === undefined) //SMMRY API unavailable
-                  {
-                    if (data.split('<title>')[1].split(' | ')[0]) {
-                      headline = data.split('<title>')[1].split(' | ')[0]; //get headline from article data
-                    } else {
-                      headline = data.split('<title>')[1].split('</title>')[0]; //got an article which had an inconsistent headline scheme once
-                    }
+                if (!(smmrydata === undefined)) {
+                  _context7.next = 37;
+                  break;
+                }
 
-                    text = _articleextractor.ArticleExtractor.extractIndependentText(data);
+                if (data.split('<title>')[1].split(' | ')[0]) {
+                  headline = data.split('<title>')[1].split(' | ')[0]; //get headline from article data
+                } else {
+                  headline = data.split('<title>')[1].split('</title>')[0]; //got an article which had an inconsistent headline scheme once
+                }
 
-                    if (text !== undefined) {
-                      text = "Not enough summary credits! " + text;
-                    }
-                  } else //SMMRY API working fine
-                  {
-                    headline = smmrydata['sm_api_title']; //article headline returned
+                text = _articleextractor.ArticleExtractor.extractIndependentText(data);
 
-                    text = smmrydata['sm_api_content']; //summarised article returned
-
-                    error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                    if (error === 2) {
-                      headline = data.split('<title>')[1].split(' | ')[0]; //get headline from article data
-
-                      text = _articleextractor.ArticleExtractor.extractIndependentText(data);
-
-                      if (text !== undefined) {
-                        text = "Not enough summary credits! " + text;
-                      }
-                    }
-                  }
-
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context7.next = 33;
+                if (!(text === undefined)) {
+                  _context7.next = 35;
                   break;
                 }
 
                 return _context7.abrupt("return", undefined);
 
-              case 33:
+              case 35:
+                _context7.next = 45;
+                break;
+
+              case 37:
+                headline = smmrydata['sm_api_title']; //article headline returned
+
+                text = smmrydata['sm_api_content']; //summarised article returned
+
+                error = smmrydata['sm_api_error']; //detecting presence of error code
+
+                if (!(error === 2)) {
+                  _context7.next = 45;
+                  break;
+                }
+
+                headline = data.split('<title>')[1].split(' | ')[0]; //get headline from article data
+
+                text = _articleextractor.ArticleExtractor.extractIndependentText(data);
+
+                if (!(text === undefined)) {
+                  _context7.next = 45;
+                  break;
+                }
+
+                return _context7.abrupt("return", undefined);
+
+              case 45:
+                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                  _context7.next = 47;
+                  break;
+                }
+
+                return _context7.abrupt("return", undefined);
+
+              case 47:
                 headline = _articleextractor.DataCleaner.cleanText(headline); // /**
                 //  * TRANSLATING
                 //  */
@@ -1329,7 +1395,7 @@ var PageParser = /*#__PURE__*/function () {
 
                 return _context7.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
-              case 35:
+              case 49:
               case "end":
                 return _context7.stop();
             }
@@ -1449,7 +1515,7 @@ var PageParser = /*#__PURE__*/function () {
                 smmrydata = _context8.sent;
 
                 if (!(smmrydata === undefined)) {
-                  _context8.next = 45;
+                  _context8.next = 46;
                   break;
                 }
 
@@ -1483,14 +1549,18 @@ var PageParser = /*#__PURE__*/function () {
               case 41:
                 text = _articleextractor.ArticleExtractor.extractNewsAUText(data);
 
-                if (text !== undefined) {
-                  text = "Not enough summary credits! " + text;
+                if (!(text === undefined)) {
+                  _context8.next = 44;
+                  break;
                 }
 
-                _context8.next = 61;
+                return _context8.abrupt("return", undefined);
+
+              case 44:
+                _context8.next = 63;
                 break;
 
-              case 45:
+              case 46:
                 headline = smmrydata['sm_api_title']; //article headline returned
 
                 text = smmrydata['sm_api_content']; //summarised article returned
@@ -1498,46 +1568,41 @@ var PageParser = /*#__PURE__*/function () {
                 error = smmrydata['sm_api_error']; //detecting presence of error code
 
                 if (!(error === 2)) {
-                  _context8.next = 61;
+                  _context8.next = 63;
                   break;
                 }
 
                 if (!data.split('<title>')[1]) {
-                  _context8.next = 58;
+                  _context8.next = 59;
                   break;
                 }
 
                 headline = data.split('<title>')[1];
 
                 if (!headline.split('</title>')[0]) {
-                  _context8.next = 55;
+                  _context8.next = 56;
                   break;
                 }
 
                 headline = headline.split('</title>')[0]; //get headline from article data
 
-                _context8.next = 56;
+                _context8.next = 57;
                 break;
-
-              case 55:
-                return _context8.abrupt("return", undefined);
 
               case 56:
-                _context8.next = 59;
-                break;
-
-              case 58:
                 return _context8.abrupt("return", undefined);
 
+              case 57:
+                _context8.next = 60;
+                break;
+
               case 59:
+                return _context8.abrupt("return", undefined);
+
+              case 60:
                 text = _articleextractor.ArticleExtractor.extractNewsAUText(data);
 
-                if (text !== undefined) {
-                  text = "Not enough summary credits! " + text;
-                }
-
-              case 61:
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                if (!(text === undefined)) {
                   _context8.next = 63;
                   break;
                 }
@@ -1545,6 +1610,14 @@ var PageParser = /*#__PURE__*/function () {
                 return _context8.abrupt("return", undefined);
 
               case 63:
+                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                  _context8.next = 65;
+                  break;
+                }
+
+                return _context8.abrupt("return", undefined);
+
+              case 65:
                 headline = _articleextractor.DataCleaner.cleanText(headline); // /**
                 //  * TRANSLATING
                 //  */
@@ -1568,7 +1641,7 @@ var PageParser = /*#__PURE__*/function () {
 
                 return _context8.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
-              case 65:
+              case 67:
               case "end":
                 return _context8.stop();
             }
@@ -1688,7 +1761,7 @@ var PageParser = /*#__PURE__*/function () {
                 smmrydata = _context9.sent;
 
                 if (!(smmrydata === undefined)) {
-                  _context9.next = 54;
+                  _context9.next = 55;
                   break;
                 }
 
@@ -1746,14 +1819,18 @@ var PageParser = /*#__PURE__*/function () {
               case 50:
                 text = _articleextractor.ArticleExtractor.extractITVText(data);
 
-                if (text !== undefined) {
-                  text = "Not enough summary credits! " + text;
+                if (!(text === undefined)) {
+                  _context9.next = 53;
+                  break;
                 }
 
-                _context9.next = 79;
+                return _context9.abrupt("return", undefined);
+
+              case 53:
+                _context9.next = 81;
                 break;
 
-              case 54:
+              case 55:
                 headline = smmrydata['sm_api_title']; //article headline returned
 
                 text = smmrydata['sm_api_content']; //summarised article returned
@@ -1761,70 +1838,65 @@ var PageParser = /*#__PURE__*/function () {
                 error = smmrydata['sm_api_error']; //detecting presence of error code
 
                 if (!(error === 2)) {
-                  _context9.next = 79;
+                  _context9.next = 81;
                   break;
                 }
 
                 if (!data.split('<title>')[1]) {
-                  _context9.next = 67;
+                  _context9.next = 68;
                   break;
                 }
 
                 headline = data.split('<title>')[1];
 
                 if (!headline.split(' - ITV News')[0]) {
-                  _context9.next = 64;
+                  _context9.next = 65;
                   break;
                 }
 
                 headline = headline.split(' - ITV News')[0]; //get headline from article data
 
-                _context9.next = 65;
+                _context9.next = 66;
                 break;
-
-              case 64:
-                return _context9.abrupt("return", undefined);
 
               case 65:
-                _context9.next = 77;
+                return _context9.abrupt("return", undefined);
+
+              case 66:
+                _context9.next = 78;
                 break;
 
-              case 67:
+              case 68:
                 if (!data.split('<h1 class="update__title update__title--large">')[1]) {
-                  _context9.next = 76;
+                  _context9.next = 77;
                   break;
                 }
 
                 headline = data.split('<h1 class="update__title update__title--large">')[1];
 
                 if (!headline.split('</h1>')[0]) {
-                  _context9.next = 73;
+                  _context9.next = 74;
                   break;
                 }
 
                 headline = headline.split('</h1>')[0];
-                _context9.next = 74;
+                _context9.next = 75;
                 break;
-
-              case 73:
-                return _context9.abrupt("return", undefined);
 
               case 74:
-                _context9.next = 77;
-                break;
-
-              case 76:
                 return _context9.abrupt("return", undefined);
 
+              case 75:
+                _context9.next = 78;
+                break;
+
               case 77:
+                return _context9.abrupt("return", undefined);
+
+              case 78:
                 text = _articleextractor.ArticleExtractor.extractITVText(data);
 
-                if (text !== undefined) {
-                  text = "Not enough summary credits! " + text;
-                }
-
-              case 79:
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                if (!(text === undefined)) {
                   _context9.next = 81;
                   break;
                 }
@@ -1832,6 +1904,14 @@ var PageParser = /*#__PURE__*/function () {
                 return _context9.abrupt("return", undefined);
 
               case 81:
+                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                  _context9.next = 83;
+                  break;
+                }
+
+                return _context9.abrupt("return", undefined);
+
+              case 83:
                 headline = _articleextractor.DataCleaner.cleanText(headline); // /**
                 //  * TRANSLATING
                 //  */
@@ -1855,7 +1935,7 @@ var PageParser = /*#__PURE__*/function () {
 
                 return _context9.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
 
-              case 83:
+              case 85:
               case "end":
                 return _context9.stop();
             }
@@ -1920,7 +2000,7 @@ function textSplitter(text) {
         segment = current.substr(0, 150);
         current = current.substr(150);
 
-        while (isLetter(current.charAt(0))) {
+        while (isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && isCharacter(current.charAt(1))) {
           segment += current.charAt(0);
           current = current.substr(1);
         }
@@ -1942,7 +2022,7 @@ function textSplitter(text) {
           _segment = _current.substr(0, 150);
           _current = _current.substr(150);
 
-          while (isLetter(_current.charAt(0))) {
+          while (isCharacter(_current.charAt(0)) || [',', '.'].includes(_current.charAt(0)) && isCharacter(_current.charAt(1))) {
             _segment += _current.charAt(0);
             _current = _current.substr(1);
           }
@@ -1960,11 +2040,11 @@ function textSplitter(text) {
   return arr;
 }
 
-function isLetter(str) {
+function isCharacter(str) {
   var caseChoice = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'any';
-  if (caseChoice === 'lowercase') return str.length === 1 && str.match(/[a-z]/i);
-  if (caseChoice === 'uppercase') return str.length === 1 && str.match(/[A-Z]/i);
-  return str.length === 1 && str.match(/[a-zA-Z]/i);
+  if (caseChoice === 'lowercase') return str.length === 1 && str.match(/[a-z0-9]/i);
+  if (caseChoice === 'uppercase') return str.length === 1 && str.match(/[A-Z0-9]/i);
+  return str.length === 1 && str.match(/[a-zA-Z0-9]/i);
 }
 
 function abbreviationConcatenation(str) {
@@ -1974,7 +2054,7 @@ function abbreviationConcatenation(str) {
     var current = str.charAt(i);
     var next = str.charAt(i + 1);
 
-    if (current === '.' && isLetter(next, 'uppercase')) {} else {
+    if (current === '.' && isCharacter(next, 'uppercase')) {} else {
       newText += current;
     }
   }

@@ -158,8 +158,8 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
               (0, _chai.expect)(result.headline).to.be.deep.equal(['Test headline']);
-              (0, _chai.expect)(result.alltext).to.be.equal('Not enough summary credits! Test article');
-              (0, _chai.expect)(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+              (0, _chai.expect)(result.alltext).to.be.equal('Test article');
+              (0, _chai.expect)(result.text).to.be.deep.equal(['Test article']);
 
             case 40:
             case "end":
@@ -305,8 +305,8 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
               (0, _chai.expect)(result.headline).to.be.deep.equal(['Test headline']);
-              (0, _chai.expect)(result.alltext).to.be.equal('Not enough summary credits! Test article');
-              (0, _chai.expect)(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+              (0, _chai.expect)(result.alltext).to.be.equal('Test article');
+              (0, _chai.expect)(result.text).to.be.deep.equal(['Test article']);
 
             case 40:
             case "end":
@@ -452,8 +452,8 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
               (0, _chai.expect)(result.headline).to.be.deep.equal(['Test headline']);
-              (0, _chai.expect)(result.alltext).to.be.equal('Not enough summary credits! Test article');
-              (0, _chai.expect)(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+              (0, _chai.expect)(result.alltext).to.be.equal('Test article');
+              (0, _chai.expect)(result.text).to.be.deep.equal(['Test article']);
 
             case 40:
             case "end":
@@ -599,8 +599,8 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
               (0, _chai.expect)(result.headline).to.be.deep.equal(['Test headline']);
-              (0, _chai.expect)(result.alltext).to.be.equal('Not enough summary credits! Test article');
-              (0, _chai.expect)(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+              (0, _chai.expect)(result.alltext).to.be.equal('Test article');
+              (0, _chai.expect)(result.text).to.be.deep.equal(['Test article']);
 
             case 40:
             case "end":
@@ -751,8 +751,8 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
               (0, _chai.expect)(result.headline).to.be.deep.equal(['Test headline']);
-              (0, _chai.expect)(result.alltext).to.be.equal('Not enough summary credits! Test article');
-              (0, _chai.expect)(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+              (0, _chai.expect)(result.alltext).to.be.equal('Test article');
+              (0, _chai.expect)(result.text).to.be.deep.equal(['Test article']);
 
             case 45:
             case "end":
@@ -903,8 +903,8 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
               (0, _chai.expect)(result.headline).to.be.deep.equal(['Test headline']);
-              (0, _chai.expect)(result.alltext).to.be.equal('Not enough summary credits! Test article');
-              (0, _chai.expect)(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+              (0, _chai.expect)(result.alltext).to.be.equal('Test article');
+              (0, _chai.expect)(result.text).to.be.deep.equal(['Test article']);
 
             case 40:
             case "end":
@@ -1050,8 +1050,8 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
               (0, _chai.expect)(result.headline).to.be.deep.equal(['Test headline']);
-              (0, _chai.expect)(result.alltext).to.be.equal('Not enough summary credits! Test article');
-              (0, _chai.expect)(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+              (0, _chai.expect)(result.alltext).to.be.equal('Test article');
+              (0, _chai.expect)(result.text).to.be.deep.equal(['Test article']);
 
             case 40:
             case "end":
@@ -1197,8 +1197,8 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
               (0, _chai.expect)(result.headline).to.be.deep.equal(['Test headline']);
-              (0, _chai.expect)(result.alltext).to.be.equal('Not enough summary credits! Test article');
-              (0, _chai.expect)(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+              (0, _chai.expect)(result.alltext).to.be.equal('Test article');
+              (0, _chai.expect)(result.text).to.be.deep.equal(['Test article']);
 
             case 40:
             case "end":
@@ -1344,8 +1344,8 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
               (0, _chai.expect)(result.headline).to.be.deep.equal(['Test headline']);
-              (0, _chai.expect)(result.alltext).to.be.equal('Not enough summary credits! Test article');
-              (0, _chai.expect)(result.text).to.be.deep.equal(['Not enough summary credits!', 'Test article']);
+              (0, _chai.expect)(result.alltext).to.be.equal('Test article');
+              (0, _chai.expect)(result.text).to.be.deep.equal(['Test article']);
 
             case 40:
             case "end":
