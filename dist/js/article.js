@@ -13,6 +13,10 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 
 var _speech = require("../../dist/js/speech");
 
+var _preferences = require("./preferences.js");
+
+var _pageparser = require("../../dist/js/pageparser");
+
 /**
  Class for an article object
  */
@@ -27,6 +31,7 @@ var Article = /*#__PURE__*/function () {
    */
   function Article(publisher, topic, allheadline, headline, link, alltext, text) {
     var language = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : "English";
+    var sentences = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : _preferences.max_sentences;
     (0, _classCallCheck2["default"])(this, Article);
     this.publisher = publisher;
     this.topic = topic;
@@ -37,6 +42,7 @@ var Article = /*#__PURE__*/function () {
     this.text = text;
     this.language = language;
     this.originalText = text;
+    this.sentences = sentences;
   }
   /**
    * Read each field of the article, excluding the link
@@ -47,33 +53,33 @@ var Article = /*#__PURE__*/function () {
     key: "read",
     value: function read() {
       new _speech.Speech(this.publisher, this.language).speak();
-      new _speech.Speech(this.topic, this.language).speak(); //TODO find some way to get this working
-      //If SMMRY isn't available, this reads out the entirety of the article because that's what is stored in alltext
-      //If SMMRY is available, that's fine because alltext contains max_sentences worth of the article.
-      //As a result, it can sound very clunky and it will be more noticeable as most evaluators will speak English
-      //The for loop is necessary for non-English articles. Can't get around it
-      //Possibilites: amend textSplitter to return an array of a requested size
-      //Also amend amendLength to take an input array
-      // if (this.language === "English")
-      // {
-      //     new Speech(this.allheadline, this.language).speak();
-      //     new Speech(this.alltext, this.language).speak();
-      // }
-      // else
-      // {
+      new _speech.Speech(this.topic, this.language).speak();
 
-      for (var i = 0; i < this.headline.length; i++) {
-        new _speech.Speech(this.headline[i], this.language).speak();
+      if (this.language === "English") {
+        var headline = (0, _pageparser.abbreviationConcatenation)(this.allheadline);
+        headline = this.allheadline.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+        if (headline) for (var i = 0; i < headline.length; i++) {
+          new _speech.Speech(headline[i], this.language).speak();
+        } else new _speech.Speech(this.allheadline, this.language).speak();
+        var text = (0, _pageparser.abbreviationConcatenation)(this.alltext);
+        text = this.alltext.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+        if (text) for (var _i = 0; _i < this.sentences; _i++) {
+          new _speech.Speech(text[_i], this.language).speak();
+        } else new _speech.Speech(this.alltext, this.language).speak();
+      } else {
+        for (var _i2 = 0; _i2 < this.headline.length; _i2++) {
+          new _speech.Speech(this.headline[_i2], this.language).speak();
+        }
+
+        for (var _i3 = 0; _i3 < this.text.length; _i3++) {
+          new _speech.Speech(this.text[_i3], this.language).speak();
+        }
       }
-
-      for (var _i = 0; _i < this.text.length; _i++) {
-        new _speech.Speech(this.text[_i], this.language).speak();
-      } //}
-
     }
   }, {
     key: "amendLength",
     value: function amendLength(sentences) {
+      this.sentences = sentences;
       var newText = [];
       var temp = [];
 

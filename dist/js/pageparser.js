@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.textSplitter = textSplitter;
 exports.isCharacter = isCharacter;
+exports.abbreviationConcatenation = abbreviationConcatenation;
 exports.PageParser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));

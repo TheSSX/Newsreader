@@ -1456,7 +1456,7 @@ export function isCharacter(str, caseChoice='any') {
     return str.length === 1 && str.match(/[a-zA-Z0-9]/i);
 }
 
-function abbreviationConcatenation(str)
+export function abbreviationConcatenation(str)
 {
     let newText = "";
 

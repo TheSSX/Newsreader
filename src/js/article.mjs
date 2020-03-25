@@ -1,4 +1,6 @@
 import {Speech} from "./speech.mjs";
+import {max_sentences} from "./preferences.js";
+import {abbreviationConcatenation} from "./pageparser.mjs";
 
 /**
  Class for an article object
@@ -13,7 +15,7 @@ export class Article
      * @param link - the link to the article
      * @param text - the summarised article text
      */
-    constructor(publisher, topic, allheadline, headline, link, alltext, text, language="English")
+    constructor(publisher, topic, allheadline, headline, link, alltext, text, language="English", sentences=max_sentences)
     {
         this.publisher = publisher;
         this.topic = topic;
@@ -24,6 +26,7 @@ export class Article
         this.text = text;
         this.language = language;
         this.originalText = text;
+        this.sentences = sentences;
     }
 
     /**
@@ -34,21 +37,30 @@ export class Article
         new Speech(this.publisher, this.language).speak();
         new Speech(this.topic, this.language).speak();
 
-        //TODO find some way to get this working
-        //If SMMRY isn't available, this reads out the entirety of the article because that's what is stored in alltext
-        //If SMMRY is available, that's fine because alltext contains max_sentences worth of the article.
-        //As a result, it can sound very clunky and it will be more noticeable as most evaluators will speak English
-        //The for loop is necessary for non-English articles. Can't get around it
-        //Possibilites: amend textSplitter to return an array of a requested size
-        //Also amend amendLength to take an input array
+        if (this.language === "English")
+        {
+            let headline = abbreviationConcatenation(this.allheadline);
+            headline = this.allheadline.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+            if (headline)
+                for (let i=0; i<headline.length; i++)
+                {
+                    new Speech(headline[i], this.language).speak();
+                }
+            else
+                new Speech(this.allheadline, this.language).speak();
 
-        // if (this.language === "English")
-        // {
-        //     new Speech(this.allheadline, this.language).speak();
-        //     new Speech(this.alltext, this.language).speak();
-        // }
-        // else
-        // {
+            let text = abbreviationConcatenation(this.alltext);
+            text = this.alltext.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+            if (text)
+                for (let i=0; i<this.sentences; i++)
+                {
+                    new Speech(text[i], this.language).speak();
+                }
+            else
+                new Speech(this.alltext, this.language).speak();
+        }
+        else
+        {
             for (let i=0; i<this.headline.length; i++)
             {
                 new Speech(this.headline[i], this.language).speak();
@@ -58,11 +70,12 @@ export class Article
             {
                 new Speech(this.text[i], this.language).speak();
             }
-        //}
+        }
     }
 
     amendLength(sentences)
     {
+        this.sentences = sentences;
         let newText = [];
         let temp = [];
         for (let i=0; i<this.originalText.length; i++)

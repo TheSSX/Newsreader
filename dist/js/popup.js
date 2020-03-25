@@ -344,6 +344,8 @@ function stop() {
 
 
 function capitalizeFirstLetter(string) {
+  if (string === 'uk' || string === 'Uk') return 'UK';
+
   try {
     return string.charAt(0).toUpperCase() + string.slice(1);
   } catch (TypeError) {

@@ -332,6 +332,9 @@ function stop() {
 //Thanks to user Steve Harrison on Stack Overflow
 //Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
 function capitalizeFirstLetter(string) {
+    if (string === 'uk' || string === 'Uk')
+        return 'UK';
+
     try
     {
         return string.charAt(0).toUpperCase() + string.slice(1);
