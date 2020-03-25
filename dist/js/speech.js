@@ -18,18 +18,16 @@ var _language_config = require("./language_config.js");
 /**
  Class for a speech object
  */
-var Speech =
-/*#__PURE__*/
-function () {
+var Speech = /*#__PURE__*/function () {
   /**
    * Creates an object requiring a text string to speak.
    * Takes user preferences from preferences.js
    * @param text - the string to speak
    */
-  function Speech(text) {
+  function Speech(text, language) {
     (0, _classCallCheck2["default"])(this, Speech);
     this.speech = new SpeechSynthesisUtterance(text);
-    this.speech.lang = _language_config.dialects[_preferences.language_choice];
+    this.speech.lang = _language_config.dialects[language];
     this.speech.volume = _preferences.volume;
     this.speech.rate = _preferences.rate;
     this.speech.pitch = _preferences.pitch;

@@ -6,7 +6,7 @@ var _chai = require("chai");
 
 var _sinon = require("sinon");
 
-var _articleextractor = require("../dist/articleextractor.js");
+var _articleextractor = require("../dist/js/articleextractor.js");
 
 var guardian = require('../test_articles/guardian.js');
 

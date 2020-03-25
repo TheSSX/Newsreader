@@ -1,4 +1,4 @@
-import {language_choice, pitch, rate, volume} from "./preferences.js";
+import {pitch, rate, volume} from "./preferences.js";
 import {dialects} from "./language_config.js";
 
 /**
@@ -11,10 +11,10 @@ export class Speech
      * Takes user preferences from preferences.js
      * @param text - the string to speak
      */
-    constructor(text)
+    constructor(text, language)
     {
         this.speech = new SpeechSynthesisUtterance(text);
-        this.speech.lang = dialects[language_choice];
+        this.speech.lang = dialects[language];
         this.speech.volume = volume;
         this.speech.rate = rate;
         this.speech.pitch = pitch;

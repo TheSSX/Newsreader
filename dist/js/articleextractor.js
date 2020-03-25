@@ -14,9 +14,7 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 /**
  * Class to clean unwanted data from HTML received from Ajax
  */
-var DataCleaner =
-/*#__PURE__*/
-function () {
+var DataCleaner = /*#__PURE__*/function () {
   function DataCleaner() {
     (0, _classCallCheck2["default"])(this, DataCleaner);
   }
@@ -86,9 +84,7 @@ function () {
 
 exports.DataCleaner = DataCleaner;
 
-var ArticleExtractor =
-/*#__PURE__*/
-function () {
+var ArticleExtractor = /*#__PURE__*/function () {
   function ArticleExtractor() {
     (0, _classCallCheck2["default"])(this, ArticleExtractor);
   }
@@ -252,7 +248,7 @@ function () {
       }
 
       return DataCleaner.cleanText(articletext);
-    } //TODO the second line returned an error at one point
+    } //TODO this isn't actually getting the headline most of the time. Fix
     //Uncaught (in promise) TypeError: Cannot read property 'split' of undefined
     //     at Function.extractAPHeadline (articleextractor.mjs:306)
     //     at Function.extractAP (pageparser.mjs:733)

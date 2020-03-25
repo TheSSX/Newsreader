@@ -1,4 +1,5 @@
 import {Bulletin} from "./bulletin.mjs";
+import {getSources, getTopics} from "./popup.mjs";
 
 /**
  * Receives messages from popup.mjs
@@ -7,8 +8,13 @@ import {Bulletin} from "./bulletin.mjs";
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse)
     {
-        if (request.greeting === "play")
-            Bulletin.fetchNews();
+        if (request.greeting === "play") {
+            getSources().then(sources => {
+                getTopics().then(topics => {
+                    Bulletin.fetchNews(sources, topics);
+                });
+            });
+        }
         else if (request.greeting === "pause")
             window.speechSynthesis.pause();
         else if (request.greeting === "resume")

@@ -6,9 +6,9 @@ var _chai = require("chai");
 
 var _sinon = require("sinon");
 
-var _speech = require("../dist/speech.js");
+var _speech = require("../dist/js/speech.js");
 
-var _article = require("../dist/article.js");
+var _article = require("../dist/js/article.js");
 
 (0, _mocha.suite)('Article', function () {
   (0, _mocha.describe)('constructor', function () {

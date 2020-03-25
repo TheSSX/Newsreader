@@ -2,7 +2,7 @@
   "name": "newsreader",
   "version": "1.0.0",
   "description": "",
-  "main": "src/jquery.js",
+  "main": "src/js/jquery.js",
   "scripts": {
     "build": "babel src --out-dir dist --delete-dir-on-start --quiet && echo Transpiled source files",
     "test": "npm run-script build && babel test-es6 --out-dir test --delete-dir-on-start --quiet && echo Transpiled test files && mocha"

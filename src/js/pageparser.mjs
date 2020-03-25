@@ -1,9 +1,6 @@
 import {Article} from "./article.mjs";
 import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
-import {Translator} from "./translator.mjs";
-import {language_choice, sources} from "./preferences.js";
-import {languages, translation_unavailable} from "./language_config.js";
-import {Speech} from "./speech.mjs";
+import {sourcelinks} from "./preferences.js";
 import {Summarise} from "./summarise.mjs";
 
 /**
@@ -16,31 +13,30 @@ export class PageParser
      * @param source - the news source
      * @param topic- the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<*|Article>} - the article is contained in the promise value
      */
-    static getArticle(source, topic, topiclink, sentences)
+    static getArticle(source, topic, topiclink)
     {
         switch(source)
         {
             case "The Guardian":
-                return PageParser.extractGuardian(topic, topiclink, sentences);
+                return PageParser.extractGuardian(topic, topiclink);
             case "BBC":
-                return PageParser.extractBBC(topic, topiclink, sentences);
+                return PageParser.extractBBC(topic, topiclink);
             case "Reuters":
-                return PageParser.extractReuters(topic, topiclink, sentences);
+                return PageParser.extractReuters(topic, topiclink);
             case "Sky News":
-                return PageParser.extractSky(topic, topiclink, sentences);
+                return PageParser.extractSky(topic, topiclink);
             case "Associated Press":
-                return PageParser.extractAP(topic, topiclink, sentences);
+                return PageParser.extractAP(topic, topiclink);
             case "Evening Standard":
-                return PageParser.extractEveningStandard(topic, topiclink, sentences);
+                return PageParser.extractEveningStandard(topic, topiclink);
             case "The Independent":
-                return PageParser.extractIndependent(topic, topiclink, sentences);
+                return PageParser.extractIndependent(topic, topiclink);
             case "ITV News":
-                return PageParser.extractITV(topic, topiclink, sentences);
+                return PageParser.extractITV(topic, topiclink);
             case "News.com.au":
-                return PageParser.extractNewsAU(topic, topiclink, sentences);
+                return PageParser.extractNewsAU(topic, topiclink);
             default:
                 throw new TypeError('Invalid source');
         }
@@ -49,20 +45,15 @@ export class PageParser
     /**
      * Queries a topic page on the Guardian website and selects a random article from it
      * @param topic - the news topic
-     * @param sentences - the number of sentences to summarise down to
      * @param topiclink - the link to that topic on the specified website
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractGuardian(topic, topiclink, sentences)
+    static async extractGuardian(topic, topiclink)
     {
+        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
         
         if (topic === "uk")
         {
@@ -106,9 +97,9 @@ export class PageParser
             randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
             counter++;
         }
-        while (randomlink.startsWith(sources[publisher] + topic + '/video/') && counter < 3);  //articles devoted to a video are no good
+        while (randomlink.startsWith(sourcelinks[publisher] + topic + '/video/') && counter < 3);  //articles devoted to a video are no good
 
-        if (randomlink.startsWith(sources[publisher] + topic + '/video/'))
+        if (randomlink.startsWith(sourcelinks[publisher] + topic + '/video/'))
         {
             return undefined;
         }
@@ -125,7 +116,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -137,8 +128,6 @@ export class PageParser
                 {
                     text = text.split(' - ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
             }
             else {
                 return undefined;
@@ -159,8 +148,6 @@ export class PageParser
                     {
                         text = text.split(' - ')[1];
                     }
-
-                    text = "Not enough summary credits! " + text;
                 }
                 else
                 {
@@ -174,47 +161,21 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
-
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
      * Queries a topic page on the BBC website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractBBC(topic, topiclink, sentences)
-    {
+    static async extractBBC(topic, topiclink)
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "BBC";
 
@@ -236,7 +197,7 @@ export class PageParser
             const current = linksarr[i];
             if (!current.includes('/') && current.includes('-') && !isNaN(current[current.length - 1]))
             {
-                articlelinks.push(sources[publisher] + 'news/' + current);
+                articlelinks.push(sourcelinks[publisher] + 'news/' + current);
             }
         }
 
@@ -261,7 +222,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -273,8 +234,10 @@ export class PageParser
                 {
                     text = text.split(' - ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
+            }
+            else
+            {
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -292,8 +255,10 @@ export class PageParser
                     {
                         text = text.split(' - ')[1];
                     }
-
-                    text = "Not enough summary credits! " + text;
+                }
+                else
+                {
+                    return undefined;
                 }
             }
         }
@@ -303,52 +268,47 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
-
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
      * Queries a topic page on the Reuters website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractReuters(topic, topiclink, sentences)
-    {
+    static async extractReuters(topic, topiclink)
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
 
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
-
         let publisher = "Reuters";
 
         const permadata = await PageParser.extractPageData(topiclink);
-        let linkdata = permadata.split('<a href="' + sources[publisher] + 'article/');
+        let linkdata = permadata.split('<a href="' + sourcelinks[publisher] + 'article/');
 
         let linksarr = [];
         for (let i = 1; i < linkdata.length; i += 1)
@@ -414,7 +374,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -426,8 +386,10 @@ export class PageParser
                 {
                     text = text.split(' - ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
+            }
+            else
+            {
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -439,15 +401,21 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' - Reuters')[0];      //get headline from article data
                 text = ArticleExtractor.extractReutersText(data);
-                if (text !== undefined)
+                if (text === undefined)
                 {
-                    if (text.split(' - ')[1])
-                    {
-                        text = text.split(' - ')[1];
-                    }
-
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
+            }
+
+            if (text !== undefined)
+            {
+                if (text.split(' - ')[1])
+                {
+                    text = text.split(' - ')[1];
+                }
+            }
+            else {
+                return undefined;
             }
         }
 
@@ -456,47 +424,42 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
-
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
      * Queries a topic page on the Sky News website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractSky(topic, topiclink, sentences)
-    {
+    static async extractSky(topic, topiclink)
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "Sky News";
 
@@ -508,7 +471,7 @@ export class PageParser
             linkdata = permadata.split('<a class="news-list__headline-link" href="https://www.skysports.com/');
         } else
         {
-            linkdata = permadata.split('<a href="' + sources[publisher] + 'story/');
+            linkdata = permadata.split('<a href="' + sourcelinks[publisher] + 'story/');
         }
 
         let linksarr = [];
@@ -547,7 +510,7 @@ export class PageParser
                     articlelinks.push('https://www.skysports.com/' + current);
                 } else
                 {
-                    articlelinks.push(sources[publisher] + 'story/' + current);
+                    articlelinks.push(sourcelinks[publisher] + 'story/' + current);
                 }
             }
         }
@@ -586,7 +549,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -598,8 +561,10 @@ export class PageParser
                 {
                     text = text.split(' - ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
+            }
+            else
+            {
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -617,8 +582,10 @@ export class PageParser
                     {
                         text = text.split(' - ')[1];
                     }
-
-                    text = "Not enough summary credits! " + text;
+                }
+                else
+                {
+                    return  undefined;
                 }
             }
         }
@@ -634,47 +601,42 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
-
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
      * Queries a topic page on the Associated Press website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractAP(topic, topiclink, sentences)
-    {
+    static async extractAP(topic, topiclink)
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "Associated Press";
 
@@ -696,7 +658,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (!current.includes('-') && !current.includes('/') && !current.includes('.') && current.length && current !== "termsofservice" && current !== "privacystatement")
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 
@@ -734,7 +696,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -742,32 +704,45 @@ export class PageParser
             text = ArticleExtractor.extractAPText(data);
             if (text !== undefined)
             {
-                if (text.split(' - ')[1])
+                if (text.split(' — ')[1])
                 {
-                    text = text.split(' - ')[1];
+                    text = text.split(' — ')[1];
                 }
-
-                text = "Not enough summary credits! " + text;
             }
-        } else    //SMMRY API working fine
+            else
+            {
+                return undefined;
+            }
+        }
+        else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
             text = smmrydata['sm_api_content'];       //summarised article returned
             const error = smmrydata['sm_api_error'];    //detecting presence of error code
 
-            if (error === 2)
-            {
+            if (error === 2) {
                 headline = ArticleExtractor.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
                 text = ArticleExtractor.extractAPText(data);
-                if (text !== undefined)
-                {
-                    if (text.split(' — ')[1])
-                    {
-                        text = text.split(' — ')[1];
-                    }
-
-                    text = "Not enough summary credits! " + text;
+                if (text === undefined) {
+                    return undefined;
                 }
+            }
+
+            if (text !== undefined)
+            {
+                if (text.split(' — ')[1])
+                {
+                    text = text.split(' — ')[1];
+                }
+            }
+            else
+            {
+                return undefined;
+            }
+
+            if (!headline)
+            {
+                headline = ArticleExtractor.extractAPHeadline(data);
             }
         }
 
@@ -776,47 +751,21 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
-
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
-
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
      * Queries a topic page on the Evening Standard website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractEveningStandard(topic, topiclink, sentences)
-    {
+    static async extractEveningStandard(topic, topiclink)
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "Evening Standard";
 
@@ -838,7 +787,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && (current.includes('news/') || current.includes('sport/') || current.includes('tech/')) && current.endsWith(".html"))
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 
@@ -876,15 +825,15 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
             headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
             text = ArticleExtractor.extractEveningStandardText(data);
-            if (text !== undefined)
+            if (text === undefined)
             {
-                text = "Not enough summary credits! " + text;
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -896,9 +845,9 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
                 text = ArticleExtractor.extractEveningStandardText(data);
-                if (text !== undefined)
+                if (text == undefined)
                 {
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
             }
         }
@@ -908,47 +857,42 @@ export class PageParser
             return undefined;
         }
 
-        /**
-         * TRANSLATING
-         */
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
-
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
      * Queries a topic page on the Independent website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractIndependent(topic, topiclink, sentences)
-    {
+    static async extractIndependent(topic, topiclink)
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "The Independent";
 
@@ -970,7 +914,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && current.endsWith(".html") && !current.includes('service/') && !current.includes('independentpremium/') && !current.includes('long_reads/') && !current.includes('extras/') && !current.includes('food-and-drink/recipes/'))
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 
@@ -1008,7 +952,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -1021,9 +965,9 @@ export class PageParser
             }
 
             text = ArticleExtractor.extractIndependentText(data);
-            if (text !== undefined)
+            if (text === undefined)
             {
-                text = "Not enough summary credits! " + text;
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -1035,9 +979,9 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
                 text = ArticleExtractor.extractIndependentText(data);
-                if (text !== undefined)
+                if (text === undefined)
                 {
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
             }
         }
@@ -1049,47 +993,42 @@ export class PageParser
 
         headline = DataCleaner.cleanText(headline);
 
-        /**
-         * TRANSLATING
-         */
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
-
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
      * Queries a topic page on the News.com.au website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractNewsAU(topic, topiclink, sentences)
-    {
+    static async extractNewsAU(topic, topiclink)
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "News.com.au";
 
@@ -1111,7 +1050,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && current.includes("/news-story/") && !current.includes('/game-reviews/'))
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 
@@ -1149,7 +1088,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -1169,9 +1108,9 @@ export class PageParser
             }
 
             text = ArticleExtractor.extractNewsAUText(data);
-            if (text !== undefined)
+            if (text === undefined)
             {
-                text = "Not enough summary credits! " + text;
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -1197,9 +1136,9 @@ export class PageParser
                 }
 
                 text = ArticleExtractor.extractNewsAUText(data);
-                if (text !== undefined)
+                if (text === undefined)
                 {
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
             }
         }
@@ -1211,47 +1150,42 @@ export class PageParser
 
         headline = DataCleaner.cleanText(headline);
 
-        /**
-         * TRANSLATING
-         */
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
-
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
      * Queries a topic page on the ITV News website and selects a random article from it
      * @param topic - the news topic
      * @param topiclink - the link to that topic on the specified website
-     * @param sentences - the number of sentences to summarise down to
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
-    static async extractITV(topic, topiclink, sentences)
-    {
+    static async extractITV(topic, topiclink)
+    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-
-        if (sentences <= 0)
-        {
-            return undefined;
-        }
 
         let publisher = "ITV News";
         const permadata = await PageParser.extractPageData(topiclink);
@@ -1272,7 +1206,7 @@ export class PageParser
             //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && current.includes("news/") && !current.includes("topic/") && !current.includes("meet-the-team/") && !current.includes("/uk-weather-forecast-") && !current.includes("/assets/") && /\d/.test(current))
             {
-                articlelinks.push(sources[publisher] + current);
+                articlelinks.push(sourcelinks[publisher] + current);
             }
         }
 
@@ -1310,7 +1244,7 @@ export class PageParser
          * SUMMARISING
          */
 
-        const smmrydata = await Summarise.summarise(randomlink, sentences);     //send article to SMMRY
+        const smmrydata = await Summarise.summarise(randomlink);     //send article to SMMRY
 
         if (smmrydata === undefined)    //SMMRY API unavailable
         {
@@ -1340,9 +1274,9 @@ export class PageParser
             }
 
             text = ArticleExtractor.extractITVText(data);
-            if (text !== undefined)
+            if (text === undefined)
             {
-                text = "Not enough summary credits! " + text;
+                return undefined;
             }
         } else    //SMMRY API working fine
         {
@@ -1378,9 +1312,9 @@ export class PageParser
                 }
 
                 text = ArticleExtractor.extractITVText(data);
-                if (text !== undefined)
+                if (text === undefined)
                 {
-                    text = "Not enough summary credits! " + text;
+                    return undefined;
                 }
             }
         }
@@ -1392,28 +1326,28 @@ export class PageParser
 
         headline = DataCleaner.cleanText(headline);
 
-        /**
-         * TRANSLATING
-         */
+        // /**
+        //  * TRANSLATING
+        //  */
+        //
+        // if (language_choice !== "English")
+        // {
+        //     const translations = await callTranslation(publisher, topic, headline, text);
+        //
+        //     if (translations !== undefined)
+        //     {
+        //         publisher = translations[0];
+        //         topic = translations[1];
+        //         headline = translations[2];
+        //         text = translations[3];
+        //     }
+        //     else
+        //     {
+        //         new Speech(translation_unavailable[language_choice]).speak();
+        //     }
+        // }
 
-        if (language_choice !== "English")
-        {
-            const translations = await callTranslation(publisher, topic, headline, text);
-
-            if (translations !== undefined)
-            {
-                publisher = translations[0];
-                topic = translations[1];
-                headline = translations[2];
-                text = translations[3];
-            }
-            else
-            {
-                new Speech(translation_unavailable[language_choice]).speak();
-            }
-        }
-
-        return new Article(publisher, topic, headline, randomlink, text);
+        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
     }
 
     /**
@@ -1431,29 +1365,113 @@ export class PageParser
     }
 }
 
-export async function callTranslation(publisher, topic, headline, text)
+/**
+ * Designed to split a paragraph of text into sentences.
+ * However, sentences longer than 150 characters are split into segments of ~150 characters and pushed
+ * one after the other to an array. Once all sentences are split and pushed on, the array is returned
+ *
+ * PURPOSE
+ * The reason for splitting sentences > 150 characters is to prevent the SpeechSynthesis module from
+ * randomly cutting out. This only happens when being spoken in a non-English language/dialect and only
+ * with utterances of 200-300 words. 150 characters is seen as a safety net for preventing this.
+ *
+ * EXAMPLE
+ * text - "sentence. sentence >150 chars. sentence."
+ * return - ['sentence.' 'partial sentence' 'partial sentence.' 'sentence.']
+ *
+ * @param text - the input paragraph
+ * @returns {[]} - the array of sentences
+ */
+export function textSplitter(text)
 {
-    const publishertranslatedata = await Translator.translate(publisher, languages[language_choice]);
-    const topictranslatedata = await Translator.translate(topic, languages[language_choice]);
-    const headlinetranslatedata = await Translator.translate(headline, languages[language_choice]);
-    const texttranslatedata = await Translator.translate(text, languages[language_choice]);
+    let arr = [];
 
-    //If translation API not available
-    if (publishertranslatedata === undefined || topictranslatedata === undefined || headlinetranslatedata === undefined || texttranslatedata === undefined)
+    text = abbreviationConcatenation(text);
+    text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+    if (!text)
     {
-        return undefined;
-    }
-    else if (publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200 || headlinetranslatedata['code'] !== 200 || texttranslatedata['code'] !== 200)
-    {
-        return undefined;
+        let current = text;
+        let segment = current;
+        if (current.length > 150)
+        {
+            while (current.length > 150)
+            {
+                segment = current.substr(0, 150);
+                current = current.substr(150);
+                while (isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && isCharacter(current.charAt(1)))
+                {
+                    segment += current.charAt(0);
+                    current = current.substr(1);
+                }
+
+                arr.push(segment);
+            }
+
+            arr.push(current);
+        }
+        else
+        {
+            arr.push(segment);
+        }
     }
     else
     {
-        publisher = publishertranslatedata['text'];
-        topic = topictranslatedata['text'];
-        headline = headlinetranslatedata['text'];
-        text = texttranslatedata['text'];
+        for (let i=0; i<text.length; i++)
+        {
+            let current = text[i];
+            let segment = current;
+            if (current.length > 150)
+            {
+                while (current.length > 150)
+                {
+                    segment = current.substr(0, 150);
+                    current = current.substr(150);
+                    while (isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && isCharacter(current.charAt(1)))
+                    {
+                        segment += current.charAt(0);
+                        current = current.substr(1);
+                    }
 
-        return [publisher, topic, headline, text];
+                    arr.push(segment);
+                }
+
+                arr.push(current);
+            }
+            else
+            {
+                arr.push(segment);
+            }
+        }
     }
+
+    return arr;
+}
+
+export function isCharacter(str, caseChoice='any') {
+    if (caseChoice === 'lowercase')
+        return str.length === 1 && str.match(/[a-z0-9]/i);
+    if (caseChoice === 'uppercase')
+        return str.length === 1 && str.match(/[A-Z0-9]/i);
+
+    return str.length === 1 && str.match(/[a-zA-Z0-9]/i);
+}
+
+export function abbreviationConcatenation(str)
+{
+    let newText = "";
+
+    for (let i=0; i<str.length-1; i++)
+    {
+        const current = str.charAt(i);
+        const next = str.charAt(i+1);
+
+        if (current === '.' && isCharacter(next, 'uppercase')){}
+        else
+        {
+            newText += current;
+        }
+    }
+
+    newText += str.charAt(str.length-1);
+    return newText;
 }

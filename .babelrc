@@ -9,31 +9,35 @@
         "rules": [
           {
             "search": "./article.mjs",
-            "replace": "../dist/article"
+            "replace": "../../dist/js/article"
           },
           {
             "search": "./pageparser.mjs",
-            "replace": "../dist/pageparser"
+            "replace": "../../dist/js/pageparser"
+          },
+          {
+            "search": "./popup.mjs",
+            "replace": "../../dist/js/popup"
+          },
+          {
+            "search": "./bulletin.mjs",
+            "replace": "../../dist/js/bulletin"
           },
           {
             "search": "./articleextractor.mjs",
-            "replace": "../dist/articleextractor"
+            "replace": "../../dist/js/articleextractor"
           },
           {
             "search": "./speech.mjs",
-            "replace": "../dist/speech"
+            "replace": "../../dist/js/speech"
           },
           {
             "search": "./translator.mjs",
-            "replace": "../dist/translator"
+            "replace": "../../dist/js/translator"
           },
           {
             "search": "./summarise.mjs",
-            "replace": "../dist/summarise"
-          },
-          {
-            "search": "./translator.mjs",
-            "replace": "../dist/translator"
+            "replace": "../../dist/js/summarise"
           }
         ]
       }

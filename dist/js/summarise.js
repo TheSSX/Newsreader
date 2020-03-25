@@ -15,6 +15,8 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
+var _preferences = require("./preferences.js");
+
 /**
  * Class to summarise articles. Communicates with the SMMRY API or, failing that, attempts to
  * summarise the article itself.
@@ -23,9 +25,7 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 var smmryurl = "https://api.smmry.com/";
 var apikey = "D7F33A666C";
 
-var Summarise =
-/*#__PURE__*/
-function () {
+var Summarise = /*#__PURE__*/function () {
   function Summarise() {
     (0, _classCallCheck2["default"])(this, Summarise);
   }
@@ -40,36 +40,37 @@ function () {
      * @returns {Promise<void>} - the JSON response from SMMRY
      */
     value: function () {
-      var _summarise = (0, _asyncToGenerator2["default"])(
-      /*#__PURE__*/
-      _regenerator["default"].mark(function _callee(articleurl, sentences) {
-        var url;
+      var _summarise = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(articleurl) {
+        var sentences,
+            url,
+            _args = arguments;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
+                sentences = _args.length > 1 && _args[1] !== undefined ? _args[1] : _preferences.max_sentences;
                 url = this.constructsmmryurl(articleurl, sentences);
-                _context.prev = 1;
-                _context.next = 4;
+                _context.prev = 2;
+                _context.next = 5;
                 return this.contactsmmry(url);
 
-              case 4:
+              case 5:
                 return _context.abrupt("return", _context.sent);
 
-              case 7:
-                _context.prev = 7;
-                _context.t0 = _context["catch"](1);
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](2);
                 return _context.abrupt("return", undefined);
 
-              case 10:
+              case 11:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[1, 7]]);
+        }, _callee, this, [[2, 8]]);
       }));
 
-      function summarise(_x, _x2) {
+      function summarise(_x) {
         return _summarise.apply(this, arguments);
       }
 

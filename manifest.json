@@ -8,18 +8,21 @@
         "<all_urls>"
       ],
       "js": [
-        "src/jquery.js",
-        "src/popup.mjs"
+        "src/js/jquery.js",
+        "src/js/popup.mjs"
       ]
     }
   ],
   "content_security_policy": "script-src 'self'; object-src 'self'",
   "browser_action": {
     "default_icon": "icon.png",
-    "default_popup": "src/popup.html"
+    "default_popup": "src/html/popup.html"
   },
   "background": {
-    "page": "src/bulletin.html",
+    "page": "src/html/bulletin.html",
     "persistant": false
-  }
+  },
+  "permissions": [
+    "storage"
+  ]
 }

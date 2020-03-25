@@ -3,19 +3,14 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.rate = exports.volume = exports.pitch = exports.language_choice = exports.sentences = exports.topics = exports.sources = exports.languagesdropdown = void 0;
-
-var _language_config = require("./language_config.js");
+exports.rate = exports.volume = exports.pitch = exports.max_sentences = exports.min_sentences = exports.topiclinks = exports.sourcelinks = void 0;
 
 /**
  * Contains the user preferences, specifically which sources to query, which topics to hear from and the number of
  * sentences they want each article to be summarised down to
  */
-var languagesdropdown = Object.keys(_language_config.languages); // dropdown menu for the user to select the language they want articles read aloud in
 // News sources and their respective homepage links
-
-exports.languagesdropdown = languagesdropdown;
-var sources = {
+var sourcelinks = {
   "The Guardian": "https://www.theguardian.com/",
   // left wing
   "BBC": "https://www.bbc.com/",
@@ -24,7 +19,7 @@ var sources = {
   // left wing
   "Reuters": "https://www.reuters.com/",
   // neutral
-  "Sky News": "https://www.news.sky.com/",
+  "Sky News": "https://news.sky.com/",
   // neutral
   "Associated Press": "https://apnews.com/",
   // neutral
@@ -37,8 +32,8 @@ var sources = {
 }; // News topics, with each source having a webpage for each topic.
 // The only exception to this is News.com.au, which doesn't have a UK news page
 
-exports.sources = sources;
-var topics = {
+exports.sourcelinks = sourcelinks;
+var topiclinks = {
   "sport": {
     "The Guardian": 'https://www.theguardian.com/sport/3019/dec/31/',
     "BBC": 'https://www.bbc.com/sport/',
@@ -142,11 +137,11 @@ var topics = {
  * User preferences for speech and article size
  */
 
-exports.topics = topics;
-var sentences = 3;
-exports.sentences = sentences;
-var language_choice = "English";
-exports.language_choice = language_choice;
+exports.topiclinks = topiclinks;
+var min_sentences = 2;
+exports.min_sentences = min_sentences;
+var max_sentences = 6;
+exports.max_sentences = max_sentences;
 var pitch = 1;
 exports.pitch = pitch;
 var volume = 1;
