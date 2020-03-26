@@ -34,6 +34,8 @@ export class Translator
      */
     static constructyandexurl(text, targetlang)
     {
+        if (!text || !targetlang)
+            return undefined;
         return `${yandexurl}?key=${apikey}&text=${text}&lang=${targetlang}`;
     }
 

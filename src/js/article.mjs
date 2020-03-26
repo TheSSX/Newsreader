@@ -1,5 +1,5 @@
 import {Speech} from "./speech.mjs";
-import {max_sentences} from "./preferences.js";
+import {min_sentences, max_sentences} from "./preferences.js";
 import {abbreviationConcatenation} from "./pageparser.mjs";
 
 /**
@@ -75,6 +75,9 @@ export class Article
 
     amendLength(sentences)
     {
+        if (sentences < min_sentences || sentences > max_sentences)
+            return;
+
         this.sentences = sentences;
         let newText = [];
         let temp = [];

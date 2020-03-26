@@ -79,6 +79,7 @@ var Translator = /*#__PURE__*/function () {
   }, {
     key: "constructyandexurl",
     value: function constructyandexurl(text, targetlang) {
+      if (!text || !targetlang) return undefined;
       return "".concat(_yandex.yandexurl, "?key=").concat(_yandex.apikey, "&text=").concat(text, "&lang=").concat(targetlang);
     }
     /**

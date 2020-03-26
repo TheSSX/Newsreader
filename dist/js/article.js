@@ -79,6 +79,7 @@ var Article = /*#__PURE__*/function () {
   }, {
     key: "amendLength",
     value: function amendLength(sentences) {
+      if (sentences < _preferences.min_sentences || sentences > _preferences.max_sentences) return;
       this.sentences = sentences;
       var newText = [];
       var temp = [];

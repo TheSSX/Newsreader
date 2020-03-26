@@ -5,7 +5,7 @@
   "main": "src/js/jquery.js",
   "scripts": {
     "build": "babel src --out-dir dist --delete-dir-on-start --quiet && echo Transpiled source files",
-    "test": "npm run-script build && babel test-es6 --out-dir test --delete-dir-on-start --quiet && echo Transpiled test files && mocha"
+    "test": "npm run-script build && babel test-es6 --out-dir test --delete-dir-on-start --quiet && echo Transpiled test files && nyc mocha -r jsdom-global/register"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,9 @@
     "babel-plugin-search-and-replace": "^1.0.1",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
+    "jsdom": "16.2.1",
+    "jsdom-global": "3.0.2",
+    "mocha-jsdom": "^2.0.0",
     "nodemon": "^2.0.2"
   },
   "dependencies": {
