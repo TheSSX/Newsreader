@@ -33,10 +33,13 @@ suite('Translator', function () {
             const input = 'input text';
             const language = 'French';
 
-            stub(Translator, 'constructyandexurl').returns(url);
-            stub(Translator, 'contactyandex').throws(new Error());
+            let stub_constructyandexurl = stub(Translator, 'constructyandexurl').returns(url);
+            let stub_contactyandex = stub(Translator, 'contactyandex').throws(new Error());
             let result = await Translator.translate(input, language);
             expect(result).to.be.equal(undefined);
+            expect(stub_constructyandexurl.called).to.be.equal(true);
+            expect(stub_constructyandexurl.calledWith(input, language)).to.be.equal(true);
+            expect(stub_contactyandex.called).to.be.equal(true);
         });
     });
 
@@ -57,7 +60,7 @@ suite('Translator', function () {
     describe('contactyandex', function () {
 
         //ReferenceError: $ is not defined
-        xit('Should return JSON data from Yandex', async function f() {
+        xit('Should return JSON data from Yandex', async function() {
             let url = 'https://www.example.com';
             let JSON_response = {
               'success': true

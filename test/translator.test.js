@@ -51,7 +51,7 @@ var _yandex = require("../dist/js/yandex.js");
       }, _callee);
     })));
     (0, _mocha.it)('Should return undefined if an external error occurs', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-      var url, input, language, result;
+      var url, input, language, stub_constructyandexurl, stub_contactyandex, result;
       return _regenerator["default"].wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -59,16 +59,19 @@ var _yandex = require("../dist/js/yandex.js");
               url = 'https://www.example.com';
               input = 'input text';
               language = 'French';
-              (0, _sinon.stub)(_translator.Translator, 'constructyandexurl').returns(url);
-              (0, _sinon.stub)(_translator.Translator, 'contactyandex')["throws"](new Error());
+              stub_constructyandexurl = (0, _sinon.stub)(_translator.Translator, 'constructyandexurl').returns(url);
+              stub_contactyandex = (0, _sinon.stub)(_translator.Translator, 'contactyandex')["throws"](new Error());
               _context2.next = 7;
               return _translator.Translator.translate(input, language);
 
             case 7:
               result = _context2.sent;
               (0, _chai.expect)(result).to.be.equal(undefined);
+              (0, _chai.expect)(stub_constructyandexurl.called).to.be.equal(true);
+              (0, _chai.expect)(stub_constructyandexurl.calledWith(input, language)).to.be.equal(true);
+              (0, _chai.expect)(stub_contactyandex.called).to.be.equal(true);
 
-            case 9:
+            case 12:
             case "end":
               return _context2.stop();
           }
@@ -89,38 +92,30 @@ var _yandex = require("../dist/js/yandex.js");
   });
   (0, _mocha.describe)('contactyandex', function () {
     //ReferenceError: $ is not defined
-    (0, _mocha.xit)('Should return JSON data from Yandex', /*#__PURE__*/function () {
-      var _f = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
-        var url, JSON_response, stub_ajax, result;
-        return _regenerator["default"].wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                url = 'https://www.example.com';
-                JSON_response = {
-                  'success': true
-                };
-                stub_ajax = (0, _sinon.stub)($, 'ajax').returns(JSON_response);
-                _context3.next = 5;
-                return _translator.Translator.contactyandex(url);
+    (0, _mocha.xit)('Should return JSON data from Yandex', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
+      var url, JSON_response, stub_ajax, result;
+      return _regenerator["default"].wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              url = 'https://www.example.com';
+              JSON_response = {
+                'success': true
+              };
+              stub_ajax = (0, _sinon.stub)($, 'ajax').returns(JSON_response);
+              _context3.next = 5;
+              return _translator.Translator.contactyandex(url);
 
-              case 5:
-                result = _context3.sent;
-                (0, _chai.expect)(result).to.be.deep.equal(JSON_response);
+            case 5:
+              result = _context3.sent;
+              (0, _chai.expect)(result).to.be.deep.equal(JSON_response);
 
-              case 7:
-              case "end":
-                return _context3.stop();
-            }
+            case 7:
+            case "end":
+              return _context3.stop();
           }
-        }, _callee3);
-      }));
-
-      function f() {
-        return _f.apply(this, arguments);
-      }
-
-      return f;
-    }());
+        }
+      }, _callee3);
+    })));
   });
 });

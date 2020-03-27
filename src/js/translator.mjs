@@ -6,7 +6,6 @@ import {apikey, yandexurl} from "./yandex.js";
  */
 export class Translator
 {
-
     /**
      * Manages the translation of text to a target language
      * @param text - the text to translate

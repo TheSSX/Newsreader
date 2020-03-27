@@ -6,8 +6,8 @@
 
 import {max_sentences} from "./preferences.js";
 
-const smmryurl = "https://api.smmry.com/";
-const apikey = "D7F33A666C";
+export const smmryurl = "https://api.smmry.com/";
+export const apikey = "D7F33A666C";
 
 export class Summarise
 {
@@ -38,6 +38,8 @@ export class Summarise
      */
     static constructsmmryurl(articleurl, sentences)
     {
+        if (!articleurl || !sentences)
+            return undefined;
         return `${smmryurl}&SM_API_KEY=${apikey}&SM_LENGTH=${sentences}&SM_QUESTION_AVOID&SM_EXCLAMATION_AVOID&SM_URL=${articleurl}`;
     }
 

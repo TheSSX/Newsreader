@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Summarise = void 0;
+exports.Summarise = exports.apikey = exports.smmryurl = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -23,7 +23,9 @@ var _preferences = require("./preferences.js");
  * Contains config info for querying the SMMRY API
  */
 var smmryurl = "https://api.smmry.com/";
+exports.smmryurl = smmryurl;
 var apikey = "D7F33A666C";
+exports.apikey = apikey;
 
 var Summarise = /*#__PURE__*/function () {
   function Summarise() {
@@ -86,6 +88,7 @@ var Summarise = /*#__PURE__*/function () {
   }, {
     key: "constructsmmryurl",
     value: function constructsmmryurl(articleurl, sentences) {
+      if (!articleurl || !sentences) return undefined;
       return "".concat(smmryurl, "&SM_API_KEY=").concat(apikey, "&SM_LENGTH=").concat(sentences, "&SM_QUESTION_AVOID&SM_EXCLAMATION_AVOID&SM_URL=").concat(articleurl);
     }
     /**
