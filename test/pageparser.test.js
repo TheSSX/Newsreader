@@ -130,7 +130,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(stub_extractGuardianText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
               //My hacky way of determining if the result is an Article object
 
-              (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", (0, _pageparser.textSplitter)("test"), "test", "test", (0, _pageparser.textSplitter)("test"), "test")));
+              (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", _pageparser.DataParser.textSplitter("test"), "test", "test", _pageparser.DataParser.textSplitter("test"), "test")));
               stub_extractPageData.restore();
               stub_summarise.restore();
               stub_extractGuardianText.restore();
@@ -1425,47 +1425,144 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
         }
       }, _callee18);
     })));
-  }); // describe('extractPageData', function () {
-  //
-  //     it('Should return results from the web server', function () {
-  //
-  //         const server = createFakeServer();
-  //         server.respondWith("GET", "*",
-  //             [200, { "Content-Type": "application/json" },
-  //                 '[{ "id": 12, "comment": "Hey there" }]']);
-  //         const stub_ajax = stub($, 'ajax').resolves({ data: 'test data' });
-  //
-  //         PageParser.extractPageData("test").then((data) => {
-  //             server.respond();
-  //             console.log("Data is " + data);
-  //             expect(stub_ajax.called).to.be.equal(true);
-  //         });
-  //     });
-  // });
-}); // describe('callTranslation', function () {
-//
-//     afterEach(function () {
-//         restore();
-//     });
-//
-//     it('Should return translated data', async function () {
-//         const stub_translate = stub(Translator, 'translate').resolves({'code': 200, 'text': 'translation'});
-//         const result = await callTranslation("test", "test", "test", "test");
-//         expect(stub_translate.callCount).to.be.equal(4);
-//         expect(result).to.be.deep.equal(['translation', 'translation', 'translation', 'translation']);
-//     });
-//
-//     it('Should return nothing if an error occurred', async function () {
-//         let stub_translate = stub(Translator, 'translate').resolves({'code': 500});
-//         let result = await callTranslation("test", "test", "test", "test");
-//         expect(stub_translate.callCount).to.be.equal(4);
-//         expect(result).to.be.equal(undefined);
-//
-//         restore();
-//
-//         stub_translate = stub(Translator, 'translate').resolves(undefined);
-//         result = await callTranslation("test", "test", "test", "test");
-//         expect(stub_translate.callCount).to.be.equal(4);
-//         expect(result).to.be.equal(undefined);
-//     });
-// });
+  });
+  (0, _mocha.describe)('extractPageData', function () {
+    (0, _mocha.xit)('Should return webpage data from the specified URL', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19() {
+      var url, response, stub_ajax, result;
+      return _regenerator["default"].wrap(function _callee19$(_context19) {
+        while (1) {
+          switch (_context19.prev = _context19.next) {
+            case 0:
+              url = 'https://www.example.com';
+              response = "test";
+              stub_ajax = (0, _sinon.stub)($, 'ajax').returns(response);
+              _context19.next = 5;
+              return _summarise.Summarise.contactsmmry(url);
+
+            case 5:
+              result = _context19.sent;
+              (0, _chai.expect)(result).to.be.equal(response);
+
+            case 7:
+            case "end":
+              return _context19.stop();
+          }
+        }
+      }, _callee19);
+    })));
+  });
+});
+(0, _mocha.suite)('DataParser', function () {
+  (0, _mocha.afterEach)(function () {
+    (0, _sinon.restore)();
+  });
+  (0, _mocha.describe)('textSplitter', function () {
+    (0, _mocha.it)('Should split up input text into an array of sentences', function () {
+      var text1 = "This is a sentence.";
+      var text2 = "This is a sentence. Here is another sentence.";
+      var text3 = "This is a sentence. Here is another sentence! Here's another?";
+      var text4 = "Here is a very long sentence greater than 150 characters to test if the algorithm can split it up and push it all onto the array in separate chunks instead of in one go. Then another sentence to make sure it's still working!";
+      var text5 = "Here is a sentence with no punctuation";
+      var text6 = "Here is a sentence with abbreviations: The U.S. army and the C.I.A. were involved, as well as the F.B.I and N.A.S.A.";
+      var text7 = "12.5 gallons were produced.";
+      var spy_abbreviationConcatenation = (0, _sinon.spy)(_pageparser.DataParser, 'abbreviationConcatenation');
+
+      var result = _pageparser.DataParser.textSplitter(text1);
+
+      (0, _chai.expect)(result).to.be.deep.equal([text1]);
+      (0, _chai.expect)(spy_abbreviationConcatenation.called).to.be.equal(true);
+      (0, _sinon.restore)();
+      spy_abbreviationConcatenation = (0, _sinon.spy)(_pageparser.DataParser, 'abbreviationConcatenation');
+      result = _pageparser.DataParser.textSplitter(text2);
+      (0, _chai.expect)(result.length).to.be.equal(2);
+      (0, _chai.expect)(spy_abbreviationConcatenation.called).to.be.equal(true);
+      (0, _sinon.restore)();
+      spy_abbreviationConcatenation = (0, _sinon.spy)(_pageparser.DataParser, 'abbreviationConcatenation');
+      result = _pageparser.DataParser.textSplitter(text3);
+      (0, _chai.expect)(result.length).to.be.equal(3);
+      (0, _chai.expect)(spy_abbreviationConcatenation.called).to.be.equal(true);
+      (0, _sinon.restore)();
+      spy_abbreviationConcatenation = (0, _sinon.spy)(_pageparser.DataParser, 'abbreviationConcatenation');
+      result = _pageparser.DataParser.textSplitter(text4);
+      (0, _chai.expect)(result.length).to.be.equal(3);
+      (0, _chai.expect)(spy_abbreviationConcatenation.called).to.be.equal(true);
+      (0, _sinon.restore)();
+      spy_abbreviationConcatenation = (0, _sinon.spy)(_pageparser.DataParser, 'abbreviationConcatenation');
+      result = _pageparser.DataParser.textSplitter(text5);
+      (0, _chai.expect)(result).to.be.deep.equal([text5]);
+      (0, _chai.expect)(spy_abbreviationConcatenation.called).to.be.equal(true);
+      (0, _sinon.restore)();
+      spy_abbreviationConcatenation = (0, _sinon.spy)(_pageparser.DataParser, 'abbreviationConcatenation');
+      result = _pageparser.DataParser.textSplitter(text6);
+      (0, _chai.expect)(result).to.be.deep.equal(['Here is a sentence with abbreviations: The US army and the CIA were involved, as well as the FBI and NASA.']);
+      (0, _chai.expect)(spy_abbreviationConcatenation.called).to.be.equal(true);
+      (0, _sinon.restore)();
+      spy_abbreviationConcatenation = (0, _sinon.spy)(_pageparser.DataParser, 'abbreviationConcatenation');
+      result = _pageparser.DataParser.textSplitter(text7);
+      (0, _chai.expect)(result.length).to.be.equal(1);
+      (0, _chai.expect)(spy_abbreviationConcatenation.called).to.be.equal(true);
+    });
+    (0, _mocha.it)('Should return undefined if not a valid string', function () {
+      var text = undefined;
+      var spy_abbreviationConcatenation = (0, _sinon.spy)(_pageparser.DataParser, 'abbreviationConcatenation');
+      (0, _chai.expect)(_pageparser.DataParser.textSplitter(text)).to.be.equal(undefined);
+      (0, _chai.expect)(spy_abbreviationConcatenation.called).to.be.equal(false);
+      (0, _sinon.restore)();
+      text = "";
+      spy_abbreviationConcatenation = (0, _sinon.spy)(_pageparser.DataParser, 'abbreviationConcatenation');
+      (0, _chai.expect)(_pageparser.DataParser.textSplitter(text)).to.be.equal(undefined);
+      (0, _chai.expect)(spy_abbreviationConcatenation.called).to.be.equal(false);
+    });
+  });
+  (0, _mocha.describe)('isCharacter', function () {
+    (0, _mocha.it)('Should return true on valid characters', function () {
+      for (var i = 0; i < _pageparser.valid_chars.length; i++) {
+        (0, _chai.expect)(_pageparser.DataParser.isCharacter(_pageparser.valid_chars[i])).to.be.equal(true);
+      }
+
+      for (var _i = 0; _i <= 9; _i++) {
+        (0, _chai.expect)(_pageparser.DataParser.isCharacter(_i.toString())).to.be.equal(true);
+      }
+
+      for (var _i2 = 0; _i2 < 26; _i2++) {
+        var lower = (_i2 + 10).toString(36).toLowerCase();
+
+        var upper = (_i2 + 10).toString(36).toUpperCase();
+
+        (0, _chai.expect)(_pageparser.DataParser.isCharacter(lower)).to.be.equal(true);
+        (0, _chai.expect)(_pageparser.DataParser.isCharacter(lower, 'lowercase')).to.be.equal(true);
+        (0, _chai.expect)(_pageparser.DataParser.isCharacter(upper)).to.be.equal(true);
+        (0, _chai.expect)(_pageparser.DataParser.isCharacter(upper, 'uppercase')).to.be.equal(true);
+      }
+    });
+    (0, _mocha.it)('Should return false on invalid characters', function () {
+      (0, _chai.expect)(_pageparser.DataParser.isCharacter("10")).to.be.equal(false);
+      (0, _chai.expect)(_pageparser.DataParser.isCharacter("1", 'lowercase')).to.be.equal(false);
+      (0, _chai.expect)(_pageparser.DataParser.isCharacter("1", 'uppercase')).to.be.equal(false);
+      (0, _chai.expect)(_pageparser.DataParser.isCharacter("")).to.be.equal(false);
+      (0, _chai.expect)(_pageparser.DataParser.isCharacter(undefined)).to.be.equal(false);
+      (0, _chai.expect)(_pageparser.DataParser.isCharacter("test")).to.be.equal(false);
+
+      for (var i = 0; i < 26; i++) {
+        var lower = (i + 10).toString(36).toLowerCase();
+        var upper = (i + 10).toString(36).toUpperCase();
+        (0, _chai.expect)(_pageparser.DataParser.isCharacter(lower, 'uppercase')).to.be.equal(false);
+        (0, _chai.expect)(_pageparser.DataParser.isCharacter(upper, 'lowercase')).to.be.equal(false);
+      }
+    });
+  });
+  (0, _mocha.describe)('abbreviationConcatenation', function () {
+    (0, _mocha.it)('Should correctly concatenate abbreviations', function () {
+      var text = "Here is a sentence with abbreviations: The U.S. army and the C.I.A. were involved, as well as the F.B.I and N.A.S.A.";
+      (0, _chai.expect)(_pageparser.DataParser.abbreviationConcatenation(text)).to.be.equal("Here is a sentence with abbreviations: The US army and the CIA were involved, as well as the FBI and NASA.");
+    });
+    (0, _mocha.it)('Should ignore regular sentences and decimal points', function () {
+      var text1 = "Here is a regular sentence. Nothing special.";
+      var text2 = "12.5 gallons were produced.";
+      var text3 = "Version 2.5.4 is due to be released.";
+      (0, _chai.expect)(_pageparser.DataParser.abbreviationConcatenation(text1)).to.be.equal(text1);
+      (0, _chai.expect)(_pageparser.DataParser.abbreviationConcatenation(text2)).to.be.equal(text2);
+      (0, _chai.expect)(_pageparser.DataParser.abbreviationConcatenation(text3)).to.be.equal(text3);
+    });
+  });
+});

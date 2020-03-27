@@ -5,10 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.textSplitter = textSplitter;
-exports.isCharacter = isCharacter;
-exports.abbreviationConcatenation = abbreviationConcatenation;
-exports.PageParser = void 0;
+exports.DataParser = exports.valid_chars = exports.PageParser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -94,7 +91,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -234,7 +231,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context.abrupt("return", undefined);
 
               case 46:
-                return _context.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+                return _context.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 47:
               case "end":
@@ -267,7 +264,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -393,7 +390,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context2.abrupt("return", undefined);
 
               case 43:
-                return _context2.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+                return _context2.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 44:
               case "end":
@@ -426,7 +423,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -601,7 +598,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context3.abrupt("return", undefined);
 
               case 56:
-                return _context3.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+                return _context3.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 57:
               case "end":
@@ -634,7 +631,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -821,7 +818,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context4.abrupt("return", undefined);
 
               case 56:
-                return _context4.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+                return _context4.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 57:
               case "end":
@@ -854,7 +851,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -1023,7 +1020,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context5.abrupt("return", undefined);
 
               case 56:
-                return _context5.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+                return _context5.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 57:
               case "end":
@@ -1056,7 +1053,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -1180,7 +1177,7 @@ var PageParser = /*#__PURE__*/function () {
 
                 text = _articleextractor.ArticleExtractor.extractEveningStandardText(data);
 
-                if (!(text == undefined)) {
+                if (!(text === undefined)) {
                   _context6.next = 45;
                   break;
                 }
@@ -1196,7 +1193,7 @@ var PageParser = /*#__PURE__*/function () {
                 return _context6.abrupt("return", undefined);
 
               case 47:
-                return _context6.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+                return _context6.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 48:
               case "end":
@@ -1229,7 +1226,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -1373,28 +1370,8 @@ var PageParser = /*#__PURE__*/function () {
                 return _context7.abrupt("return", undefined);
 
               case 47:
-                headline = _articleextractor.DataCleaner.cleanText(headline); // /**
-                //  * TRANSLATING
-                //  */
-                //
-                // if (language_choice !== "English")
-                // {
-                //     const translations = await callTranslation(publisher, topic, headline, text);
-                //
-                //     if (translations !== undefined)
-                //     {
-                //         publisher = translations[0];
-                //         topic = translations[1];
-                //         headline = translations[2];
-                //         text = translations[3];
-                //     }
-                //     else
-                //     {
-                //         new Speech(translation_unavailable[language_choice]).speak();
-                //     }
-                // }
-
-                return _context7.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+                headline = _articleextractor.DataCleaner.cleanText(headline);
+                return _context7.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 49:
               case "end":
@@ -1427,7 +1404,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -1619,28 +1596,8 @@ var PageParser = /*#__PURE__*/function () {
                 return _context8.abrupt("return", undefined);
 
               case 65:
-                headline = _articleextractor.DataCleaner.cleanText(headline); // /**
-                //  * TRANSLATING
-                //  */
-                //
-                // if (language_choice !== "English")
-                // {
-                //     const translations = await callTranslation(publisher, topic, headline, text);
-                //
-                //     if (translations !== undefined)
-                //     {
-                //         publisher = translations[0];
-                //         topic = translations[1];
-                //         headline = translations[2];
-                //         text = translations[3];
-                //     }
-                //     else
-                //     {
-                //         new Speech(translation_unavailable[language_choice]).speak();
-                //     }
-                // }
-
-                return _context8.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+                headline = _articleextractor.DataCleaner.cleanText(headline);
+                return _context8.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 67:
               case "end":
@@ -1673,7 +1630,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -1913,28 +1870,8 @@ var PageParser = /*#__PURE__*/function () {
                 return _context9.abrupt("return", undefined);
 
               case 83:
-                headline = _articleextractor.DataCleaner.cleanText(headline); // /**
-                //  * TRANSLATING
-                //  */
-                //
-                // if (language_choice !== "English")
-                // {
-                //     const translations = await callTranslation(publisher, topic, headline, text);
-                //
-                //     if (translations !== undefined)
-                //     {
-                //         publisher = translations[0];
-                //         topic = translations[1];
-                //         headline = translations[2];
-                //         text = translations[3];
-                //     }
-                //     else
-                //     {
-                //         new Speech(translation_unavailable[language_choice]).speak();
-                //     }
-                // }
-
-                return _context9.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+                headline = _articleextractor.DataCleaner.cleanText(headline);
+                return _context9.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 85:
               case "end":
@@ -1966,100 +1903,131 @@ var PageParser = /*#__PURE__*/function () {
   }]);
   return PageParser;
 }();
-/**
- * Designed to split a paragraph of text into sentences.
- * However, sentences longer than 150 characters are split into segments of ~150 characters and pushed
- * one after the other to an array. Once all sentences are split and pushed on, the array is returned
- *
- * PURPOSE
- * The reason for splitting sentences > 150 characters is to prevent the SpeechSynthesis module from
- * randomly cutting out. This only happens when being spoken in a non-English language/dialect and only
- * with utterances of 200-300 words. 150 characters is seen as a safety net for preventing this.
- *
- * EXAMPLE
- * text - "sentence. sentence >150 chars. sentence."
- * return - ['sentence.' 'partial sentence' 'partial sentence.' 'sentence.']
- *
- * @param text - the input paragraph
- * @returns {[]} - the array of sentences
- */
-
 
 exports.PageParser = PageParser;
+var valid_chars = [',', '.', '!', '?', '£', '$', '€', '"', "'", '%', '&', '(', ')', '#', '~', '/', '<', '>', '-', '_', '+', '='];
+exports.valid_chars = valid_chars;
 
-function textSplitter(text) {
-  var arr = [];
-  text = abbreviationConcatenation(text);
-  text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+var DataParser = /*#__PURE__*/function () {
+  function DataParser() {
+    (0, _classCallCheck2["default"])(this, DataParser);
+  }
 
-  if (!text) {
-    var current = text;
-    var segment = current;
+  (0, _createClass2["default"])(DataParser, null, [{
+    key: "textSplitter",
 
-    if (current.length > 150) {
-      while (current.length > 150) {
-        segment = current.substr(0, 150);
-        current = current.substr(150);
+    /**
+     * Designed to split a paragraph of text into sentences.
+     * However, sentences longer than 150 characters are split into segments of ~150 characters and pushed
+     * one after the other to an array. Once all sentences are split and pushed on, the array is returned
+     *
+     * PURPOSE
+     * The reason for splitting sentences > 150 characters is to prevent the SpeechSynthesis module from
+     * randomly cutting out. This only happens when being spoken in a non-English language/dialect and only
+     * with utterances of 200-300 words. 150 characters is seen as a safety net for preventing this.
+     *
+     * EXAMPLE
+     * text - "sentence. sentence >150 chars. sentence."
+     * return - ['sentence.' 'partial sentence' 'partial sentence.' 'sentence.']
+     *
+     * @param text - the input paragraph
+     * @returns {[]} - the array of sentences
+     */
+    value: function textSplitter(text) {
+      if (!text) return undefined;
+      var arr = [];
+      text = DataParser.abbreviationConcatenation(text);
+      text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
 
-        while (isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && isCharacter(current.charAt(1))) {
-          segment += current.charAt(0);
-          current = current.substr(1);
-        }
+      if (!text) {
+        var current = text;
+        var segment = current;
 
-        arr.push(segment);
-      }
+        if (current.length > 150) {
+          while (current.length > 150) {
+            segment = current.substr(0, 150);
+            current = current.substr(150);
 
-      arr.push(current);
-    } else {
-      arr.push(segment);
-    }
-  } else {
-    for (var i = 0; i < text.length; i++) {
-      var _current = text[i];
-      var _segment = _current;
+            while (DataParser.isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && DataParser.isCharacter(current.charAt(1))) {
+              segment += current.charAt(0);
+              current = current.substr(1);
+            }
 
-      if (_current.length > 150) {
-        while (_current.length > 150) {
-          _segment = _current.substr(0, 150);
-          _current = _current.substr(150);
-
-          while (isCharacter(_current.charAt(0)) || [',', '.'].includes(_current.charAt(0)) && isCharacter(_current.charAt(1))) {
-            _segment += _current.charAt(0);
-            _current = _current.substr(1);
+            arr.push(segment);
           }
 
-          arr.push(_segment);
+          arr.push(current);
+        } else {
+          arr.push(segment);
+        }
+      } else {
+        for (var i = 0; i < text.length; i++) {
+          var _current = text[i];
+          var _segment = _current;
+
+          if (_current.length > 150) {
+            while (_current.length > 150) {
+              _segment = _current.substr(0, 150);
+              _current = _current.substr(150);
+
+              while (DataParser.isCharacter(_current.charAt(0)) || [',', '.'].includes(_current.charAt(0)) && DataParser.isCharacter(_current.charAt(1))) {
+                _segment += _current.charAt(0);
+                _current = _current.substr(1);
+              }
+
+              arr.push(_segment);
+            }
+
+            arr.push(_current);
+          } else {
+            arr.push(_segment);
+          }
+        }
+      }
+
+      return arr;
+    }
+  }, {
+    key: "isCharacter",
+    value: function isCharacter(str) {
+      var caseChoice = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'any';
+      if (!str) return false;
+      if (str.length !== 1 || !['any', 'lowercase', 'uppercase'].includes(caseChoice)) return false;
+      if (str === ' ') return false;
+      if (valid_chars.includes(str)) return true;
+
+      try {
+        var num = parseInt(str);
+        if (!isNaN(num) && caseChoice === 'any') return true;
+      } catch (TypeError) {}
+
+      if (caseChoice === 'uppercase') return str >= 'A' && str <= 'Z';else if (caseChoice === 'lowercase') return str >= 'a' && str <= 'z';else return str >= 'A' && str <= 'Z' || str >= 'a' && str <= 'z';
+    }
+  }, {
+    key: "abbreviationConcatenation",
+    value: function abbreviationConcatenation(str) {
+      var newText = "";
+
+      for (var i = 0; i < str.length - 1; i++) {
+        var current = str.charAt(i);
+
+        if (i >= 1) {
+          var previous = str.charAt(i - 1);
+          var next = str.charAt(i + 1);
+          if (DataParser.isCharacter(previous, 'uppercase') && current === '.' && DataParser.isCharacter(next, 'uppercase')) i++;else if (i >= 3) {
+            var previousprevious = str.charAt(i - 2);
+            if (previousprevious === '.' && DataParser.isCharacter(previous, 'uppercase') && current === '.' && !DataParser.isCharacter(next)) i++;
+          }
         }
 
-        arr.push(_current);
-      } else {
-        arr.push(_segment);
+        newText += str.charAt(i);
       }
+
+      newText += str.charAt(str.length - 1);
+      return newText;
     }
-  }
+  }]);
+  return DataParser;
+}();
 
-  return arr;
-}
-
-function isCharacter(str) {
-  var caseChoice = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'any';
-  if (caseChoice === 'lowercase') return str.length === 1 && str.match(/[a-z0-9]/i);
-  if (caseChoice === 'uppercase') return str.length === 1 && str.match(/[A-Z0-9]/i);
-  return str.length === 1 && str.match(/[a-zA-Z0-9]/i);
-}
-
-function abbreviationConcatenation(str) {
-  var newText = "";
-
-  for (var i = 0; i < str.length - 1; i++) {
-    var current = str.charAt(i);
-    var next = str.charAt(i + 1);
-
-    if (current === '.' && isCharacter(next, 'uppercase')) {} else {
-      newText += current;
-    }
-  }
-
-  newText += str.charAt(str.length - 1);
-  return newText;
-}
+exports.DataParser = DataParser;

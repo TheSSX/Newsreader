@@ -50,11 +50,11 @@ export class PageParser
      */
     static async extractGuardian(topic, topiclink)
     {
-        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
-        
+
         if (topic === "uk")
         {
             topic = "uk-news";
@@ -161,7 +161,7 @@ export class PageParser
             return undefined;
         }
 
-        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text));
     }
 
     /**
@@ -171,7 +171,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractBBC(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -268,28 +268,7 @@ export class PageParser
             return undefined;
         }
 
-        // /**
-        //  * TRANSLATING
-        //  */
-        //
-        // if (language_choice !== "English")
-        // {
-        //     const translations = await callTranslation(publisher, topic, headline, text);
-        //
-        //     if (translations !== undefined)
-        //     {
-        //         publisher = translations[0];
-        //         topic = translations[1];
-        //         headline = translations[2];
-        //         text = translations[3];
-        //     }
-        //     else
-        //     {
-        //         new Speech(translation_unavailable[language_choice]).speak();
-        //     }
-        // }
-
-        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text));
     }
 
     /**
@@ -299,7 +278,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractReuters(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -424,28 +403,7 @@ export class PageParser
             return undefined;
         }
 
-        // /**
-        //  * TRANSLATING
-        //  */
-        //
-        // if (language_choice !== "English")
-        // {
-        //     const translations = await callTranslation(publisher, topic, headline, text);
-        //
-        //     if (translations !== undefined)
-        //     {
-        //         publisher = translations[0];
-        //         topic = translations[1];
-        //         headline = translations[2];
-        //         text = translations[3];
-        //     }
-        //     else
-        //     {
-        //         new Speech(translation_unavailable[language_choice]).speak();
-        //     }
-        // }
-
-        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text));
     }
 
     /**
@@ -455,7 +413,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractSky(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -601,28 +559,7 @@ export class PageParser
             return undefined;
         }
 
-        // /**
-        //  * TRANSLATING
-        //  */
-        //
-        // if (language_choice !== "English")
-        // {
-        //     const translations = await callTranslation(publisher, topic, headline, text);
-        //
-        //     if (translations !== undefined)
-        //     {
-        //         publisher = translations[0];
-        //         topic = translations[1];
-        //         headline = translations[2];
-        //         text = translations[3];
-        //     }
-        //     else
-        //     {
-        //         new Speech(translation_unavailable[language_choice]).speak();
-        //     }
-        // }
-
-        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text));
     }
 
     /**
@@ -632,7 +569,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractAP(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -751,7 +688,7 @@ export class PageParser
             return undefined;
         }
 
-        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text));
     }
 
     /**
@@ -761,7 +698,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractEveningStandard(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -845,7 +782,7 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
                 text = ArticleExtractor.extractEveningStandardText(data);
-                if (text == undefined)
+                if (text === undefined)
                 {
                     return undefined;
                 }
@@ -857,28 +794,7 @@ export class PageParser
             return undefined;
         }
 
-        // /**
-        //  * TRANSLATING
-        //  */
-        //
-        // if (language_choice !== "English")
-        // {
-        //     const translations = await callTranslation(publisher, topic, headline, text);
-        //
-        //     if (translations !== undefined)
-        //     {
-        //         publisher = translations[0];
-        //         topic = translations[1];
-        //         headline = translations[2];
-        //         text = translations[3];
-        //     }
-        //     else
-        //     {
-        //         new Speech(translation_unavailable[language_choice]).speak();
-        //     }
-        // }
-
-        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text));
     }
 
     /**
@@ -888,7 +804,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractIndependent(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -993,28 +909,7 @@ export class PageParser
 
         headline = DataCleaner.cleanText(headline);
 
-        // /**
-        //  * TRANSLATING
-        //  */
-        //
-        // if (language_choice !== "English")
-        // {
-        //     const translations = await callTranslation(publisher, topic, headline, text);
-        //
-        //     if (translations !== undefined)
-        //     {
-        //         publisher = translations[0];
-        //         topic = translations[1];
-        //         headline = translations[2];
-        //         text = translations[3];
-        //     }
-        //     else
-        //     {
-        //         new Speech(translation_unavailable[language_choice]).speak();
-        //     }
-        // }
-
-        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text));
     }
 
     /**
@@ -1024,7 +919,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractNewsAU(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -1150,28 +1045,7 @@ export class PageParser
 
         headline = DataCleaner.cleanText(headline);
 
-        // /**
-        //  * TRANSLATING
-        //  */
-        //
-        // if (language_choice !== "English")
-        // {
-        //     const translations = await callTranslation(publisher, topic, headline, text);
-        //
-        //     if (translations !== undefined)
-        //     {
-        //         publisher = translations[0];
-        //         topic = translations[1];
-        //         headline = translations[2];
-        //         text = translations[3];
-        //     }
-        //     else
-        //     {
-        //         new Speech(translation_unavailable[language_choice]).speak();
-        //     }
-        // }
-
-        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text));
     }
 
     /**
@@ -1181,7 +1055,7 @@ export class PageParser
      * @returns {Promise<undefined|Article>} - returns a constructed news article or undefined if the article is no good
      */
     static async extractITV(topic, topiclink)
-    {        //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+    {        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
         /**
          * GETTING RANDOM LINK FOR TOPIC
@@ -1326,28 +1200,7 @@ export class PageParser
 
         headline = DataCleaner.cleanText(headline);
 
-        // /**
-        //  * TRANSLATING
-        //  */
-        //
-        // if (language_choice !== "English")
-        // {
-        //     const translations = await callTranslation(publisher, topic, headline, text);
-        //
-        //     if (translations !== undefined)
-        //     {
-        //         publisher = translations[0];
-        //         topic = translations[1];
-        //         headline = translations[2];
-        //         text = translations[3];
-        //     }
-        //     else
-        //     {
-        //         new Speech(translation_unavailable[language_choice]).speak();
-        //     }
-        // }
-
-        return new Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text));
+        return new Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text));
     }
 
     /**
@@ -1365,60 +1218,62 @@ export class PageParser
     }
 }
 
-/**
- * Designed to split a paragraph of text into sentences.
- * However, sentences longer than 150 characters are split into segments of ~150 characters and pushed
- * one after the other to an array. Once all sentences are split and pushed on, the array is returned
- *
- * PURPOSE
- * The reason for splitting sentences > 150 characters is to prevent the SpeechSynthesis module from
- * randomly cutting out. This only happens when being spoken in a non-English language/dialect and only
- * with utterances of 200-300 words. 150 characters is seen as a safety net for preventing this.
- *
- * EXAMPLE
- * text - "sentence. sentence >150 chars. sentence."
- * return - ['sentence.' 'partial sentence' 'partial sentence.' 'sentence.']
- *
- * @param text - the input paragraph
- * @returns {[]} - the array of sentences
- */
-export function textSplitter(text)
+export const valid_chars = [
+    ',',
+    '.',
+    '!',
+    '?',
+    '£',
+    '$',
+    '€',
+    '"',
+    "'",
+    '%',
+    '&',
+    '(',
+    ')',
+    '#',
+    '~',
+    '/',
+    '<',
+    '>',
+    '-',
+    '_',
+    '+',
+    '='
+];
+
+export class DataParser
 {
-    let arr = [];
-
-    text = abbreviationConcatenation(text);
-    text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
-    if (!text)
+    /**
+     * Designed to split a paragraph of text into sentences.
+     * However, sentences longer than 150 characters are split into segments of ~150 characters and pushed
+     * one after the other to an array. Once all sentences are split and pushed on, the array is returned
+     *
+     * PURPOSE
+     * The reason for splitting sentences > 150 characters is to prevent the SpeechSynthesis module from
+     * randomly cutting out. This only happens when being spoken in a non-English language/dialect and only
+     * with utterances of 200-300 words. 150 characters is seen as a safety net for preventing this.
+     *
+     * EXAMPLE
+     * text - "sentence. sentence >150 chars. sentence."
+     * return - ['sentence.' 'partial sentence' 'partial sentence.' 'sentence.']
+     *
+     * @param text - the input paragraph
+     * @returns {[]} - the array of sentences
+     */
+    static textSplitter(text)
     {
-        let current = text;
-        let segment = current;
-        if (current.length > 150)
-        {
-            while (current.length > 150)
-            {
-                segment = current.substr(0, 150);
-                current = current.substr(150);
-                while (isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && isCharacter(current.charAt(1)))
-                {
-                    segment += current.charAt(0);
-                    current = current.substr(1);
-                }
+        if (!text)
+            return undefined;
 
-                arr.push(segment);
-            }
-
-            arr.push(current);
-        }
-        else
+        let arr = [];
+    
+        text = DataParser.abbreviationConcatenation(text);
+        text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+        if (!text)
         {
-            arr.push(segment);
-        }
-    }
-    else
-    {
-        for (let i=0; i<text.length; i++)
-        {
-            let current = text[i];
+            let current = text;
             let segment = current;
             if (current.length > 150)
             {
@@ -1426,15 +1281,15 @@ export function textSplitter(text)
                 {
                     segment = current.substr(0, 150);
                     current = current.substr(150);
-                    while (isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && isCharacter(current.charAt(1)))
+                    while (DataParser.isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && DataParser.isCharacter(current.charAt(1)))
                     {
                         segment += current.charAt(0);
                         current = current.substr(1);
                     }
-
+    
                     arr.push(segment);
                 }
-
+    
                 arr.push(current);
             }
             else
@@ -1442,36 +1297,96 @@ export function textSplitter(text)
                 arr.push(segment);
             }
         }
-    }
-
-    return arr;
-}
-
-export function isCharacter(str, caseChoice='any') {
-    if (caseChoice === 'lowercase')
-        return str.length === 1 && str.match(/[a-z0-9]/i);
-    if (caseChoice === 'uppercase')
-        return str.length === 1 && str.match(/[A-Z0-9]/i);
-
-    return str.length === 1 && str.match(/[a-zA-Z0-9]/i);
-}
-
-export function abbreviationConcatenation(str)
-{
-    let newText = "";
-
-    for (let i=0; i<str.length-1; i++)
-    {
-        const current = str.charAt(i);
-        const next = str.charAt(i+1);
-
-        if (current === '.' && isCharacter(next, 'uppercase')){}
         else
         {
-            newText += current;
+            for (let i=0; i<text.length; i++)
+            {
+                let current = text[i];
+                let segment = current;
+                if (current.length > 150)
+                {
+                    while (current.length > 150)
+                    {
+                        segment = current.substr(0, 150);
+                        current = current.substr(150);
+                        while (DataParser.isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && DataParser.isCharacter(current.charAt(1)))
+                        {
+                            segment += current.charAt(0);
+                            current = current.substr(1);
+                        }
+    
+                        arr.push(segment);
+                    }
+    
+                    arr.push(current);
+                }
+                else
+                {
+                    arr.push(segment);
+                }
+            }
         }
+    
+        return arr;
     }
+    
+    static isCharacter(str, caseChoice='any')
+    {
+        if (!str)
+            return false;
 
-    newText += str.charAt(str.length-1);
-    return newText;
+        if (str.length !== 1 || !['any', 'lowercase', 'uppercase'].includes(caseChoice))
+            return false;
+
+        if (str === ' ')
+            return false;
+
+        if (valid_chars.includes(str))
+            return true;
+
+        try
+        {
+            const num = parseInt(str);
+            if (!isNaN(num) && caseChoice === 'any')
+                return true;
+        }
+        catch(TypeError){}
+
+        if (caseChoice === 'uppercase')
+            return str >= 'A' && str <= 'Z';
+        else if (caseChoice === 'lowercase')
+            return str >= 'a' && str <= 'z';
+        else
+            return (str >= 'A' && str <= 'Z') || (str >= 'a' && str <= 'z');
+    }
+    
+    static abbreviationConcatenation(str)
+    {
+        let newText = "";
+    
+        for (let i=0; i<str.length-1; i++)
+        {
+            let current = str.charAt(i);
+
+            if (i >= 1)
+            {
+                const previous = str.charAt(i-1);
+                const next = str.charAt(i+1);
+                if (DataParser.isCharacter(previous, 'uppercase') && current === '.' && DataParser.isCharacter(next, 'uppercase'))
+                    i++;
+                else if (i>=3)
+                {
+                    const previousprevious = str.charAt(i-2);
+                    if (previousprevious === '.' && DataParser.isCharacter(previous, 'uppercase') && current === '.' && !DataParser.isCharacter(next))
+                        i++;
+                }
+            }
+
+            newText += str.charAt(i);
+        }
+    
+        newText += str.charAt(str.length-1);
+        return newText;
+    }
 }
+

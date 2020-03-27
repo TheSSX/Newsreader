@@ -26,7 +26,7 @@ var _bulletin = require("../dist/js/bulletin.js");
       var stub_retryTopic = (0, _sinon.stub)(_bulletin.Bulletin, "retryTopic").callsFake(function () {
         return true;
       });
-      var stub_getArticle = (0, _sinon.stub)(_pageparser.PageParser, "getArticle").resolves(new _article.Article("test", "test", (0, _pageparser.textSplitter)("test"), "test", "test", (0, _pageparser.textSplitter)("test"), "test"));
+      var stub_getArticle = (0, _sinon.stub)(_pageparser.PageParser, "getArticle").resolves(new _article.Article("test", "test", _pageparser.DataParser.textSplitter("test"), "test", "test", _pageparser.DataParser.textSplitter("test"), "test"));
 
       _bulletin.Bulletin.fetchNews(_preferences.sourcelinks, _preferences.topiclinks);
 

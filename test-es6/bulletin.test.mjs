@@ -1,7 +1,7 @@
 import {describe, it, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
 import {stub, spy, restore} from "sinon";
-import {PageParser, textSplitter} from "../dist/js/pageparser.js";
+import {PageParser, DataParser} from "../dist/js/pageparser.js";
 import {Article} from "../dist/js/article.js";
 import {sourcelinks, topiclinks} from "../dist/js/preferences.js";
 import {Bulletin} from "../dist/js/bulletin.js";
@@ -23,7 +23,7 @@ suite('Bulletin', function () {
                 return true;
             });
 
-            let stub_getArticle = stub(PageParser, "getArticle").resolves(new Article("test", "test", textSplitter("test"), "test", "test", textSplitter("test"), "test"));
+            let stub_getArticle = stub(PageParser, "getArticle").resolves(new Article("test", "test", DataParser.textSplitter("test"), "test", "test", DataParser.textSplitter("test"), "test"));
 
             Bulletin.fetchNews(sourcelinks, topiclinks);
             expect(stub_getArticle.callCount).to.be.equal(Object.keys(topiclinks).length);
