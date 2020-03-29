@@ -4,7 +4,7 @@
 
 import {languages} from "./language_config.js";
 import {min_sentences, max_sentences, sourcelinks, topiclinks} from "./preferences.js";
-import {checkNewsAUUK} from "./bulletin.mjs";
+import {Bulletin} from "./bulletin.mjs";
 
 const allsources = Object.keys(sourcelinks);
 const alltopics = Object.keys(topiclinks);
@@ -256,7 +256,7 @@ function play()
 {
     getSources().then(sources => {
         getTopics().then(topics => {
-            if (checkNewsAUUK(sources, topics))
+            if (Bulletin.checkNewsAUUK(sources, topics))
             {
                 document.getElementById('headline').innerHTML = "News.com.au does not report UK news";
                 return false;

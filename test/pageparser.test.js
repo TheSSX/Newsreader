@@ -107,10 +107,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
-              stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns(undefined); //Can't figure this out at all
-              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
+              stub_extractGuardianText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractGuardianText').returns(undefined);
               _context.next = 6;
               return _pageparser.PageParser.extractGuardian(topic, "test");
 
@@ -127,8 +124,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(test_link); //Manual article extraction shouldn't have been called
 
-              (0, _chai.expect)(stub_extractGuardianText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractGuardianText.called).to.be.equal(false); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", _pageparser.DataParser.textSplitter("test"), "test", "test", _pageparser.DataParser.textSplitter("test"), "test")));
               stub_extractPageData.restore();
@@ -152,8 +148,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(test_link);
-              (0, _chai.expect)(stub_extractGuardianText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractGuardianText.called).to.be.equal(true); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
@@ -254,10 +249,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
-              stub_extractBBCText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractBBCText').returns(undefined); //Can't figure this out at all
-              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
+              stub_extractBBCText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractBBCText').returns(undefined);
               _context3.next = 6;
               return _pageparser.PageParser.extractBBC(topic, "test");
 
@@ -274,8 +266,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["BBC"] + 'news/' + test_link); //Manual article extraction shouldn't have been called
 
-              (0, _chai.expect)(stub_extractBBCText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractBBCText.called).to.be.equal(false); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               stub_extractPageData.restore();
@@ -299,8 +290,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["BBC"] + 'news/' + test_link);
-              (0, _chai.expect)(stub_extractBBCText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractBBCText.called).to.be.equal(true); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
@@ -401,10 +391,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
-              stub_extractReutersText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractReutersText').returns(undefined); //Can't figure this out at all
-              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
+              stub_extractReutersText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractReutersText').returns(undefined);
               _context5.next = 6;
               return _pageparser.PageParser.extractReuters(topic, "test");
 
@@ -421,8 +408,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.oneOf([_preferences.sourcelinks["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]); //Manual article extraction shouldn't have been called
 
-              (0, _chai.expect)(stub_extractReutersText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractReutersText.called).to.be.equal(false); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               stub_extractPageData.restore();
@@ -446,8 +432,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.oneOf([_preferences.sourcelinks["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
-              (0, _chai.expect)(stub_extractReutersText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractReutersText.called).to.be.equal(true); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
@@ -548,10 +533,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
-              stub_extractSkyText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractSkyText').returns(undefined); //Can't figure this out at all
-              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
+              stub_extractSkyText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractSkyText').returns(undefined);
               _context7.next = 6;
               return _pageparser.PageParser.extractSky(topic, "test");
 
@@ -568,8 +550,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.oneOf([_preferences.sourcelinks["Sky News"] + 'story/' + test_link, 'https://www.skysports.com/' + test_link]); //Manual article extraction shouldn't have been called
 
-              (0, _chai.expect)(stub_extractSkyText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractSkyText.called).to.be.equal(false); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               stub_extractPageData.restore();
@@ -593,8 +574,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.oneOf([_preferences.sourcelinks["Sky News"] + 'story/' + test_link, 'https://www.skysports.com/' + test_link]);
-              (0, _chai.expect)(stub_extractSkyText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractSkyText.called).to.be.equal(true); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
@@ -696,10 +676,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
               stub_extractAPHeadline = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractAPHeadline').returns(undefined);
-              stub_extractAPText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractAPText').returns(undefined); //Can't figure this out at all
-              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
+              stub_extractAPText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractAPText').returns(undefined);
               _context9.next = 7;
               return _pageparser.PageParser.extractAP(topic, "test");
 
@@ -717,8 +694,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["Associated Press"] + test_link); //Manual article extraction shouldn't have been called
 
               (0, _chai.expect)(stub_extractAPHeadline.called).to.be.equal(false);
-              (0, _chai.expect)(stub_extractAPText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractAPText.called).to.be.equal(false); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               stub_extractPageData.restore();
@@ -745,8 +721,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["Associated Press"] + test_link);
               (0, _chai.expect)(stub_extractAPHeadline.called).to.be.equal(true);
-              (0, _chai.expect)(stub_extractAPText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractAPText.called).to.be.equal(true); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
@@ -852,10 +827,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
-              stub_extractEveningStandardText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractEveningStandardText').returns(undefined); //Can't figure this out at all
-              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
+              stub_extractEveningStandardText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractEveningStandardText').returns(undefined);
               _context11.next = 6;
               return _pageparser.PageParser.extractEveningStandard(topic, "test");
 
@@ -872,8 +844,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["Evening Standard"] + test_link); //Manual article extraction shouldn't have been called
 
-              (0, _chai.expect)(stub_extractEveningStandardText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractEveningStandardText.called).to.be.equal(false); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               stub_extractPageData.restore();
@@ -897,8 +868,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["Evening Standard"] + test_link);
-              (0, _chai.expect)(stub_extractEveningStandardText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractEveningStandardText.called).to.be.equal(true); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
@@ -999,10 +969,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
-              stub_extractIndependentText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractIndependentText').returns(undefined); //Can't figure this out at all
-              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
+              stub_extractIndependentText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractIndependentText').returns(undefined);
               _context13.next = 6;
               return _pageparser.PageParser.extractIndependent(topic, "test");
 
@@ -1019,8 +986,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["The Independent"] + 'news/' + test_link); //Manual article extraction shouldn't have been called
 
-              (0, _chai.expect)(stub_extractIndependentText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractIndependentText.called).to.be.equal(false); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               stub_extractPageData.restore();
@@ -1044,8 +1010,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["The Independent"] + 'news/' + test_link);
-              (0, _chai.expect)(stub_extractIndependentText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractIndependentText.called).to.be.equal(true); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
@@ -1146,10 +1111,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
-              stub_extractITVText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractITVText').returns(undefined); //Can't figure this out at all
-              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
+              stub_extractITVText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractITVText').returns(undefined);
               _context15.next = 6;
               return _pageparser.PageParser.extractITV(topic, "test");
 
@@ -1166,14 +1128,13 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["ITV News"] + 'news/' + test_link); //Manual article extraction shouldn't have been called
 
-              (0, _chai.expect)(stub_extractITVText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractITVText.called).to.be.equal(false); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               stub_extractPageData.restore();
               stub_summarise.restore();
               stub_extractITVText.restore();
-              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<title>Test headline - ITV News</title><p>Test</p><a href="/news/' + test_link + '"></a><p>Test</p>');
+              stub_extractPageData = (0, _sinon.stub)(_pageparser.PageParser, 'extractPageData').returns('<h1 class="update__title update__title--large">Test headline</h1><p>Test</p><a href="/news/' + test_link + '"></a><p>Test</p>');
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(undefined);
               stub_extractITVText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractITVText').returns("Test article");
               _context15.next = 25;
@@ -1191,8 +1152,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(_preferences.sourcelinks["ITV News"] + 'news/' + test_link);
-              (0, _chai.expect)(stub_extractITVText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractITVText.called).to.be.equal(true); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');
@@ -1293,10 +1253,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
 
               stub_summarise = (0, _sinon.stub)(_summarise.Summarise, 'summarise').returns(valid_test_smmry_json); //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
 
-              stub_extractNewsAUText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractNewsAUText').returns(undefined); //Can't figure this out at all
-              //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-              //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
+              stub_extractNewsAUText = (0, _sinon.stub)(_articleextractor.ArticleExtractor, 'extractNewsAUText').returns(undefined);
               _context17.next = 6;
               return _pageparser.PageParser.extractNewsAU(topic, "test");
 
@@ -1313,8 +1270,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(test_link); //Manual article extraction shouldn't have been called
 
-              (0, _chai.expect)(stub_extractNewsAUText.called).to.be.equal(false); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractNewsAUText.called).to.be.equal(false); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               stub_extractPageData.restore();
@@ -1338,8 +1294,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               (0, _chai.expect)(stub_summarise.called).to.be.equal(true);
               summarise_arg = stub_summarise.getCall(-1).args[0];
               (0, _chai.expect)(summarise_arg).to.be.equal(test_link);
-              (0, _chai.expect)(stub_extractNewsAUText.called).to.be.equal(true); //expect(stub_callTranslation.called).to.be.equal(false);
-              //My hacky way of determining if the result is an Article object
+              (0, _chai.expect)(stub_extractNewsAUText.called).to.be.equal(true); //My hacky way of determining if the result is an Article object
 
               (0, _chai.expect)((0, _typeof2["default"])(result)).to.be.equal((0, _typeof2["default"])(new _article.Article("test", "test", "test", "test", "test", "test", "test")));
               (0, _chai.expect)(result.allheadline).to.be.equal('Test headline');

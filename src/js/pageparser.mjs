@@ -129,9 +129,6 @@ export class PageParser
                     text = text.split(' - ')[1];
                 }
             }
-            else {
-                return undefined;
-            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -148,10 +145,6 @@ export class PageParser
                     {
                         text = text.split(' - ')[1];
                     }
-                }
-                else
-                {
-                    return undefined;
                 }
             }
         }
@@ -235,10 +228,6 @@ export class PageParser
                     text = text.split(' - ')[1];
                 }
             }
-            else
-            {
-                return undefined;
-            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -255,10 +244,6 @@ export class PageParser
                     {
                         text = text.split(' - ')[1];
                     }
-                }
-                else
-                {
-                    return undefined;
                 }
             }
         }
@@ -366,10 +351,6 @@ export class PageParser
                     text = text.split(' - ')[1];
                 }
             }
-            else
-            {
-                return undefined;
-            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -380,10 +361,6 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' - Reuters')[0];      //get headline from article data
                 text = ArticleExtractor.extractReutersText(data);
-                if (text === undefined)
-                {
-                    return undefined;
-                }
             }
 
             if (text !== undefined)
@@ -392,9 +369,6 @@ export class PageParser
                 {
                     text = text.split(' - ')[1];
                 }
-            }
-            else {
-                return undefined;
             }
         }
 
@@ -520,10 +494,6 @@ export class PageParser
                     text = text.split(' - ')[1];
                 }
             }
-            else
-            {
-                return undefined;
-            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -541,20 +511,10 @@ export class PageParser
                         text = text.split(' - ')[1];
                     }
                 }
-                else
-                {
-                    return  undefined;
-                }
             }
         }
 
-        if (headline === undefined || text === undefined || headline.includes('?'))		//not sure this includes statement works
-        {
-            return undefined;
-        }
-
-        //Checking of a live coverage article. Might need to rejig this to have a technique for a bunch of articles
-        if (headline.includes("LIVE") || headline.includes("Live"))
+        if (headline === undefined || text === undefined || headline.includes('?') || headline.includes("LIVE") || headline.includes("Live"))		//not sure this includes statement works
         {
             return undefined;
         }
@@ -646,10 +606,6 @@ export class PageParser
                     text = text.split(' — ')[1];
                 }
             }
-            else
-            {
-                return undefined;
-            }
         }
         else    //SMMRY API working fine
         {
@@ -660,9 +616,6 @@ export class PageParser
             if (error === 2) {
                 headline = ArticleExtractor.extractAPHeadline(data);   //SMMRY can't find the headline in AP articles. So we extract it ourselves
                 text = ArticleExtractor.extractAPText(data);
-                if (text === undefined) {
-                    return undefined;
-                }
             }
 
             if (text !== undefined)
@@ -671,10 +624,6 @@ export class PageParser
                 {
                     text = text.split(' — ')[1];
                 }
-            }
-            else
-            {
-                return undefined;
             }
 
             if (!headline)
@@ -768,10 +717,6 @@ export class PageParser
         {
             headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
             text = ArticleExtractor.extractEveningStandardText(data);
-            if (text === undefined)
-            {
-                return undefined;
-            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -782,10 +727,6 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' | London Evening Standard')[0];      //get headline from article data
                 text = ArticleExtractor.extractEveningStandardText(data);
-                if (text === undefined)
-                {
-                    return undefined;
-                }
             }
         }
 
@@ -881,10 +822,6 @@ export class PageParser
             }
 
             text = ArticleExtractor.extractIndependentText(data);
-            if (text === undefined)
-            {
-                return undefined;
-            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -895,10 +832,6 @@ export class PageParser
             {
                 headline = data.split('<title>')[1].split(' | ')[0];      //get headline from article data
                 text = ArticleExtractor.extractIndependentText(data);
-                if (text === undefined)
-                {
-                    return undefined;
-                }
             }
         }
 
@@ -993,20 +926,10 @@ export class PageParser
                 if (headline.split('</title>')[0])
                 {
                     headline = headline.split('</title>')[0];      //get headline from article data
-                } else
-                {
-                    return undefined;
                 }
-            } else
-            {
-                return undefined;
             }
 
             text = ArticleExtractor.extractNewsAUText(data);
-            if (text === undefined)
-            {
-                return undefined;
-            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -1021,20 +944,10 @@ export class PageParser
                     if (headline.split('</title>')[0])
                     {
                         headline = headline.split('</title>')[0];      //get headline from article data
-                    } else
-                    {
-                        return undefined;
                     }
-                } else
-                {
-                    return undefined;
                 }
 
                 text = ArticleExtractor.extractNewsAUText(data);
-                if (text === undefined)
-                {
-                    return undefined;
-                }
             }
         }
 
@@ -1077,7 +990,6 @@ export class PageParser
         for (let i = 0; i < linksarr.length; i += 1)
         {
             const current = linksarr[i];
-            //if (current.matches("/^[a-z0-9]+$/"))
             if (current.includes('-') && current.includes("news/") && !current.includes("topic/") && !current.includes("meet-the-team/") && !current.includes("/uk-weather-forecast-") && !current.includes("/assets/") && /\d/.test(current))
             {
                 articlelinks.push(sourcelinks[publisher] + current);
@@ -1100,16 +1012,16 @@ export class PageParser
         let data = await PageParser.extractPageData(randomlink);  //fetch data from article page
         let timeout = 0;
 
-        while (data === undefined && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
+        while (!data && timeout < 3)		//sometimes Reuters article exists on www.reuters and not uk.reuters or vice versa. Currently, just choose a different article
         {
             randomlink = links[Math.floor(Math.random() * links.length)];  //select a random article
             data = await PageParser.extractPageData(randomlink);  //fetch data from article page
             timeout += 1;
+        }
 
-            if (data === undefined && timeout === 3 || (randomlink === undefined && timeout === 3))
-            {
-                return undefined;
-            }
+        if (!data && timeout === 3 || (!randomlink && timeout === 3))
+        {
+            return undefined;
         }
 
         let headline, text;
@@ -1128,9 +1040,6 @@ export class PageParser
                 if (headline.split(' - ITV News')[0])
                 {
                     headline = headline.split(' - ITV News')[0];      //get headline from article data
-                } else
-                {
-                    return undefined;
                 }
             } else if (data.split('<h1 class="update__title update__title--large">')[1])
             {
@@ -1138,20 +1047,10 @@ export class PageParser
                 if (headline.split('</h1>')[0])
                 {
                     headline = headline.split('</h1>')[0];
-                } else
-                {
-                    return undefined;
                 }
-            } else
-            {
-                return undefined;
             }
 
             text = ArticleExtractor.extractITVText(data);
-            if (text === undefined)
-            {
-                return undefined;
-            }
         } else    //SMMRY API working fine
         {
             headline = smmrydata['sm_api_title'];     //article headline returned
@@ -1166,9 +1065,6 @@ export class PageParser
                     if (headline.split(' - ITV News')[0])
                     {
                         headline = headline.split(' - ITV News')[0];      //get headline from article data
-                    } else
-                    {
-                        return undefined;
                     }
                 } else if (data.split('<h1 class="update__title update__title--large">')[1])
                 {
@@ -1176,20 +1072,10 @@ export class PageParser
                     if (headline.split('</h1>')[0])
                     {
                         headline = headline.split('</h1>')[0];
-                    } else
-                    {
-                        return undefined;
                     }
-                } else
-                {
-                    return undefined;
                 }
 
                 text = ArticleExtractor.extractITVText(data);
-                if (text === undefined)
-                {
-                    return undefined;
-                }
             }
         }
 

@@ -1,4 +1,4 @@
-import {describe, it, suite, beforeEach, afterEach} from "mocha";
+import {describe, it, xit, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
 import {stub, spy, restore} from "sinon";
 import {PageParser, DataParser} from "../dist/js/pageparser.js";
@@ -14,37 +14,111 @@ suite('Bulletin', function () {
 
     describe('fetchNews', function () {
 
-        // TODO finish this off by trying to stub read of Article
-        // Currently getting error TypeError: Cannot stub non-existent own property read
-        // Articles online indicating a module called proxyquire might be needed
-        it('Should select an article from each topic and read it aloud', function () {
+        //ReferenceError: SpeechSynthesisUtterance is not defined
+        xit('Should select an article from each topic and read it aloud', async function () {
 
-            const stub_retryTopic = stub(Bulletin, "retryTopic").callsFake(function () {
-                return true;
-            });
+            const article = new Article("test", "test", ["test"], "test", "test", ["text"], "test");
+            let stub_getArticle = stub(PageParser, "getArticle").resolves(article);
+            let stub_retryTopic = stub(Bulletin, "retryTopic").returns(true);
+            let stub_checkSentences = stub(Bulletin, "checkSentences").resolves(article);
+            let stub_checkTranslation = stub(Bulletin, "checkTranslation").resolves(article);
+            let stub_readArticles = stub(Bulletin, "readArticles").returns(true);
 
-            let stub_getArticle = stub(PageParser, "getArticle").resolves(new Article("test", "test", DataParser.textSplitter("test"), "test", "test", DataParser.textSplitter("test"), "test"));
+            let test_sources = {};
+            for (let i=0; i<Object.keys(sourcelinks).length; i++)
+            {
+                const key = Object.keys(sourcelinks)[i];
+                test_sources[key] = Math.random() >= 0.5;
+            }
 
-            Bulletin.fetchNews(sourcelinks, topiclinks);
-            expect(stub_getArticle.callCount).to.be.equal(Object.keys(topiclinks).length);
+            let test_topics = {};
+            let counter = 0;
+            for (let i=0; i<Object.keys(topiclinks).length; i++)
+            {
+                const key = Object.keys(topiclinks)[i];
+                const val = Math.random() >= 0.5;
+                test_topics[key] = val;
+                if (val)
+                    counter++;
+            }
+
+            await Bulletin.fetchNews(test_sources, test_topics);
+            expect(stub_getArticle.callCount).to.be.equal(counter);
             expect(stub_retryTopic.called).to.be.equal(false);
+            expect(stub_checkSentences.called).to.be.equal(true);
+            expect(stub_checkTranslation.called).to.be.equal(true);
+            expect(stub_readArticles.called).to.be.equal(true);
 
-            stub_getArticle.restore();
+            restore();
+
             stub_getArticle = stub(PageParser, "getArticle").throws(new TypeError());
-            Bulletin.fetchNews(sourcelinks, topiclinks);
-            expect(stub_getArticle.callCount).to.be.equal(Object.keys(topiclinks).length);
-            expect(stub_retryTopic.called).to.be.equal(true);
-            const argument = stub_retryTopic.getCall(-1).args[1];
-            expect(argument).to.be.equal(2);
+            stub_retryTopic = stub(Bulletin, "retryTopic").returns(true);
+            stub_checkSentences = stub(Bulletin, "checkSentences").resolves(article);
+            stub_checkTranslation = stub(Bulletin, "checkTranslation").resolves(article);
+            stub_readArticles = stub(Bulletin, "readArticles").returns(true);
+
+            await Bulletin.fetchNews(test_sources, test_topics);
+            expect(stub_getArticle.callCount).to.be.equal(counter);
+            expect(stub_retryTopic.callCount).to.be.equal(counter);
+            expect(stub_checkSentences.called).to.be.equal(true);
+            expect(stub_checkTranslation.called).to.be.equal(true);
+            expect(stub_readArticles.called).to.be.equal(true);
         });
 
         it('Should retry fetching an article for a topic if initial attempt did not succeed', function () {
             const stub_getArticle = stub(PageParser, "getArticle").throws(new TypeError());
-            const spy_retryTopic = spy(Bulletin, "retryTopic");
+            const stub_retryTopic = stub(Bulletin, "retryTopic").returns(true);
 
-            Bulletin.retryTopic(Object.keys(topiclinks)[0], 2);
-            expect(stub_getArticle.callCount).to.be.equal(9);
-            expect(spy_retryTopic.callCount).to.be.equal(9);
+            let test_sources = {};
+            for (let i=0; i<Object.keys(sourcelinks).length; i++)
+            {
+                const key = Object.keys(sourcelinks)[i];
+                test_sources[key] = Math.random() >= 0.5;
+            }
+
+            let test_topics = {};
+            let counter = 0;
+            for (let i=0; i<Object.keys(topiclinks).length; i++)
+            {
+                const key = Object.keys(topiclinks)[i];
+                const val = Math.random() >= 0.5;
+                test_topics[key] = val;
+                if (val)
+                    counter++;
+            }
+
+            Bulletin.fetchNews(test_sources, test_topics);
+            expect(stub_getArticle.callCount).to.be.equal(counter);
+            expect(stub_retryTopic.callCount).to.be.equal(counter);
+        });
+
+        it('Should prevent UK topic and News.com.au being attempted', function () {
+
+            let stub_checkNewsAUUK = stub(Bulletin, 'checkNewsAUUK').returns(true);
+            let test_sources = {};
+            let test_topics = {};
+
+            for (let i=0; i<Object.keys(sourcelinks).length; i++)
+            {
+                const key = Object.keys(sourcelinks)[i];
+                if (key === 'News.com.au')
+                    test_sources[key] = true;
+                else
+                    test_sources[key] = false;
+            }
+
+            for (let i=0; i<Object.keys(topiclinks).length; i++)
+            {
+                const key = Object.keys(topiclinks)[i];
+                if (key === 'uk')
+                    test_sources[key] = true;
+                else
+                    test_sources[key] = false;
+            }
+
+            let result = Bulletin.fetchNews(test_sources, test_topics);
+            expect(result).to.be.equal(false);
+            expect(stub_checkNewsAUUK.called).to.be.equal(true);
         });
     });
 });

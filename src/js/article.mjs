@@ -1,6 +1,6 @@
 import {Speech} from "./speech.mjs";
 import {min_sentences, max_sentences} from "./preferences.js";
-import {abbreviationConcatenation} from "./pageparser.mjs";
+import {DataParser} from "./pageparser.mjs";
 
 /**
  Class for an article object

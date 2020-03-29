@@ -56,12 +56,15 @@ var Article = /*#__PURE__*/function () {
       new _speech.Speech(this.topic, this.language).speak();
 
       if (this.language === "English") {
-        var headline = DataParser.abbreviationConcatenation(this.allheadline);
+        var headline = _pageparser.DataParser.abbreviationConcatenation(this.allheadline);
+
         headline = this.allheadline.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
         if (headline) for (var i = 0; i < headline.length; i++) {
           new _speech.Speech(headline[i], this.language).speak();
         } else new _speech.Speech(this.allheadline, this.language).speak();
-        var text = DataParser.abbreviationConcatenation(this.alltext);
+
+        var text = _pageparser.DataParser.abbreviationConcatenation(this.alltext);
+
         text = this.alltext.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
         if (text) for (var _i = 0; _i < this.sentences; _i++) {
           new _speech.Speech(text[_i], this.language).speak();

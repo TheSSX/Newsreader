@@ -255,7 +255,7 @@ function playPauseToggle() {
 function play() {
   getSources().then(function (sources) {
     getTopics().then(function (topics) {
-      if ((0, _bulletin.checkNewsAUUK)(sources, topics)) {
+      if (_bulletin.Bulletin.checkNewsAUUK(sources, topics)) {
         document.getElementById('headline').innerHTML = "News.com.au does not report UK news";
         return false;
       }

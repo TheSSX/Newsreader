@@ -5,7 +5,6 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.checkNewsAUUK = checkNewsAUUK;
 exports.Bulletin = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
@@ -74,6 +73,8 @@ var Bulletin = /*#__PURE__*/function () {
       // };
       // window.speechSynthesis.speak(utterance);
       // return true;
+      //News.com.au does not have UK news
+      if (Bulletin.checkNewsAUUK(sources, topics)) return false;
       articles = [];
       remaining = Object.keys(topics).length;
 
@@ -85,15 +86,6 @@ var Bulletin = /*#__PURE__*/function () {
         if (!topics[topic]) {
           remaining--;
           return "continue";
-        } //News.com.au does not have UK news.
-
-
-        if (topic === "uk" && source === "News.com.au") {
-          if (checkNewsAUUK(sources, topics)) return "continue";
-        }
-
-        while (topic === "uk" && source === "News.com.au") {
-          source = Object.keys(_preferences.sourcelinks)[Math.floor(Math.random() * Object.keys(_preferences.sourcelinks).length)];
         }
 
         while (!sources[source]) {
@@ -570,6 +562,21 @@ var Bulletin = /*#__PURE__*/function () {
 
       return getTranslatedArticle;
     }()
+  }, {
+    key: "checkNewsAUUK",
+    value: function checkNewsAUUK(sources, topics) {
+      if (!sources['News.com.au'] || !topics['uk']) return false;
+
+      for (var i = 0; i < Object.keys(sources).length; i++) {
+        if (sources[Object.keys(sources)[i]] && Object.keys(sources)[i] !== 'News.com.au') return false;
+      }
+
+      for (var _i2 = 0; _i2 < Object.keys(topics).length; _i2++) {
+        if (topics[Object.keys(topics)[_i2]] && Object.keys(topics)[_i2] !== 'uk') return false;
+      }
+
+      return true;
+    }
   }]);
   return Bulletin;
 }(); //Thanks to user Steve Harrison on Stack Overflow
@@ -584,18 +591,4 @@ function capitalizeFirstLetter(string) {
   } catch (TypeError) {
     return string;
   }
-}
-
-function checkNewsAUUK(sources, topics) {
-  if (!sources['News.com.au'] || !topics['uk']) return false;
-
-  for (var i = 0; i < Object.keys(sources).length; i++) {
-    if (sources[Object.keys(sources)[i]] && Object.keys(sources)[i] !== 'News.com.au') return false;
-  }
-
-  for (var _i2 = 0; _i2 < Object.keys(topics).length; _i2++) {
-    if (topics[Object.keys(topics)[_i2]] && Object.keys(topics)[_i2] !== 'uk') return false;
-  }
-
-  return true;
 }

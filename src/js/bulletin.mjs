@@ -47,6 +47,10 @@ export class Bulletin
         // window.speechSynthesis.speak(utterance);
         // return true;
 
+        //News.com.au does not have UK news
+        if (Bulletin.checkNewsAUUK(sources, topics))
+            return false;
+
         articles = [];
         remaining = Object.keys(topics).length;
 
@@ -60,19 +64,8 @@ export class Bulletin
                 continue;
             }
 
-            //News.com.au does not have UK news.
-            if (topic === "uk" && source === "News.com.au")
+            while (!sources[source])
             {
-                if (checkNewsAUUK(sources, topics))
-                    continue
-            }
-
-            while (topic === "uk" && source === "News.com.au")
-            {
-                source = Object.keys(sourcelinks)[Math.floor(Math.random() * Object.keys(sourcelinks).length)];
-            }
-
-            while (!sources[source]) {
                 source = Object.keys(sourcelinks)[Math.floor(Math.random() * Object.keys(sourcelinks).length)];
             }
 
@@ -337,6 +330,26 @@ export class Bulletin
             return new Article(publisher, topic, article.headline, headline, article.link, article.alltext, text, language_choice);
         }
     }
+
+    static checkNewsAUUK(sources, topics)
+    {
+        if (!sources['News.com.au'] || !topics['uk'])
+            return false;
+
+        for (let i=0; i<Object.keys(sources).length; i++)
+        {
+            if (sources[Object.keys(sources)[i]] && Object.keys(sources)[i] !== 'News.com.au')
+                return false;
+        }
+
+        for (let i=0; i<Object.keys(topics).length; i++)
+        {
+            if (topics[Object.keys(topics)[i]] && Object.keys(topics)[i] !== 'uk')
+                return false;
+        }
+
+        return true;
+    }
 }
 
 //Thanks to user Steve Harrison on Stack Overflow
@@ -350,24 +363,4 @@ function capitalizeFirstLetter(string) {
     {
         return string;
     }
-}
-
-export function checkNewsAUUK(sources, topics)
-{
-    if (!sources['News.com.au'] || !topics['uk'])
-        return false;
-
-    for (let i=0; i<Object.keys(sources).length; i++)
-    {
-        if (sources[Object.keys(sources)[i]] && Object.keys(sources)[i] !== 'News.com.au')
-            return false;
-    }
-
-    for (let i=0; i<Object.keys(topics).length; i++)
-    {
-        if (topics[Object.keys(topics)[i]] && Object.keys(topics)[i] !== 'uk')
-            return false;
-    }
-
-    return true;
 }
