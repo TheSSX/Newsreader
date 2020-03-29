@@ -104,43 +104,41 @@ var Bulletin = /*#__PURE__*/function () {
             remaining--;
 
             if (remaining === 0) {
-              var utterance = new SpeechSynthesisUtterance("");
-              utterance.onend = /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
-                var nextArticle;
-                return _regenerator["default"].wrap(function _callee$(_context) {
-                  while (1) {
-                    switch (_context.prev = _context.next) {
-                      case 0:
-                        nextArticle = articles.shift();
+              var nextArticle = articles.shift();
 
-                        if (!(nextArticle === undefined)) {
-                          _context.next = 5;
-                          break;
-                        }
+              if (nextArticle === undefined) {
+                chrome.runtime.sendMessage({
+                  greeting: "stop"
+                });
+                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                return true;
+              }
 
-                        chrome.runtime.sendMessage({
-                          greeting: "stop"
-                        });
-                        chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                        return _context.abrupt("return", true);
-
-                      case 5:
-                        Bulletin.checkSentences(nextArticle).then(function (newArticle) {
-                          Bulletin.checkTranslation(newArticle).then(function (result) {
-                            nextArticle = result;
-                            Bulletin.readArticles(nextArticle, articles);
-                          });
-                        });
-
-                      case 6:
-                      case "end":
-                        return _context.stop();
-                    }
-                  }
-                }, _callee);
-              }));
-              window.speechSynthesis.speak(utterance);
-              return true;
+              Bulletin.checkSentences(nextArticle).then(function (newArticle) {
+                Bulletin.checkTranslation(newArticle).then(function (result) {
+                  nextArticle = result;
+                  Bulletin.readArticles(nextArticle, articles);
+                  return true;
+                });
+              }); // const utterance = new SpeechSynthesisUtterance("");
+              // utterance.onend = async function () {
+              //     let nextArticle = articles.shift();
+              //     if (nextArticle === undefined)
+              //     {
+              //         chrome.runtime.sendMessage({greeting: "stop"});
+              //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+              //         return true;
+              //     }
+              //
+              //     Bulletin.checkSentences(nextArticle).then(newArticle => {
+              //         Bulletin.checkTranslation(newArticle).then(result => {
+              //             nextArticle = result;
+              //             Bulletin.readArticles(nextArticle, articles);
+              //         });
+              //     });
+              // };
+              //
+              // window.speechSynthesis.speak(utterance);
             }
           })["catch"](function () {
             Bulletin.retryTopic(topic, 2);
@@ -174,43 +172,41 @@ var Bulletin = /*#__PURE__*/function () {
           remaining--;
 
           if (remaining === 0) {
-            var utterance = new SpeechSynthesisUtterance("");
-            utterance.onend = /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2() {
-              var nextArticle;
-              return _regenerator["default"].wrap(function _callee2$(_context2) {
-                while (1) {
-                  switch (_context2.prev = _context2.next) {
-                    case 0:
-                      nextArticle = articles.shift();
+            var nextArticle = articles.shift();
 
-                      if (!(nextArticle === undefined)) {
-                        _context2.next = 5;
-                        break;
-                      }
+            if (nextArticle === undefined) {
+              chrome.runtime.sendMessage({
+                greeting: "stop"
+              });
+              chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+              return true;
+            }
 
-                      chrome.runtime.sendMessage({
-                        greeting: "stop"
-                      });
-                      chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                      return _context2.abrupt("return", true);
-
-                    case 5:
-                      Bulletin.checkSentences(nextArticle).then(function (newArticle) {
-                        Bulletin.checkTranslation(newArticle).then(function (result) {
-                          nextArticle = result;
-                          Bulletin.readArticles(nextArticle, articles);
-                        });
-                      });
-
-                    case 6:
-                    case "end":
-                      return _context2.stop();
-                  }
-                }
-              }, _callee2);
-            }));
-            window.speechSynthesis.speak(utterance);
-            return true;
+            Bulletin.checkSentences(nextArticle).then(function (newArticle) {
+              Bulletin.checkTranslation(newArticle).then(function (result) {
+                nextArticle = result;
+                Bulletin.readArticles(nextArticle, articles);
+                return true;
+              });
+            }); // const utterance = new SpeechSynthesisUtterance("");
+            // utterance.onend = async function () {
+            //     let nextArticle = articles.shift();
+            //     if (nextArticle === undefined)
+            //     {
+            //         chrome.runtime.sendMessage({greeting: "stop"});
+            //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+            //         return true;
+            //     }
+            //
+            //     Bulletin.checkSentences(nextArticle).then(newArticle => {
+            //         Bulletin.checkTranslation(newArticle).then(result => {
+            //             nextArticle = result;
+            //             Bulletin.readArticles(nextArticle, articles);
+            //         });
+            //     });
+            // };
+            //
+            // window.speechSynthesis.speak(utterance);
           }
         })["catch"](function () {
           Bulletin.retryTopic(topic, ++attempt);
@@ -221,43 +217,41 @@ var Bulletin = /*#__PURE__*/function () {
             remaining--;
 
             if (remaining === 0) {
-              var utterance = new SpeechSynthesisUtterance("");
-              utterance.onend = /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3() {
-                var nextArticle;
-                return _regenerator["default"].wrap(function _callee3$(_context3) {
-                  while (1) {
-                    switch (_context3.prev = _context3.next) {
-                      case 0:
-                        nextArticle = articles.shift();
+              var nextArticle = articles.shift();
 
-                        if (!(nextArticle === undefined)) {
-                          _context3.next = 5;
-                          break;
-                        }
+              if (nextArticle === undefined) {
+                chrome.runtime.sendMessage({
+                  greeting: "stop"
+                });
+                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                return true;
+              }
 
-                        chrome.runtime.sendMessage({
-                          greeting: "stop"
-                        });
-                        chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                        return _context3.abrupt("return", true);
-
-                      case 5:
-                        Bulletin.checkSentences(nextArticle).then(function (newArticle) {
-                          Bulletin.checkTranslation(newArticle).then(function (result) {
-                            nextArticle = result;
-                            Bulletin.readArticles(nextArticle, articles);
-                          });
-                        });
-
-                      case 6:
-                      case "end":
-                        return _context3.stop();
-                    }
-                  }
-                }, _callee3);
-              }));
-              window.speechSynthesis.speak(utterance);
-              return true;
+              Bulletin.checkSentences(nextArticle).then(function (newArticle) {
+                Bulletin.checkTranslation(newArticle).then(function (result) {
+                  nextArticle = result;
+                  Bulletin.readArticles(nextArticle, articles);
+                  return true;
+                });
+              }); // const utterance = new SpeechSynthesisUtterance("");
+              // utterance.onend = async function () {
+              //     let nextArticle = articles.shift();
+              //     if (nextArticle === undefined)
+              //     {
+              //         chrome.runtime.sendMessage({greeting: "stop"});
+              //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+              //         return true;
+              //     }
+              //
+              //     Bulletin.checkSentences(nextArticle).then(newArticle => {
+              //         Bulletin.checkTranslation(newArticle).then(result => {
+              //             nextArticle = result;
+              //             Bulletin.readArticles(nextArticle, articles);
+              //         });
+              //     });
+              // };
+              //
+              // window.speechSynthesis.speak(utterance);
             }
           } else {
           Bulletin.retryTopic(topic, ++attempt); // try again, increase number of attempts
@@ -305,16 +299,16 @@ var Bulletin = /*#__PURE__*/function () {
       });
       current.read();
       var utterance = new SpeechSynthesisUtterance("");
-      utterance.onend = /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
+      utterance.onend = /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
         var nextArticle;
-        return _regenerator["default"].wrap(function _callee4$(_context4) {
+        return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context.prev = _context.next) {
               case 0:
                 nextArticle = articles.shift();
 
                 if (!(nextArticle === undefined)) {
-                  _context4.next = 5;
+                  _context.next = 5;
                   break;
                 }
 
@@ -322,7 +316,7 @@ var Bulletin = /*#__PURE__*/function () {
                   greeting: "stop"
                 });
                 chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                return _context4.abrupt("return", true);
+                return _context.abrupt("return", true);
 
               case 5:
                 Bulletin.checkSentences(nextArticle).then(function (newArticle) {
@@ -334,22 +328,22 @@ var Bulletin = /*#__PURE__*/function () {
 
               case 6:
               case "end":
-                return _context4.stop();
+                return _context.stop();
             }
           }
-        }, _callee4);
+        }, _callee);
       }));
       window.speechSynthesis.speak(utterance);
     }
   }, {
     key: "checkSentences",
     value: function () {
-      var _checkSentences = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(article) {
-        return _regenerator["default"].wrap(function _callee5$(_context5) {
+      var _checkSentences = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(article) {
+        return _regenerator["default"].wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                return _context5.abrupt("return", new Promise(function (resolve, reject) {
+                return _context2.abrupt("return", new Promise(function (resolve, reject) {
                   chrome.storage.local.get(['sentences'], function (result) {
                     var sentences = result['sentences'];
 
@@ -363,10 +357,10 @@ var Bulletin = /*#__PURE__*/function () {
 
               case 1:
               case "end":
-                return _context5.stop();
+                return _context2.stop();
             }
           }
-        }, _callee5);
+        }, _callee2);
       }));
 
       function checkSentences(_x) {
@@ -378,36 +372,36 @@ var Bulletin = /*#__PURE__*/function () {
   }, {
     key: "checkTranslation",
     value: function () {
-      var _checkTranslation = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee7(article) {
-        return _regenerator["default"].wrap(function _callee7$(_context7) {
+      var _checkTranslation = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(article) {
+        return _regenerator["default"].wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                return _context7.abrupt("return", new Promise(function (resolve, reject) {
+                return _context4.abrupt("return", new Promise(function (resolve, reject) {
                   chrome.storage.local.get(['language'], /*#__PURE__*/function () {
-                    var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee6(result) {
+                    var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(result) {
                       var language_choice, translatedArticle;
-                      return _regenerator["default"].wrap(function _callee6$(_context6) {
+                      return _regenerator["default"].wrap(function _callee3$(_context3) {
                         while (1) {
-                          switch (_context6.prev = _context6.next) {
+                          switch (_context3.prev = _context3.next) {
                             case 0:
                               language_choice = result['language'];
 
                               if (!language_choice) {
-                                _context6.next = 7;
+                                _context3.next = 7;
                                 break;
                               }
 
                               if (!(language_choice !== 'English')) {
-                                _context6.next = 7;
+                                _context3.next = 7;
                                 break;
                               }
 
-                              _context6.next = 5;
+                              _context3.next = 5;
                               return Bulletin.getTranslatedArticle(article, language_choice);
 
                             case 5:
-                              translatedArticle = _context6.sent;
+                              translatedArticle = _context3.sent;
 
                               if (translatedArticle !== undefined) {
                                 article = translatedArticle;
@@ -420,24 +414,24 @@ var Bulletin = /*#__PURE__*/function () {
 
                             case 8:
                             case "end":
-                              return _context6.stop();
+                              return _context3.stop();
                           }
                         }
-                      }, _callee6);
+                      }, _callee3);
                     }));
 
                     return function (_x3) {
-                      return _ref5.apply(this, arguments);
+                      return _ref2.apply(this, arguments);
                     };
                   }());
                 }));
 
               case 1:
               case "end":
-                return _context7.stop();
+                return _context4.stop();
             }
           }
-        }, _callee7);
+        }, _callee4);
       }));
 
       function checkTranslation(_x2) {
@@ -449,51 +443,51 @@ var Bulletin = /*#__PURE__*/function () {
   }, {
     key: "getTranslatedArticle",
     value: function () {
-      var _getTranslatedArticle = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee8(article, language_choice) {
+      var _getTranslatedArticle = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(article, language_choice) {
         var publishertranslatedata, topictranslatedata, headline, i, current, text, _i, _current, publisher, topic;
 
-        return _regenerator["default"].wrap(function _callee8$(_context8) {
+        return _regenerator["default"].wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context8.prev = _context8.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context8.next = 2;
+                _context5.next = 2;
                 return _translator.Translator.translate(article.publisher, _language_config.languages[language_choice]);
 
               case 2:
-                publishertranslatedata = _context8.sent;
-                _context8.next = 5;
+                publishertranslatedata = _context5.sent;
+                _context5.next = 5;
                 return _translator.Translator.translate(article.topic, _language_config.languages[language_choice]);
 
               case 5:
-                topictranslatedata = _context8.sent;
+                topictranslatedata = _context5.sent;
                 headline = [];
                 i = 0;
 
               case 8:
                 if (!(i < article.headline.length)) {
-                  _context8.next = 18;
+                  _context5.next = 18;
                   break;
                 }
 
-                _context8.next = 11;
+                _context5.next = 11;
                 return _translator.Translator.translate(article.headline[i], _language_config.languages[language_choice]);
 
               case 11:
-                current = _context8.sent;
+                current = _context5.sent;
 
                 if (!(current['code'] !== 200)) {
-                  _context8.next = 14;
+                  _context5.next = 14;
                   break;
                 }
 
-                return _context8.abrupt("return", undefined);
+                return _context5.abrupt("return", undefined);
 
               case 14:
                 headline.push(current['text']);
 
               case 15:
                 i++;
-                _context8.next = 8;
+                _context5.next = 8;
                 break;
 
               case 18:
@@ -502,58 +496,58 @@ var Bulletin = /*#__PURE__*/function () {
 
               case 20:
                 if (!(_i < article.text.length)) {
-                  _context8.next = 30;
+                  _context5.next = 30;
                   break;
                 }
 
-                _context8.next = 23;
+                _context5.next = 23;
                 return _translator.Translator.translate(article.text[_i], _language_config.languages[language_choice]);
 
               case 23:
-                _current = _context8.sent;
+                _current = _context5.sent;
 
                 if (!(_current['code'] !== 200)) {
-                  _context8.next = 26;
+                  _context5.next = 26;
                   break;
                 }
 
-                return _context8.abrupt("return", undefined);
+                return _context5.abrupt("return", undefined);
 
               case 26:
                 text.push(_current['text']);
 
               case 27:
                 _i++;
-                _context8.next = 20;
+                _context5.next = 20;
                 break;
 
               case 30:
                 if (!(publishertranslatedata === undefined || topictranslatedata === undefined || article.headline.length !== headline.length || article.text.length !== text.length)) {
-                  _context8.next = 34;
+                  _context5.next = 34;
                   break;
                 }
 
-                return _context8.abrupt("return", undefined);
+                return _context5.abrupt("return", undefined);
 
               case 34:
                 if (!(publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200)) {
-                  _context8.next = 38;
+                  _context5.next = 38;
                   break;
                 }
 
-                return _context8.abrupt("return", undefined);
+                return _context5.abrupt("return", undefined);
 
               case 38:
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
-                return _context8.abrupt("return", new _article.Article(publisher, topic, article.headline, headline, article.link, article.alltext, text, language_choice));
+                return _context5.abrupt("return", new _article.Article(publisher, topic, article.headline, headline, article.link, article.alltext, text, language_choice));
 
               case 41:
               case "end":
-                return _context8.stop();
+                return _context5.stop();
             }
           }
-        }, _callee8);
+        }, _callee5);
       }));
 
       function getTranslatedArticle(_x4, _x5) {

@@ -36,6 +36,10 @@ suite('Bulletin', function () {
             for (let i=0; i<Object.keys(topiclinks).length; i++)
             {
                 const key = Object.keys(topiclinks)[i];
+                if (i === 0)
+                {
+                    test_topics[key] = true;
+                }
                 const val = Math.random() >= 0.5;
                 test_topics[key] = val;
                 if (val)
@@ -81,6 +85,10 @@ suite('Bulletin', function () {
             for (let i=0; i<Object.keys(topiclinks).length; i++)
             {
                 const key = Object.keys(topiclinks)[i];
+                if (i === 0)
+                {
+                    test_topics[key] = true;
+                }
                 const val = Math.random() >= 0.5;
                 test_topics[key] = val;
                 if (val)
