@@ -1,8 +1,8 @@
 const chrome = require('sinon-chrome/extensions');
-import {describe, it, xit, suite, beforeEach, afterEach} from "mocha";
+import {describe, it, xit, suite, beforeEach, afterEach, before, after} from "mocha";
 import {expect} from "chai";
 import {stub, spy, restore} from "sinon";
-import {PageParser, DataParser} from "../dist/js/pageparser.js";
+import {PageParser} from "../dist/js/pageparser.js";
 import {Article} from "../dist/js/article.js";
 import {sourcelinks, topiclinks} from "../dist/js/preferences.js";
 import {Bulletin} from "../dist/js/bulletin.js";
@@ -11,8 +11,12 @@ import {languages} from "../dist/js/language_config.js";
 
 suite('Bulletin', function () {
 
-    beforeEach(function () {
+    before(function () {
         global.chrome = chrome;
+    });
+
+    after(function () {
+        chrome.flush();
     });
 
     afterEach(function () {
