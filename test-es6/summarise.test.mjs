@@ -1,9 +1,10 @@
-import {describe, it, xit, suite, beforeEach, afterEach} from "mocha";
+import {describe, it, xit, suite, beforeEach, afterEach, before} from "mocha";
 import {expect} from "chai";
 import {restore, stub} from "sinon";
 import {Summarise} from "../dist/js/summarise.js";
 import {max_sentences} from "../dist/js/preferences.js";
 import {smmryurl, apikey} from "../dist/js/summarise.js";
+import {PageParser} from "../dist/js/pageparser.js";
 
 suite('Summarise', function () {
 
@@ -18,39 +19,39 @@ suite('Summarise', function () {
             const smmryurl = 'https://www.smmry.com';
             const summary = 'summary';
             let stub_constructsmmryurl = stub(Summarise, 'constructsmmryurl').returns(smmryurl);
-            let stub_contactsmmry = stub(Summarise, 'contactsmmry').returns(summary);
+            let stub_extractPageData = stub(PageParser, 'extractPageData').returns(summary);
             let sentences = max_sentences - 1;
 
             let result = await Summarise.summarise(url);
             expect(result).to.be.equal(summary);
             expect(stub_constructsmmryurl.called).to.be.equal(true);
             expect(stub_constructsmmryurl.calledWith(url, max_sentences)).to.be.equal(true);
-            expect(stub_contactsmmry.called).to.be.equal(true);
+            expect(stub_extractPageData.called).to.be.equal(true);
 
             stub_constructsmmryurl.restore();
-            stub_contactsmmry.restore();
+            stub_extractPageData.restore();
 
             stub_constructsmmryurl = stub(Summarise, 'constructsmmryurl').returns(smmryurl);
-            stub_contactsmmry = stub(Summarise, 'contactsmmry').returns(summary);
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns(summary);
 
             result = await Summarise.summarise(url, sentences);
             expect(result).to.be.equal(summary);
             expect(stub_constructsmmryurl.called).to.be.equal(true);
             expect(stub_constructsmmryurl.calledWith(url, sentences)).to.be.equal(true);
-            expect(stub_contactsmmry.called).to.be.equal(true);
+            expect(stub_extractPageData.called).to.be.equal(true);
         });
 
         it('Should return undefined if an external error occurs', async function () {
             const url = 'https://www.example.com';
             const smmryurl = 'https://www.smmry.com';
             let stub_constructsmmryurl = stub(Summarise, 'constructsmmryurl').returns(smmryurl);
-            let stub_contactsmmry = stub(Summarise, 'contactsmmry').throws(new Error());
+            let stub_extractPageData = stub(PageParser, 'extractPageData').throws(new Error());
 
             const result = await Summarise.summarise(url);
             expect(result).to.be.equal(undefined);
             expect(stub_constructsmmryurl.called).to.be.equal(true);
             expect(stub_constructsmmryurl.calledWith(url, max_sentences)).to.be.equal(true);
-            expect(stub_contactsmmry.called).to.be.equal(true);
+            expect(stub_extractPageData.called).to.be.equal(true);
         });
     });
 
@@ -65,21 +66,6 @@ suite('Summarise', function () {
             articleurl = '';
             sentences = max_sentences + 1;
             expect(Summarise.constructsmmryurl(articleurl, sentences)).to.be.equal(undefined);
-        });
-    });
-
-    describe('contactsmmry', function () {
-
-        //ReferenceError: $ is not defined
-        xit('Should return JSON data from Smmry', async function() {
-            let url = 'https://www.example.com';
-            let JSON_response = {
-                'success': true
-            };
-            let stub_ajax = stub($, 'ajax').returns(JSON_response);
-
-            let result = await Summarise.contactsmmry(url);
-            expect(result).to.be.deep.equal(JSON_response);
         });
     });
 });

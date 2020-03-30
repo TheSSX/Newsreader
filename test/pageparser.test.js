@@ -24,6 +24,8 @@ var _preferences = require("../dist/js/preferences.js");
 
 var _summarise = require("../dist/js/summarise.js");
 
+var jsdom = require('jsdom-global');
+
 var valid_test_smmry_json = {
   'sm_api_title': 'test-headline',
   'sm_api_content': 'test-content',
@@ -37,6 +39,10 @@ var invalid_test_smmry_json = {
 var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Object.keys(_preferences.topiclinks).length)]; //random topic
 
 (0, _mocha.suite)('PageParser', function () {
+  (0, _mocha.before)(function () {
+    jsdom();
+    global.$ = global.jQuery = require('jquery');
+  });
   (0, _mocha.afterEach)(function () {
     (0, _sinon.restore)();
   });
@@ -1382,7 +1388,7 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
     })));
   });
   (0, _mocha.describe)('extractPageData', function () {
-    (0, _mocha.xit)('Should return webpage data from the specified URL', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19() {
+    (0, _mocha.it)('Should return webpage data from the specified URL', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee19() {
       var url, response, stub_ajax, result;
       return _regenerator["default"].wrap(function _callee19$(_context19) {
         while (1) {
@@ -1392,13 +1398,14 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
               response = "test";
               stub_ajax = (0, _sinon.stub)($, 'ajax').returns(response);
               _context19.next = 5;
-              return _summarise.Summarise.contactsmmry(url);
+              return _pageparser.PageParser.extractPageData(url);
 
             case 5:
               result = _context19.sent;
+              (0, _chai.expect)(stub_ajax.called).to.be.equal(true);
               (0, _chai.expect)(result).to.be.equal(response);
 
-            case 7:
+            case 8:
             case "end":
               return _context19.stop();
           }

@@ -1096,11 +1096,7 @@ export class PageParser
      */
     static extractPageData(theurl)
     {
-        return $.ajax({url: theurl}).done(function (data)
-        {
-        }).fail(function (ajaxError)
-        {
-        });    //not convinced this actually returns or throws an error
+        return $.ajax({url: theurl})
     }
 }
 

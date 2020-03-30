@@ -1529,7 +1529,7 @@ var PageParser = /*#__PURE__*/function () {
     value: function extractPageData(theurl) {
       return $.ajax({
         url: theurl
-      }).done(function (data) {}).fail(function (ajaxError) {}); //not convinced this actually returns or throws an error
+      });
     }
   }]);
   return PageParser;

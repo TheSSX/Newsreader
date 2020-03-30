@@ -1,4 +1,4 @@
-import {describe, it, xit, suite, afterEach} from "mocha";
+import {describe, it, xit, suite, afterEach, before} from "mocha";
 import {expect} from "chai";
 import {stub, restore, spy} from "sinon";
 import {PageParser, DataParser, valid_chars} from "../dist/js/pageparser.js";
@@ -6,6 +6,7 @@ import {Article} from "../dist/js/article.js";
 import {ArticleExtractor} from "../dist/js/articleextractor.js";
 import {topiclinks, sourcelinks} from "../dist/js/preferences.js";
 import {Summarise} from "../dist/js/summarise.js";
+const jsdom = require('jsdom-global');
 
 const valid_test_smmry_json = {
     'sm_api_title': 'test-headline',
@@ -22,6 +23,11 @@ const invalid_test_smmry_json = {
 const topic = Object.keys(topiclinks)[Math.floor(Math.random() * Object.keys(topiclinks).length)];   //random topic
 
 suite ('PageParser', function () {
+
+    before(function () {
+        jsdom();
+        global.$ = global.jQuery = require('jquery');
+    });
 
     afterEach(function () {
         restore();
@@ -1294,12 +1300,13 @@ suite ('PageParser', function () {
 
     describe('extractPageData', function () {
 
-        xit('Should return webpage data from the specified URL', async function () {
+        it('Should return webpage data from the specified URL', async function () {
             let url = 'https://www.example.com';
             let response = "test";
             let stub_ajax = stub($, 'ajax').returns(response);
 
-            let result = await Summarise.contactsmmry(url);
+            let result = await PageParser.extractPageData(url);
+            expect(stub_ajax.called).to.be.equal(true);
             expect(result).to.be.equal(response);
         });
     });

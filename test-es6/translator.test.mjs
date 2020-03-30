@@ -1,8 +1,9 @@
-import {describe, it, xit, suite, beforeEach, afterEach} from "mocha";
+import {describe, it, xit, suite, beforeEach, afterEach, before} from "mocha";
 import {expect} from "chai";
 import {restore, stub} from "sinon";
 import {Translator} from "../dist/js/translator.js";
 import {apikey, yandexurl} from "../dist/js/yandex.js";
+import {PageParser} from "../dist/js/pageparser.js";
 
 suite('Translator', function () {
 
@@ -19,13 +20,13 @@ suite('Translator', function () {
             const language = 'French';
 
             const stub_constructyandexurl = stub(Translator, 'constructyandexurl').returns(url);
-            let stub_contactyandex = stub(Translator, 'contactyandex').returns(translation);
+            let stub_extractPageData = stub(PageParser, 'extractPageData').returns(translation);
 
             let result = await Translator.translate(input, language);
             expect(result).to.be.equal(translation);
             expect(stub_constructyandexurl.called).to.be.equal(true);
             expect(stub_constructyandexurl.calledWith(input, language)).to.be.equal(true);
-            expect(stub_contactyandex.called).to.be.equal(true);
+            expect(stub_extractPageData.called).to.be.equal(true);
         });
 
         it('Should return undefined if an external error occurs', async function () {
@@ -34,12 +35,12 @@ suite('Translator', function () {
             const language = 'French';
 
             let stub_constructyandexurl = stub(Translator, 'constructyandexurl').returns(url);
-            let stub_contactyandex = stub(Translator, 'contactyandex').throws(new Error());
+            let stub_extractPageData = stub(PageParser, 'extractPageData').throws(new Error());
             let result = await Translator.translate(input, language);
             expect(result).to.be.equal(undefined);
             expect(stub_constructyandexurl.called).to.be.equal(true);
             expect(stub_constructyandexurl.calledWith(input, language)).to.be.equal(true);
-            expect(stub_contactyandex.called).to.be.equal(true);
+            expect(stub_extractPageData.called).to.be.equal(true);
         });
     });
 
@@ -54,21 +55,6 @@ suite('Translator', function () {
             text = '';
             targetlang = '';
             expect(Translator.constructyandexurl(text, targetlang)).to.be.equal(undefined);
-        });
-    });
-
-    describe('contactyandex', function () {
-
-        //ReferenceError: $ is not defined
-        xit('Should return JSON data from Yandex', async function() {
-            let url = 'https://www.example.com';
-            let JSON_response = {
-              'success': true
-            };
-            let stub_ajax = stub($, 'ajax').returns(JSON_response);
-
-            let result = await Translator.contactyandex(url);
-            expect(result).to.be.deep.equal(JSON_response);
         });
     });
 });
