@@ -24,7 +24,12 @@ var _translator = require("../dist/js/translator.js");
 
 var _language_config = require("../dist/js/language_config.js");
 
+var chrome = require('sinon-chrome/extensions');
+
 (0, _mocha.suite)('Bulletin', function () {
+  (0, _mocha.beforeEach)(function () {
+    global.chrome = chrome;
+  });
   (0, _mocha.afterEach)(function () {
     (0, _sinon.restore)();
   });
@@ -212,7 +217,7 @@ var _language_config = require("../dist/js/language_config.js");
     })));
   });
   (0, _mocha.describe)('readArticles', function () {
-    //ReferenceError: chrome is not defined, fails
+    //ReferenceError: SpeechSynthesisUtterance is not defined
     (0, _mocha.xit)('Should send appropriate chrome messages, read current article and recursively call itself for next article', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4() {
       var article, allarticles, spy_readArticles, stub_checkSentences, stub_checkTranslation, result;
       return _regenerator["default"].wrap(function _callee4$(_context4) {
@@ -242,7 +247,7 @@ var _language_config = require("../dist/js/language_config.js");
       }, _callee4);
     }))); //ReferenceError: chrome is not defined, fails
 
-    (0, _mocha.xit)('Should send a stop message and return true if no more articles are to be read', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
+    (0, _mocha.it)('Should send a stop message and return true if no more articles are to be read', /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5() {
       var article, spy_readArticles, stub_checkSentences, stub_checkTranslation, result;
       return _regenerator["default"].wrap(function _callee5$(_context5) {
         while (1) {

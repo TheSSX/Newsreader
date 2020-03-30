@@ -1,3 +1,4 @@
+const chrome = require('sinon-chrome/extensions');
 import {describe, it, xit, suite, beforeEach, afterEach} from "mocha";
 import {expect} from "chai";
 import {stub, spy, restore} from "sinon";
@@ -9,6 +10,10 @@ import {Translator} from "../dist/js/translator.js";
 import {languages} from "../dist/js/language_config.js";
 
 suite('Bulletin', function () {
+
+    beforeEach(function () {
+        global.chrome = chrome;
+    });
 
     afterEach(function () {
         restore();
@@ -162,7 +167,7 @@ suite('Bulletin', function () {
 
     describe('readArticles', function () {
 
-        //ReferenceError: chrome is not defined, fails
+        //ReferenceError: SpeechSynthesisUtterance is not defined
         xit('Should send appropriate chrome messages, read current article and recursively call itself for next article', async function () {
 
             const article = new Article("test", "test", "test", ["test"], "test", "test", ["text"]);
@@ -179,7 +184,7 @@ suite('Bulletin', function () {
         });
 
         //ReferenceError: chrome is not defined, fails
-        xit('Should send a stop message and return true if no more articles are to be read', async function () {
+        it('Should send a stop message and return true if no more articles are to be read', async function () {
             const article = new Article("test", "test", "test", ["test"], "test", "test", ["text"]);
             const spy_readArticles = spy(Bulletin, 'readArticles');
             const stub_checkSentences = stub(Bulletin, 'checkSentences').resolves(article);
