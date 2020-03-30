@@ -951,7 +951,7 @@ export class PageParser
             }
         }
 
-        if (headline === undefined || text === undefined || headline.includes('?'))		//TODO not sure this includes statement works
+        if (headline === undefined || text === undefined || ['?'].includes(headline))
         {
             return undefined;
         }

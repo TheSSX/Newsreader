@@ -203,7 +203,7 @@ var ArticleExtractor = /*#__PURE__*/function () {
         counter += 1;
       }
 
-      articletext = DataCleaner.cleanText(articletext); //TODO maybe not the best idea. Could be hyphen in the text somewhere
+      articletext = DataCleaner.cleanText(articletext);
 
       if (articletext.split(' - ')[1]) {
         articletext = articletext.split(' - ')[1];
@@ -248,11 +248,7 @@ var ArticleExtractor = /*#__PURE__*/function () {
       }
 
       return DataCleaner.cleanText(articletext);
-    } //TODO this isn't actually getting the headline most of the time. Fix
-    //Uncaught (in promise) TypeError: Cannot read property 'split' of undefined
-    //     at Function.extractAPHeadline (articleextractor.mjs:306)
-    //     at Function.extractAP (pageparser.mjs:733)
-
+    }
   }, {
     key: "extractAPHeadline",
     value: function extractAPHeadline(data) {
@@ -277,10 +273,9 @@ var ArticleExtractor = /*#__PURE__*/function () {
     value: function extractAPText(data) {
       var copy = false;
       var articletext = "";
-      var counter = 0; //TODO add in the various return undefined's here
-
-      data = data.split('<div class="Article" data-key="article">')[1];
-      data = data.split('<div class="bellow-article">')[0];
+      var counter = 0;
+      if (data.split('<div class="Article" data-key="article">')[1]) data = data.split('<div class="Article" data-key="article">')[1];else return undefined;
+      if (data.split('<div class="bellow-article">')[0]) data = data.split('<div class="bellow-article">')[0];else return undefined;
 
       while (counter < data.length - 3) {
         var startoftext = data.substring(counter, counter + 2) === '<p';

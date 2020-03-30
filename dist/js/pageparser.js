@@ -1319,7 +1319,7 @@ var PageParser = /*#__PURE__*/function () {
                     }
                   }
 
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                if (!(headline === undefined || text === undefined || ['?'].includes(headline))) {
                   _context8.next = 33;
                   break;
                 }

@@ -62,7 +62,9 @@ function setUp() {
   if (playPauseButton && stopButton) {
     playPauseButton.addEventListener('click', playPauseToggle);
     stopButton.addEventListener('click', stop);
-  } else {//TODO something broke, what do we do, add something later
+    return true;
+  } else {
+    return false;
   }
 }
 
