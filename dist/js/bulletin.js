@@ -27,7 +27,8 @@ var _language_config = require("./language_config.js");
 
 var _translator = require("../../dist/js/translator");
 
-var articles, remaining;
+var articles = [];
+var remaining = 0;
 /**
  Class for object to query random sourcelinks for each topic
  */
@@ -103,7 +104,7 @@ var Bulletin = /*#__PURE__*/function () {
             articles.push(article);
             remaining--;
 
-            if (remaining === 0) {
+            if (remaining <= 0) {
               var nextArticle = articles.shift();
 
               if (nextArticle === undefined) {
@@ -111,7 +112,7 @@ var Bulletin = /*#__PURE__*/function () {
                   greeting: "stop"
                 });
                 chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                return true;
+                return false;
               }
 
               Bulletin.checkSentences(nextArticle).then(function (newArticle) {
@@ -120,25 +121,7 @@ var Bulletin = /*#__PURE__*/function () {
                   Bulletin.readArticles(nextArticle, articles);
                   return true;
                 });
-              }); // const utterance = new SpeechSynthesisUtterance("");
-              // utterance.onend = async function () {
-              //     let nextArticle = articles.shift();
-              //     if (nextArticle === undefined)
-              //     {
-              //         chrome.runtime.sendMessage({greeting: "stop"});
-              //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-              //         return true;
-              //     }
-              //
-              //     Bulletin.checkSentences(nextArticle).then(newArticle => {
-              //         Bulletin.checkTranslation(newArticle).then(result => {
-              //             nextArticle = result;
-              //             Bulletin.readArticles(nextArticle, articles);
-              //         });
-              //     });
-              // };
-              //
-              // window.speechSynthesis.speak(utterance);
+              });
             }
           })["catch"](function () {
             Bulletin.retryTopic(topic, 2);
@@ -171,7 +154,7 @@ var Bulletin = /*#__PURE__*/function () {
           articles.push(article);
           remaining--;
 
-          if (remaining === 0) {
+          if (remaining <= 0) {
             var nextArticle = articles.shift();
 
             if (nextArticle === undefined) {
@@ -179,7 +162,7 @@ var Bulletin = /*#__PURE__*/function () {
                 greeting: "stop"
               });
               chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-              return true;
+              return false;
             }
 
             Bulletin.checkSentences(nextArticle).then(function (newArticle) {
@@ -188,25 +171,7 @@ var Bulletin = /*#__PURE__*/function () {
                 Bulletin.readArticles(nextArticle, articles);
                 return true;
               });
-            }); // const utterance = new SpeechSynthesisUtterance("");
-            // utterance.onend = async function () {
-            //     let nextArticle = articles.shift();
-            //     if (nextArticle === undefined)
-            //     {
-            //         chrome.runtime.sendMessage({greeting: "stop"});
-            //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-            //         return true;
-            //     }
-            //
-            //     Bulletin.checkSentences(nextArticle).then(newArticle => {
-            //         Bulletin.checkTranslation(newArticle).then(result => {
-            //             nextArticle = result;
-            //             Bulletin.readArticles(nextArticle, articles);
-            //         });
-            //     });
-            // };
-            //
-            // window.speechSynthesis.speak(utterance);
+            });
           }
         })["catch"](function () {
           Bulletin.retryTopic(topic, ++attempt);
@@ -216,7 +181,7 @@ var Bulletin = /*#__PURE__*/function () {
           {
             remaining--;
 
-            if (remaining === 0) {
+            if (remaining <= 0) {
               var nextArticle = articles.shift();
 
               if (nextArticle === undefined) {
@@ -224,7 +189,7 @@ var Bulletin = /*#__PURE__*/function () {
                   greeting: "stop"
                 });
                 chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                return true;
+                return false;
               }
 
               Bulletin.checkSentences(nextArticle).then(function (newArticle) {
@@ -233,25 +198,7 @@ var Bulletin = /*#__PURE__*/function () {
                   Bulletin.readArticles(nextArticle, articles);
                   return true;
                 });
-              }); // const utterance = new SpeechSynthesisUtterance("");
-              // utterance.onend = async function () {
-              //     let nextArticle = articles.shift();
-              //     if (nextArticle === undefined)
-              //     {
-              //         chrome.runtime.sendMessage({greeting: "stop"});
-              //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-              //         return true;
-              //     }
-              //
-              //     Bulletin.checkSentences(nextArticle).then(newArticle => {
-              //         Bulletin.checkTranslation(newArticle).then(result => {
-              //             nextArticle = result;
-              //             Bulletin.readArticles(nextArticle, articles);
-              //         });
-              //     });
-              // };
-              //
-              // window.speechSynthesis.speak(utterance);
+              });
             }
           } else {
           Bulletin.retryTopic(topic, ++attempt); // try again, increase number of attempts
@@ -275,13 +222,13 @@ var Bulletin = /*#__PURE__*/function () {
         message = {
           "headline": current.allheadline,
           "publisher": current.publisher,
-          "topic": capitalizeFirstLetter(current.topic)
+          "topic": Bulletin.capitalizeFirstLetter(current.topic)
         };
       } else {
         message = {
           "headline": current.headline,
           "publisher": current.publisher,
-          "topic": capitalizeFirstLetter(current.topic)
+          "topic": Bulletin.capitalizeFirstLetter(current.topic)
         };
       }
 
@@ -455,94 +402,103 @@ var Bulletin = /*#__PURE__*/function () {
 
               case 2:
                 publishertranslatedata = _context5.sent;
-                _context5.next = 5;
-                return _translator.Translator.translate(article.topic, _language_config.languages[language_choice]);
+
+                if (!(publishertranslatedata === undefined)) {
+                  _context5.next = 5;
+                  break;
+                }
+
+                return _context5.abrupt("return", undefined);
 
               case 5:
+                _context5.next = 7;
+                return _translator.Translator.translate(article.topic, _language_config.languages[language_choice]);
+
+              case 7:
                 topictranslatedata = _context5.sent;
                 headline = [];
                 i = 0;
 
-              case 8:
+              case 10:
                 if (!(i < article.headline.length)) {
-                  _context5.next = 18;
+                  _context5.next = 20;
                   break;
                 }
 
-                _context5.next = 11;
+                _context5.next = 13;
                 return _translator.Translator.translate(article.headline[i], _language_config.languages[language_choice]);
 
-              case 11:
+              case 13:
                 current = _context5.sent;
 
                 if (!(current['code'] !== 200)) {
-                  _context5.next = 14;
+                  _context5.next = 16;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 14:
+              case 16:
                 headline.push(current['text']);
 
-              case 15:
+              case 17:
                 i++;
-                _context5.next = 8;
+                _context5.next = 10;
                 break;
 
-              case 18:
+              case 20:
                 text = [];
                 _i = 0;
 
-              case 20:
+              case 22:
                 if (!(_i < article.text.length)) {
-                  _context5.next = 30;
+                  _context5.next = 32;
                   break;
                 }
 
-                _context5.next = 23;
+                _context5.next = 25;
                 return _translator.Translator.translate(article.text[_i], _language_config.languages[language_choice]);
 
-              case 23:
+              case 25:
                 _current = _context5.sent;
 
                 if (!(_current['code'] !== 200)) {
-                  _context5.next = 26;
+                  _context5.next = 28;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 26:
+              case 28:
                 text.push(_current['text']);
 
-              case 27:
+              case 29:
                 _i++;
-                _context5.next = 20;
+                _context5.next = 22;
                 break;
 
-              case 30:
-                if (!(publishertranslatedata === undefined || topictranslatedata === undefined || article.headline.length !== headline.length || article.text.length !== text.length)) {
-                  _context5.next = 34;
+              case 32:
+                if (!(topictranslatedata === undefined || article.headline.length !== headline.length || article.text.length !== text.length)) {
+                  _context5.next = 36;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 34:
+              case 36:
                 if (!(publishertranslatedata['code'] !== 200 || topictranslatedata['code'] !== 200)) {
-                  _context5.next = 38;
+                  _context5.next = 40;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 38:
+              case 40:
                 publisher = publishertranslatedata['text'];
                 topic = topictranslatedata['text'];
                 return _context5.abrupt("return", new _article.Article(publisher, topic, article.headline, headline, article.link, article.alltext, text, language_choice));
 
-              case 41:
+              case 43:
               case "end":
                 return _context5.stop();
             }
@@ -570,19 +526,20 @@ var Bulletin = /*#__PURE__*/function () {
       }
 
       return true;
+    } //Thanks to user Steve Harrison on Stack Overflow
+    //Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
+
+  }, {
+    key: "capitalizeFirstLetter",
+    value: function capitalizeFirstLetter(string) {
+      try {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      } catch (TypeError) {
+        return string;
+      }
     }
   }]);
   return Bulletin;
-}(); //Thanks to user Steve Harrison on Stack Overflow
-//Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
-
+}();
 
 exports.Bulletin = Bulletin;
-
-function capitalizeFirstLetter(string) {
-  try {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  } catch (TypeError) {
-    return string;
-  }
-}

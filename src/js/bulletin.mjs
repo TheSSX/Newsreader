@@ -5,7 +5,8 @@ import {Speech} from "./speech.mjs";
 import {languages, translation_unavailable} from "./language_config.js";
 import {Translator} from "./translator.mjs";
 
-let articles, remaining;
+let articles = [];
+let remaining = 0;
 
 /**
  Class for object to query random sourcelinks for each topic
@@ -78,14 +79,14 @@ export class Bulletin
                     articles.push(article);
                     remaining--;
 
-                    if (remaining === 0)
+                    if (remaining <= 0)
                     {
                         let nextArticle = articles.shift();
                         if (nextArticle === undefined)
                         {
                             chrome.runtime.sendMessage({greeting: "stop"});
                             chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                            return true;
+                            return false;
                         }
 
                         Bulletin.checkSentences(nextArticle).then(newArticle => {
@@ -95,26 +96,6 @@ export class Bulletin
                                 return true;
                             });
                         });
-
-                        // const utterance = new SpeechSynthesisUtterance("");
-                        // utterance.onend = async function () {
-                        //     let nextArticle = articles.shift();
-                        //     if (nextArticle === undefined)
-                        //     {
-                        //         chrome.runtime.sendMessage({greeting: "stop"});
-                        //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                        //         return true;
-                        //     }
-                        //
-                        //     Bulletin.checkSentences(nextArticle).then(newArticle => {
-                        //         Bulletin.checkTranslation(newArticle).then(result => {
-                        //             nextArticle = result;
-                        //             Bulletin.readArticles(nextArticle, articles);
-                        //         });
-                        //     });
-                        // };
-                        //
-                        // window.speechSynthesis.speak(utterance);
                     }
                 })
                 .catch(function () {
@@ -140,14 +121,14 @@ export class Bulletin
                 articles.push(article);
                 remaining--;
 
-                if (remaining === 0)
+                if (remaining <= 0)
                 {
                     let nextArticle = articles.shift();
                     if (nextArticle === undefined)
                     {
                         chrome.runtime.sendMessage({greeting: "stop"});
                         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                        return true;
+                        return false;
                     }
 
                     Bulletin.checkSentences(nextArticle).then(newArticle => {
@@ -157,26 +138,6 @@ export class Bulletin
                             return true;
                         });
                     });
-
-                    // const utterance = new SpeechSynthesisUtterance("");
-                    // utterance.onend = async function () {
-                    //     let nextArticle = articles.shift();
-                    //     if (nextArticle === undefined)
-                    //     {
-                    //         chrome.runtime.sendMessage({greeting: "stop"});
-                    //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                    //         return true;
-                    //     }
-                    //
-                    //     Bulletin.checkSentences(nextArticle).then(newArticle => {
-                    //         Bulletin.checkTranslation(newArticle).then(result => {
-                    //             nextArticle = result;
-                    //             Bulletin.readArticles(nextArticle, articles);
-                    //         });
-                    //     });
-                    // };
-                    //
-                    // window.speechSynthesis.speak(utterance);
                 }
             })
             .catch(function () {
@@ -189,14 +150,14 @@ export class Bulletin
             {
                 remaining--;
 
-                if (remaining === 0)
+                if (remaining <= 0)
                 {
                     let nextArticle = articles.shift();
                     if (nextArticle === undefined)
                     {
                         chrome.runtime.sendMessage({greeting: "stop"});
                         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                        return true;
+                        return false;
                     }
 
                     Bulletin.checkSentences(nextArticle).then(newArticle => {
@@ -206,27 +167,6 @@ export class Bulletin
                             return true;
                         });
                     });
-
-
-                    // const utterance = new SpeechSynthesisUtterance("");
-                    // utterance.onend = async function () {
-                    //     let nextArticle = articles.shift();
-                    //     if (nextArticle === undefined)
-                    //     {
-                    //         chrome.runtime.sendMessage({greeting: "stop"});
-                    //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                    //         return true;
-                    //     }
-                    //
-                    //     Bulletin.checkSentences(nextArticle).then(newArticle => {
-                    //         Bulletin.checkTranslation(newArticle).then(result => {
-                    //             nextArticle = result;
-                    //             Bulletin.readArticles(nextArticle, articles);
-                    //         });
-                    //     });
-                    // };
-                    //
-                    // window.speechSynthesis.speak(utterance);
                 }
             }
             else
@@ -251,7 +191,7 @@ export class Bulletin
             message = {
                 "headline": current.allheadline,
                 "publisher": current.publisher,
-                "topic": capitalizeFirstLetter(current.topic)
+                "topic": Bulletin.capitalizeFirstLetter(current.topic)
             };
         }
         else
@@ -259,7 +199,7 @@ export class Bulletin
             message = {
                 "headline": current.headline,
                 "publisher": current.publisher,
-                "topic": capitalizeFirstLetter(current.topic)
+                "topic": Bulletin.capitalizeFirstLetter(current.topic)
             };
         }
 
@@ -337,8 +277,11 @@ export class Bulletin
 
     static async getTranslatedArticle(article, language_choice)
     {
-        //return new Article("This is " + language_choice, "This is " + article.topic, "", "", "hello", ["translated text"], language_choice);
         const publishertranslatedata = await Translator.translate(article.publisher, languages[language_choice]);
+
+        if (publishertranslatedata === undefined)
+            return undefined;
+
         const topictranslatedata = await Translator.translate(article.topic, languages[language_choice]);
 
         let headline = [];
@@ -360,7 +303,7 @@ export class Bulletin
         }
 
         //If translation API not available
-        if (publishertranslatedata === undefined || topictranslatedata === undefined || article.headline.length !== headline.length || article.text.length !== text.length)
+        if (topictranslatedata === undefined || article.headline.length !== headline.length || article.text.length !== text.length)
         {
             return undefined;
         }
@@ -396,17 +339,14 @@ export class Bulletin
 
         return true;
     }
-}
 
-//Thanks to user Steve Harrison on Stack Overflow
-//Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
-function capitalizeFirstLetter(string) {
-    try
-    {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-    catch(TypeError)
-    {
-        return string;
+    //Thanks to user Steve Harrison on Stack Overflow
+    //Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
+    static capitalizeFirstLetter(string) {
+        try {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        } catch (TypeError) {
+            return string;
+        }
     }
 }
