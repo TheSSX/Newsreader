@@ -106,7 +106,10 @@ Yandex offers a selection of 97 languages to translate texts of any length. Ten 
 
 ### Building and testing
 
-Building and testing of Newsreader can only be done by cloning this repository (see [alternative installation method](#alternative-method)). Builds and tests are executed in the command line using [Node.js.](https://nodejs.org/) Make sure that is installed globally first.
+Building and testing of Newsreader can only be done by cloning this repository (see [alternative installation method](#alternative-method)). Builds and tests are executed in the command line using [Node.js.](https://nodejs.org/) Make sure that is installed globally first. Then type:
+```
+npm install
+```
 
 #### Building
 Open a terminal and navigate to the project root directory. Type:
