@@ -1,6 +1,6 @@
 # Newsreader
 
-[![TheSSX](https://circleci.com/gh/thessx/newsreader.svg?style=shield&circle-token=38ac7c107864b63c9a55ed5216fb098854fae00a)](https://app.circleci.com/pipelines/github/TheSSX/Newsreader)
+[![TheSSX](https://circleci.com/gh/TheSSX/Newsreader.svg?style=shield&circle-token=38ac7c107864b63c9a55ed5216fb098854fae00a)](https://app.circleci.com/pipelines/github/TheSSX/Newsreader)
 
 <img src="https://github.com/TheSSX/Newsreader/blob/testing/icons/icon128.png" width="128">
 
@@ -11,7 +11,7 @@ Newsreader was developed as a final-year Honours' Project by Sam Glendenning of 
 ------------
 
 ### Functionality
-<img src="https://github.com/TheSSX/Newsreader/blob/testing/screenshots/screen1.PNG" width="300">
+<img src="https://github.com/TheSSX/Newsreader/blob/testing/screenshots/screen1.PNG" width="400">
 
 1. Click the orange Newsreader icon in the top right of the Chrome browser, to the right of the address bar.
 2. Customise the settings of Newsreader to your liking. This includes a range of spoken language, spoken sentences per article, news publications to hear from and news topics to hear about.
