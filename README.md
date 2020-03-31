@@ -4,6 +4,10 @@
 
 <img src="https://github.com/TheSSX/Newsreader/tree/master/icons/icon128.png" width="128">
 
+[TOCM]
+
+[TOC]
+
 Newsreader is a Google Chrome extension that reads a summarised version of the latest news articles through text-to-speech technology! Customise your 5-minute bulletin from a selection of 9 news topics from 9 news publications. Newsreader works in the background, so you can continue surfing the web while listening to the latest news. Make sure your speakers are switched on!
 
 Newsreader was developed as a final-year Honours' Project by Sam Glendenning of the University of Dundee. 
@@ -11,6 +15,7 @@ Newsreader was developed as a final-year Honours' Project by Sam Glendenning of 
 ------------
 
 ### Functionality
+![](https://github.com/TheSSX/Newsreader/tree/master/screenshots/screen1.png)
 <img src="https://github.com/TheSSX/Newsreader/tree/master/screenshots/screen1.png" width="300">
 
 1. Click the orange Newsreader icon in the top right of the Chrome browser, to the right of the address bar.
