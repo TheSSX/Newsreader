@@ -62,7 +62,9 @@ function setUp() {
   if (playPauseButton && stopButton) {
     playPauseButton.addEventListener('click', playPauseToggle);
     stopButton.addEventListener('click', stop);
-  } else {//TODO something broke, what do we do, add something later
+    return true;
+  } else {
+    return false;
   }
 }
 
@@ -255,7 +257,7 @@ function playPauseToggle() {
 function play() {
   getSources().then(function (sources) {
     getTopics().then(function (topics) {
-      if ((0, _bulletin.checkNewsAUUK)(sources, topics)) {
+      if (_bulletin.Bulletin.checkNewsAUUK(sources, topics)) {
         document.getElementById('headline').innerHTML = "News.com.au does not report UK news";
         return false;
       }

@@ -1,6 +1,6 @@
 import {Speech} from "./speech.mjs";
-import {max_sentences} from "./preferences.js";
-import {abbreviationConcatenation} from "./pageparser.mjs";
+import {min_sentences, max_sentences} from "./preferences.js";
+import {DataParser} from "./pageparser.mjs";
 
 /**
  Class for an article object
@@ -39,7 +39,7 @@ export class Article
 
         if (this.language === "English")
         {
-            let headline = abbreviationConcatenation(this.allheadline);
+            let headline = DataParser.abbreviationConcatenation(this.allheadline);
             headline = this.allheadline.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
             if (headline)
                 for (let i=0; i<headline.length; i++)
@@ -49,7 +49,7 @@ export class Article
             else
                 new Speech(this.allheadline, this.language).speak();
 
-            let text = abbreviationConcatenation(this.alltext);
+            let text = DataParser.abbreviationConcatenation(this.alltext);
             text = this.alltext.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
             if (text)
                 for (let i=0; i<this.sentences; i++)
@@ -75,6 +75,9 @@ export class Article
 
     amendLength(sentences)
     {
+        if (sentences < min_sentences || sentences > max_sentences)
+            return;
+
         this.sentences = sentences;
         let newText = [];
         let temp = [];

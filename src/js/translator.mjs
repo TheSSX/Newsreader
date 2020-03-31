@@ -1,4 +1,5 @@
 import {apikey, yandexurl} from "./yandex.js";
+import {PageParser} from "./pageparser.mjs";
 
 /**
  Class for translating articles via the Yandex free translation service.
@@ -6,7 +7,6 @@ import {apikey, yandexurl} from "./yandex.js";
  */
 export class Translator
 {
-
     /**
      * Manages the translation of text to a target language
      * @param text - the text to translate
@@ -19,7 +19,7 @@ export class Translator
 
         try
         {
-            return await this.contactyandex(url);
+            return await PageParser.extractPageData(url);
         } catch
         {
             return undefined;
@@ -34,20 +34,8 @@ export class Translator
      */
     static constructyandexurl(text, targetlang)
     {
+        if (!text || !targetlang)
+            return undefined;
         return `${yandexurl}?key=${apikey}&text=${text}&lang=${targetlang}`;
-    }
-
-    /**
-     * Queries Yandex and returns JSON data
-     * @param url - the URL to query
-     * @returns {*} - the JSON data
-     */
-    static contactyandex(url)
-    {
-        return $.ajax({url: url}).done(function (data)
-        {
-        }).fail(function (ajaxError)
-        {
-        });
     }
 }

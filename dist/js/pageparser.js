@@ -5,10 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.textSplitter = textSplitter;
-exports.isCharacter = isCharacter;
-exports.abbreviationConcatenation = abbreviationConcatenation;
-exports.PageParser = void 0;
+exports.DataParser = exports.valid_chars = exports.PageParser = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -94,7 +91,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -166,77 +163,50 @@ var PageParser = /*#__PURE__*/function () {
               case 22:
                 smmrydata = _context.sent;
 
-                if (!(smmrydata === undefined)) {
-                  _context.next = 33;
-                  break;
-                }
+                //send article to SMMRY
+                if (smmrydata === undefined) //SMMRY API unavailable
+                  {
+                    headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
 
-                headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
+                    text = _articleextractor.ArticleExtractor.extractGuardianText(data);
 
-                text = _articleextractor.ArticleExtractor.extractGuardianText(data);
+                    if (text !== undefined) {
+                      if (text.split(' - ')[1]) {
+                        text = text.split(' - ')[1];
+                      }
+                    }
+                  } else //SMMRY API working fine
+                  {
+                    headline = smmrydata['sm_api_title']; //article headline returned
 
-                if (!(text !== undefined)) {
-                  _context.next = 30;
-                  break;
-                }
+                    text = smmrydata['sm_api_content']; //summarised article returned
 
-                if (text.split(' - ')[1]) {
-                  text = text.split(' - ')[1];
-                }
+                    error = smmrydata['sm_api_error']; //detecting presence of error code
 
-                _context.next = 31;
-                break;
+                    if (error === 2) {
+                      headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
 
-              case 30:
-                return _context.abrupt("return", undefined);
+                      text = _articleextractor.ArticleExtractor.extractGuardianText(data);
 
-              case 31:
-                _context.next = 44;
-                break;
+                      if (text !== undefined) {
+                        if (text.split(' - ')[1]) {
+                          text = text.split(' - ')[1];
+                        }
+                      }
+                    }
+                  }
 
-              case 33:
-                headline = smmrydata['sm_api_title']; //article headline returned
-
-                text = smmrydata['sm_api_content']; //summarised article returned
-
-                error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                if (!(error === 2)) {
-                  _context.next = 44;
-                  break;
-                }
-
-                headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
-
-                text = _articleextractor.ArticleExtractor.extractGuardianText(data);
-
-                if (!(text !== undefined)) {
-                  _context.next = 43;
-                  break;
-                }
-
-                if (text.split(' - ')[1]) {
-                  text = text.split(' - ')[1];
-                }
-
-                _context.next = 44;
-                break;
-
-              case 43:
-                return _context.abrupt("return", undefined);
-
-              case 44:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context.next = 46;
+                  _context.next = 26;
                   break;
                 }
 
                 return _context.abrupt("return", undefined);
 
-              case 46:
-                return _context.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+              case 26:
+                return _context.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
-              case 47:
+              case 27:
               case "end":
                 return _context.stop();
             }
@@ -267,7 +237,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -326,76 +296,49 @@ var PageParser = /*#__PURE__*/function () {
               case 19:
                 smmrydata = _context2.sent;
 
-                if (!(smmrydata === undefined)) {
-                  _context2.next = 30;
-                  break;
-                }
+                //send article to SMMRY
+                if (smmrydata === undefined) //SMMRY API unavailable
+                  {
+                    headline = data.split('<title>')[1].split(' - BBC News')[0];
+                    text = _articleextractor.ArticleExtractor.extractBBCText(data);
 
-                headline = data.split('<title>')[1].split(' - BBC News')[0];
-                text = _articleextractor.ArticleExtractor.extractBBCText(data);
+                    if (text !== undefined) {
+                      if (text.split(' - ')[1]) {
+                        text = text.split(' - ')[1];
+                      }
+                    }
+                  } else //SMMRY API working fine
+                  {
+                    headline = smmrydata['sm_api_title']; //article headline returned
 
-                if (!(text !== undefined)) {
-                  _context2.next = 27;
-                  break;
-                }
+                    text = smmrydata['sm_api_content']; //summarised article returned
 
-                if (text.split(' - ')[1]) {
-                  text = text.split(' - ')[1];
-                }
+                    error = smmrydata['sm_api_error']; //detecting presence of error code
 
-                _context2.next = 28;
-                break;
+                    if (error === 2) {
+                      headline = data.split('<title>')[1].split(' - BBC News')[0]; //get headline from article data
 
-              case 27:
-                return _context2.abrupt("return", undefined);
+                      text = _articleextractor.ArticleExtractor.extractBBCText(data);
 
-              case 28:
-                _context2.next = 41;
-                break;
+                      if (text !== undefined) {
+                        if (text.split(' - ')[1]) {
+                          text = text.split(' - ')[1];
+                        }
+                      }
+                    }
+                  }
 
-              case 30:
-                headline = smmrydata['sm_api_title']; //article headline returned
-
-                text = smmrydata['sm_api_content']; //summarised article returned
-
-                error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                if (!(error === 2)) {
-                  _context2.next = 41;
-                  break;
-                }
-
-                headline = data.split('<title>')[1].split(' - BBC News')[0]; //get headline from article data
-
-                text = _articleextractor.ArticleExtractor.extractBBCText(data);
-
-                if (!(text !== undefined)) {
-                  _context2.next = 40;
-                  break;
-                }
-
-                if (text.split(' - ')[1]) {
-                  text = text.split(' - ')[1];
-                }
-
-                _context2.next = 41;
-                break;
-
-              case 40:
-                return _context2.abrupt("return", undefined);
-
-              case 41:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context2.next = 43;
+                  _context2.next = 23;
                   break;
                 }
 
                 return _context2.abrupt("return", undefined);
 
-              case 43:
-                return _context2.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+              case 23:
+                return _context2.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
-              case 44:
+              case 24:
               case "end":
                 return _context2.stop();
             }
@@ -426,7 +369,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -525,85 +468,50 @@ var PageParser = /*#__PURE__*/function () {
               case 30:
                 smmrydata = _context3.sent;
 
-                if (!(smmrydata === undefined)) {
-                  _context3.next = 41;
-                  break;
-                }
+                //send article to SMMRY
+                if (smmrydata === undefined) //SMMRY API unavailable
+                  {
+                    headline = data.split('<title>')[1].split(' - Reuters')[0]; //get headline from article data
 
-                headline = data.split('<title>')[1].split(' - Reuters')[0]; //get headline from article data
+                    text = _articleextractor.ArticleExtractor.extractReutersText(data);
 
-                text = _articleextractor.ArticleExtractor.extractReutersText(data);
+                    if (text !== undefined) {
+                      if (text.split(' - ')[1]) {
+                        text = text.split(' - ')[1];
+                      }
+                    }
+                  } else //SMMRY API working fine
+                  {
+                    headline = smmrydata['sm_api_title']; //article headline returned
 
-                if (!(text !== undefined)) {
-                  _context3.next = 38;
-                  break;
-                }
+                    text = smmrydata['sm_api_content']; //summarised article returned
 
-                if (text.split(' - ')[1]) {
-                  text = text.split(' - ')[1];
-                }
+                    error = smmrydata['sm_api_error']; //detecting presence of error code
 
-                _context3.next = 39;
-                break;
+                    if (error === 2) {
+                      headline = data.split('<title>')[1].split(' - Reuters')[0]; //get headline from article data
 
-              case 38:
-                return _context3.abrupt("return", undefined);
+                      text = _articleextractor.ArticleExtractor.extractReutersText(data);
+                    }
 
-              case 39:
-                _context3.next = 54;
-                break;
+                    if (text !== undefined) {
+                      if (text.split(' - ')[1]) {
+                        text = text.split(' - ')[1];
+                      }
+                    }
+                  }
 
-              case 41:
-                headline = smmrydata['sm_api_title']; //article headline returned
-
-                text = smmrydata['sm_api_content']; //summarised article returned
-
-                error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                if (!(error === 2)) {
-                  _context3.next = 49;
-                  break;
-                }
-
-                headline = data.split('<title>')[1].split(' - Reuters')[0]; //get headline from article data
-
-                text = _articleextractor.ArticleExtractor.extractReutersText(data);
-
-                if (!(text === undefined)) {
-                  _context3.next = 49;
-                  break;
-                }
-
-                return _context3.abrupt("return", undefined);
-
-              case 49:
-                if (!(text !== undefined)) {
-                  _context3.next = 53;
-                  break;
-                }
-
-                if (text.split(' - ')[1]) {
-                  text = text.split(' - ')[1];
-                }
-
-                _context3.next = 54;
-                break;
-
-              case 53:
-                return _context3.abrupt("return", undefined);
-
-              case 54:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context3.next = 56;
+                  _context3.next = 34;
                   break;
                 }
 
                 return _context3.abrupt("return", undefined);
 
-              case 56:
-                return _context3.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+              case 34:
+                return _context3.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
-              case 57:
+              case 35:
               case "end":
                 return _context3.stop();
             }
@@ -634,7 +542,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -745,85 +653,50 @@ var PageParser = /*#__PURE__*/function () {
               case 30:
                 smmrydata = _context4.sent;
 
-                if (!(smmrydata === undefined)) {
-                  _context4.next = 41;
-                  break;
-                }
+                //send article to SMMRY
+                if (smmrydata === undefined) //SMMRY API unavailable
+                  {
+                    headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
 
-                headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
+                    text = _articleextractor.ArticleExtractor.extractSkyText(data);
 
-                text = _articleextractor.ArticleExtractor.extractSkyText(data);
+                    if (text !== undefined) {
+                      if (text.split(' - ')[1]) {
+                        text = text.split(' - ')[1];
+                      }
+                    }
+                  } else //SMMRY API working fine
+                  {
+                    headline = smmrydata['sm_api_title']; //article headline returned
 
-                if (!(text !== undefined)) {
-                  _context4.next = 38;
-                  break;
-                }
+                    text = smmrydata['sm_api_content']; //summarised article returned
 
-                if (text.split(' - ')[1]) {
-                  text = text.split(' - ')[1];
-                }
+                    error = smmrydata['sm_api_error']; //detecting presence of error code
 
-                _context4.next = 39;
-                break;
+                    if (error === 2) {
+                      headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
 
-              case 38:
-                return _context4.abrupt("return", undefined);
+                      text = _articleextractor.ArticleExtractor.extractSkyText(data);
 
-              case 39:
-                _context4.next = 52;
-                break;
+                      if (text !== undefined) {
+                        if (text.split(' - ')[1]) {
+                          text = text.split(' - ')[1];
+                        }
+                      }
+                    }
+                  }
 
-              case 41:
-                headline = smmrydata['sm_api_title']; //article headline returned
-
-                text = smmrydata['sm_api_content']; //summarised article returned
-
-                error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                if (!(error === 2)) {
-                  _context4.next = 52;
-                  break;
-                }
-
-                headline = data.split('<title>')[1].split(' |')[0]; //get headline from article data
-
-                text = _articleextractor.ArticleExtractor.extractSkyText(data);
-
-                if (!(text !== undefined)) {
-                  _context4.next = 51;
-                  break;
-                }
-
-                if (text.split(' - ')[1]) {
-                  text = text.split(' - ')[1];
-                }
-
-                _context4.next = 52;
-                break;
-
-              case 51:
-                return _context4.abrupt("return", undefined);
-
-              case 52:
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context4.next = 54;
+                if (!(headline === undefined || text === undefined || headline.includes('?') || headline.includes("LIVE") || headline.includes("Live"))) {
+                  _context4.next = 34;
                   break;
                 }
 
                 return _context4.abrupt("return", undefined);
 
-              case 54:
-                if (!(headline.includes("LIVE") || headline.includes("Live"))) {
-                  _context4.next = 56;
-                  break;
-                }
+              case 34:
+                return _context4.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
-                return _context4.abrupt("return", undefined);
-
-              case 56:
-                return _context4.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
-
-              case 57:
+              case 35:
               case "end":
                 return _context4.stop();
             }
@@ -854,7 +727,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -942,90 +815,54 @@ var PageParser = /*#__PURE__*/function () {
               case 29:
                 smmrydata = _context5.sent;
 
-                if (!(smmrydata === undefined)) {
-                  _context5.next = 40;
-                  break;
-                }
+                //send article to SMMRY
+                if (smmrydata === undefined) //SMMRY API unavailable
+                  {
+                    headline = _articleextractor.ArticleExtractor.extractAPHeadline(data); //SMMRY can't find the headline in AP articles. So we extract it ourselves
 
-                headline = _articleextractor.ArticleExtractor.extractAPHeadline(data); //SMMRY can't find the headline in AP articles. So we extract it ourselves
+                    text = _articleextractor.ArticleExtractor.extractAPText(data);
 
-                text = _articleextractor.ArticleExtractor.extractAPText(data);
+                    if (text !== undefined) {
+                      if (text.split(' — ')[1]) {
+                        text = text.split(' — ')[1];
+                      }
+                    }
+                  } else //SMMRY API working fine
+                  {
+                    headline = smmrydata['sm_api_title']; //article headline returned
 
-                if (!(text !== undefined)) {
-                  _context5.next = 37;
-                  break;
-                }
+                    text = smmrydata['sm_api_content']; //summarised article returned
 
-                if (text.split(' — ')[1]) {
-                  text = text.split(' — ')[1];
-                }
+                    error = smmrydata['sm_api_error']; //detecting presence of error code
 
-                _context5.next = 38;
-                break;
+                    if (error === 2) {
+                      headline = _articleextractor.ArticleExtractor.extractAPHeadline(data); //SMMRY can't find the headline in AP articles. So we extract it ourselves
 
-              case 37:
-                return _context5.abrupt("return", undefined);
+                      text = _articleextractor.ArticleExtractor.extractAPText(data);
+                    }
 
-              case 38:
-                _context5.next = 54;
-                break;
+                    if (text !== undefined) {
+                      if (text.split(' — ')[1]) {
+                        text = text.split(' — ')[1];
+                      }
+                    }
 
-              case 40:
-                headline = smmrydata['sm_api_title']; //article headline returned
+                    if (!headline) {
+                      headline = _articleextractor.ArticleExtractor.extractAPHeadline(data);
+                    }
+                  }
 
-                text = smmrydata['sm_api_content']; //summarised article returned
-
-                error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                if (!(error === 2)) {
-                  _context5.next = 48;
-                  break;
-                }
-
-                headline = _articleextractor.ArticleExtractor.extractAPHeadline(data); //SMMRY can't find the headline in AP articles. So we extract it ourselves
-
-                text = _articleextractor.ArticleExtractor.extractAPText(data);
-
-                if (!(text === undefined)) {
-                  _context5.next = 48;
-                  break;
-                }
-
-                return _context5.abrupt("return", undefined);
-
-              case 48:
-                if (!(text !== undefined)) {
-                  _context5.next = 52;
-                  break;
-                }
-
-                if (text.split(' — ')[1]) {
-                  text = text.split(' — ')[1];
-                }
-
-                _context5.next = 53;
-                break;
-
-              case 52:
-                return _context5.abrupt("return", undefined);
-
-              case 53:
-                if (!headline) {
-                  headline = _articleextractor.ArticleExtractor.extractAPHeadline(data);
-                }
-
-              case 54:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context5.next = 56;
+                  _context5.next = 33;
                   break;
                 }
 
                 return _context5.abrupt("return", undefined);
 
-              case 56:
-                return _context5.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+              case 33:
+                return _context5.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
-              case 57:
+              case 34:
               case "end":
                 return _context5.stop();
             }
@@ -1056,7 +893,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -1144,61 +981,38 @@ var PageParser = /*#__PURE__*/function () {
               case 29:
                 smmrydata = _context6.sent;
 
-                if (!(smmrydata === undefined)) {
-                  _context6.next = 37;
-                  break;
-                }
+                //send article to SMMRY
+                if (smmrydata === undefined) //SMMRY API unavailable
+                  {
+                    headline = data.split('<title>')[1].split(' | London Evening Standard')[0]; //get headline from article data
 
-                headline = data.split('<title>')[1].split(' | London Evening Standard')[0]; //get headline from article data
+                    text = _articleextractor.ArticleExtractor.extractEveningStandardText(data);
+                  } else //SMMRY API working fine
+                  {
+                    headline = smmrydata['sm_api_title']; //article headline returned
 
-                text = _articleextractor.ArticleExtractor.extractEveningStandardText(data);
+                    text = smmrydata['sm_api_content']; //summarised article returned
 
-                if (!(text === undefined)) {
-                  _context6.next = 35;
-                  break;
-                }
+                    error = smmrydata['sm_api_error']; //detecting presence of error code
 
-                return _context6.abrupt("return", undefined);
+                    if (error === 2) {
+                      headline = data.split('<title>')[1].split(' | London Evening Standard')[0]; //get headline from article data
 
-              case 35:
-                _context6.next = 45;
-                break;
+                      text = _articleextractor.ArticleExtractor.extractEveningStandardText(data);
+                    }
+                  }
 
-              case 37:
-                headline = smmrydata['sm_api_title']; //article headline returned
-
-                text = smmrydata['sm_api_content']; //summarised article returned
-
-                error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                if (!(error === 2)) {
-                  _context6.next = 45;
-                  break;
-                }
-
-                headline = data.split('<title>')[1].split(' | London Evening Standard')[0]; //get headline from article data
-
-                text = _articleextractor.ArticleExtractor.extractEveningStandardText(data);
-
-                if (!(text == undefined)) {
-                  _context6.next = 45;
-                  break;
-                }
-
-                return _context6.abrupt("return", undefined);
-
-              case 45:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context6.next = 47;
+                  _context6.next = 33;
                   break;
                 }
 
                 return _context6.abrupt("return", undefined);
 
-              case 47:
-                return _context6.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
+              case 33:
+                return _context6.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
-              case 48:
+              case 34:
               case "end":
                 return _context6.stop();
             }
@@ -1229,7 +1043,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -1317,86 +1131,43 @@ var PageParser = /*#__PURE__*/function () {
               case 29:
                 smmrydata = _context7.sent;
 
-                if (!(smmrydata === undefined)) {
-                  _context7.next = 37;
-                  break;
-                }
+                //send article to SMMRY
+                if (smmrydata === undefined) //SMMRY API unavailable
+                  {
+                    if (data.split('<title>')[1].split(' | ')[0]) {
+                      headline = data.split('<title>')[1].split(' | ')[0]; //get headline from article data
+                    } else {
+                      headline = data.split('<title>')[1].split('</title>')[0]; //got an article which had an inconsistent headline scheme once
+                    }
 
-                if (data.split('<title>')[1].split(' | ')[0]) {
-                  headline = data.split('<title>')[1].split(' | ')[0]; //get headline from article data
-                } else {
-                  headline = data.split('<title>')[1].split('</title>')[0]; //got an article which had an inconsistent headline scheme once
-                }
+                    text = _articleextractor.ArticleExtractor.extractIndependentText(data);
+                  } else //SMMRY API working fine
+                  {
+                    headline = smmrydata['sm_api_title']; //article headline returned
 
-                text = _articleextractor.ArticleExtractor.extractIndependentText(data);
+                    text = smmrydata['sm_api_content']; //summarised article returned
 
-                if (!(text === undefined)) {
-                  _context7.next = 35;
+                    error = smmrydata['sm_api_error']; //detecting presence of error code
+
+                    if (error === 2) {
+                      headline = data.split('<title>')[1].split(' | ')[0]; //get headline from article data
+
+                      text = _articleextractor.ArticleExtractor.extractIndependentText(data);
+                    }
+                  }
+
+                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
+                  _context7.next = 33;
                   break;
                 }
 
                 return _context7.abrupt("return", undefined);
+
+              case 33:
+                headline = _articleextractor.DataCleaner.cleanText(headline);
+                return _context7.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
               case 35:
-                _context7.next = 45;
-                break;
-
-              case 37:
-                headline = smmrydata['sm_api_title']; //article headline returned
-
-                text = smmrydata['sm_api_content']; //summarised article returned
-
-                error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                if (!(error === 2)) {
-                  _context7.next = 45;
-                  break;
-                }
-
-                headline = data.split('<title>')[1].split(' | ')[0]; //get headline from article data
-
-                text = _articleextractor.ArticleExtractor.extractIndependentText(data);
-
-                if (!(text === undefined)) {
-                  _context7.next = 45;
-                  break;
-                }
-
-                return _context7.abrupt("return", undefined);
-
-              case 45:
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context7.next = 47;
-                  break;
-                }
-
-                return _context7.abrupt("return", undefined);
-
-              case 47:
-                headline = _articleextractor.DataCleaner.cleanText(headline); // /**
-                //  * TRANSLATING
-                //  */
-                //
-                // if (language_choice !== "English")
-                // {
-                //     const translations = await callTranslation(publisher, topic, headline, text);
-                //
-                //     if (translations !== undefined)
-                //     {
-                //         publisher = translations[0];
-                //         topic = translations[1];
-                //         headline = translations[2];
-                //         text = translations[3];
-                //     }
-                //     else
-                //     {
-                //         new Speech(translation_unavailable[language_choice]).speak();
-                //     }
-                // }
-
-                return _context7.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
-
-              case 49:
               case "end":
                 return _context7.stop();
             }
@@ -1427,7 +1198,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -1515,134 +1286,51 @@ var PageParser = /*#__PURE__*/function () {
               case 29:
                 smmrydata = _context8.sent;
 
-                if (!(smmrydata === undefined)) {
-                  _context8.next = 46;
-                  break;
-                }
+                //send article to SMMRY
+                if (smmrydata === undefined) //SMMRY API unavailable
+                  {
+                    if (data.split('<title>')[1]) {
+                      headline = data.split('<title>')[1];
 
-                if (!data.split('<title>')[1]) {
-                  _context8.next = 40;
-                  break;
-                }
+                      if (headline.split('</title>')[0]) {
+                        headline = headline.split('</title>')[0]; //get headline from article data
+                      }
+                    }
 
-                headline = data.split('<title>')[1];
+                    text = _articleextractor.ArticleExtractor.extractNewsAUText(data);
+                  } else //SMMRY API working fine
+                  {
+                    headline = smmrydata['sm_api_title']; //article headline returned
 
-                if (!headline.split('</title>')[0]) {
-                  _context8.next = 37;
-                  break;
-                }
+                    text = smmrydata['sm_api_content']; //summarised article returned
 
-                headline = headline.split('</title>')[0]; //get headline from article data
+                    error = smmrydata['sm_api_error']; //detecting presence of error code
 
-                _context8.next = 38;
-                break;
+                    if (error === 2) {
+                      if (data.split('<title>')[1]) {
+                        headline = data.split('<title>')[1];
 
-              case 37:
-                return _context8.abrupt("return", undefined);
+                        if (headline.split('</title>')[0]) {
+                          headline = headline.split('</title>')[0]; //get headline from article data
+                        }
+                      }
 
-              case 38:
-                _context8.next = 41;
-                break;
+                      text = _articleextractor.ArticleExtractor.extractNewsAUText(data);
+                    }
+                  }
 
-              case 40:
-                return _context8.abrupt("return", undefined);
-
-              case 41:
-                text = _articleextractor.ArticleExtractor.extractNewsAUText(data);
-
-                if (!(text === undefined)) {
-                  _context8.next = 44;
-                  break;
-                }
-
-                return _context8.abrupt("return", undefined);
-
-              case 44:
-                _context8.next = 63;
-                break;
-
-              case 46:
-                headline = smmrydata['sm_api_title']; //article headline returned
-
-                text = smmrydata['sm_api_content']; //summarised article returned
-
-                error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                if (!(error === 2)) {
-                  _context8.next = 63;
-                  break;
-                }
-
-                if (!data.split('<title>')[1]) {
-                  _context8.next = 59;
-                  break;
-                }
-
-                headline = data.split('<title>')[1];
-
-                if (!headline.split('</title>')[0]) {
-                  _context8.next = 56;
-                  break;
-                }
-
-                headline = headline.split('</title>')[0]; //get headline from article data
-
-                _context8.next = 57;
-                break;
-
-              case 56:
-                return _context8.abrupt("return", undefined);
-
-              case 57:
-                _context8.next = 60;
-                break;
-
-              case 59:
-                return _context8.abrupt("return", undefined);
-
-              case 60:
-                text = _articleextractor.ArticleExtractor.extractNewsAUText(data);
-
-                if (!(text === undefined)) {
-                  _context8.next = 63;
+                if (!(headline === undefined || text === undefined || ['?'].includes(headline))) {
+                  _context8.next = 33;
                   break;
                 }
 
                 return _context8.abrupt("return", undefined);
 
-              case 63:
-                if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context8.next = 65;
-                  break;
-                }
+              case 33:
+                headline = _articleextractor.DataCleaner.cleanText(headline);
+                return _context8.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
-                return _context8.abrupt("return", undefined);
-
-              case 65:
-                headline = _articleextractor.DataCleaner.cleanText(headline); // /**
-                //  * TRANSLATING
-                //  */
-                //
-                // if (language_choice !== "English")
-                // {
-                //     const translations = await callTranslation(publisher, topic, headline, text);
-                //
-                //     if (translations !== undefined)
-                //     {
-                //         publisher = translations[0];
-                //         topic = translations[1];
-                //         headline = translations[2];
-                //         text = translations[3];
-                //     }
-                //     else
-                //     {
-                //         new Speech(translation_unavailable[language_choice]).speak();
-                //     }
-                // }
-
-                return _context8.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
-
-              case 67:
+              case 35:
               case "end":
                 return _context8.stop();
             }
@@ -1673,7 +1361,7 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", textSplitter("text"));
+                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
 
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
@@ -1696,7 +1384,7 @@ var PageParser = /*#__PURE__*/function () {
                 articlelinks = [];
 
                 for (_i11 = 0; _i11 < linksarr.length; _i11 += 1) {
-                  current = linksarr[_i11]; //if (current.matches("/^[a-z0-9]+$/"))
+                  current = linksarr[_i11];
 
                   if (current.includes('-') && current.includes("news/") && !current.includes("topic/") && !current.includes("meet-the-team/") && !current.includes("/uk-weather-forecast-") && !current.includes("/assets/") && /\d/.test(current)) {
                     articlelinks.push(_preferences.sourcelinks[publisher] + current);
@@ -1728,8 +1416,8 @@ var PageParser = /*#__PURE__*/function () {
                 timeout = 0;
 
               case 17:
-                if (!(data === undefined && timeout < 3)) {
-                  _context9.next = 27;
+                if (!(!data && timeout < 3)) {
+                  _context9.next = 25;
                   break;
                 }
 
@@ -1742,17 +1430,16 @@ var PageParser = /*#__PURE__*/function () {
                 data = _context9.sent;
                 //fetch data from article page
                 timeout += 1;
+                _context9.next = 17;
+                break;
 
-                if (!(data === undefined && timeout === 3 || randomlink === undefined && timeout === 3)) {
-                  _context9.next = 25;
+              case 25:
+                if (!(!data && timeout === 3 || !randomlink && timeout === 3)) {
+                  _context9.next = 27;
                   break;
                 }
 
                 return _context9.abrupt("return", undefined);
-
-              case 25:
-                _context9.next = 17;
-                break;
 
               case 27:
                 _context9.next = 29;
@@ -1761,182 +1448,63 @@ var PageParser = /*#__PURE__*/function () {
               case 29:
                 smmrydata = _context9.sent;
 
-                if (!(smmrydata === undefined)) {
-                  _context9.next = 55;
-                  break;
-                }
+                //send article to SMMRY
+                if (smmrydata === undefined) //SMMRY API unavailable
+                  {
+                    if (data.split('<title>')[1]) {
+                      headline = data.split('<title>')[1];
 
-                if (!data.split('<title>')[1]) {
-                  _context9.next = 40;
-                  break;
-                }
+                      if (headline.split(' - ITV News')[0]) {
+                        headline = headline.split(' - ITV News')[0]; //get headline from article data
+                      }
+                    } else if (data.split('<h1 class="update__title update__title--large">')[1]) {
+                      headline = data.split('<h1 class="update__title update__title--large">')[1];
 
-                headline = data.split('<title>')[1];
+                      if (headline.split('</h1>')[0]) {
+                        headline = headline.split('</h1>')[0];
+                      }
+                    }
 
-                if (!headline.split(' - ITV News')[0]) {
-                  _context9.next = 37;
-                  break;
-                }
+                    text = _articleextractor.ArticleExtractor.extractITVText(data);
+                  } else //SMMRY API working fine
+                  {
+                    headline = smmrydata['sm_api_title']; //article headline returned
 
-                headline = headline.split(' - ITV News')[0]; //get headline from article data
+                    text = smmrydata['sm_api_content']; //summarised article returned
 
-                _context9.next = 38;
-                break;
+                    error = smmrydata['sm_api_error']; //detecting presence of error code
 
-              case 37:
-                return _context9.abrupt("return", undefined);
+                    if (error === 2) {
+                      if (data.split('<title>')[1]) {
+                        headline = data.split('<title>')[1];
 
-              case 38:
-                _context9.next = 50;
-                break;
+                        if (headline.split(' - ITV News')[0]) {
+                          headline = headline.split(' - ITV News')[0]; //get headline from article data
+                        }
+                      } else if (data.split('<h1 class="update__title update__title--large">')[1]) {
+                        headline = data.split('<h1 class="update__title update__title--large">')[1];
 
-              case 40:
-                if (!data.split('<h1 class="update__title update__title--large">')[1]) {
-                  _context9.next = 49;
-                  break;
-                }
+                        if (headline.split('</h1>')[0]) {
+                          headline = headline.split('</h1>')[0];
+                        }
+                      }
 
-                headline = data.split('<h1 class="update__title update__title--large">')[1];
+                      text = _articleextractor.ArticleExtractor.extractITVText(data);
+                    }
+                  }
 
-                if (!headline.split('</h1>')[0]) {
-                  _context9.next = 46;
-                  break;
-                }
-
-                headline = headline.split('</h1>')[0];
-                _context9.next = 47;
-                break;
-
-              case 46:
-                return _context9.abrupt("return", undefined);
-
-              case 47:
-                _context9.next = 50;
-                break;
-
-              case 49:
-                return _context9.abrupt("return", undefined);
-
-              case 50:
-                text = _articleextractor.ArticleExtractor.extractITVText(data);
-
-                if (!(text === undefined)) {
-                  _context9.next = 53;
-                  break;
-                }
-
-                return _context9.abrupt("return", undefined);
-
-              case 53:
-                _context9.next = 81;
-                break;
-
-              case 55:
-                headline = smmrydata['sm_api_title']; //article headline returned
-
-                text = smmrydata['sm_api_content']; //summarised article returned
-
-                error = smmrydata['sm_api_error']; //detecting presence of error code
-
-                if (!(error === 2)) {
-                  _context9.next = 81;
-                  break;
-                }
-
-                if (!data.split('<title>')[1]) {
-                  _context9.next = 68;
-                  break;
-                }
-
-                headline = data.split('<title>')[1];
-
-                if (!headline.split(' - ITV News')[0]) {
-                  _context9.next = 65;
-                  break;
-                }
-
-                headline = headline.split(' - ITV News')[0]; //get headline from article data
-
-                _context9.next = 66;
-                break;
-
-              case 65:
-                return _context9.abrupt("return", undefined);
-
-              case 66:
-                _context9.next = 78;
-                break;
-
-              case 68:
-                if (!data.split('<h1 class="update__title update__title--large">')[1]) {
-                  _context9.next = 77;
-                  break;
-                }
-
-                headline = data.split('<h1 class="update__title update__title--large">')[1];
-
-                if (!headline.split('</h1>')[0]) {
-                  _context9.next = 74;
-                  break;
-                }
-
-                headline = headline.split('</h1>')[0];
-                _context9.next = 75;
-                break;
-
-              case 74:
-                return _context9.abrupt("return", undefined);
-
-              case 75:
-                _context9.next = 78;
-                break;
-
-              case 77:
-                return _context9.abrupt("return", undefined);
-
-              case 78:
-                text = _articleextractor.ArticleExtractor.extractITVText(data);
-
-                if (!(text === undefined)) {
-                  _context9.next = 81;
-                  break;
-                }
-
-                return _context9.abrupt("return", undefined);
-
-              case 81:
                 if (!(headline === undefined || text === undefined || headline.includes('?'))) {
-                  _context9.next = 83;
+                  _context9.next = 33;
                   break;
                 }
 
                 return _context9.abrupt("return", undefined);
 
-              case 83:
-                headline = _articleextractor.DataCleaner.cleanText(headline); // /**
-                //  * TRANSLATING
-                //  */
-                //
-                // if (language_choice !== "English")
-                // {
-                //     const translations = await callTranslation(publisher, topic, headline, text);
-                //
-                //     if (translations !== undefined)
-                //     {
-                //         publisher = translations[0];
-                //         topic = translations[1];
-                //         headline = translations[2];
-                //         text = translations[3];
-                //     }
-                //     else
-                //     {
-                //         new Speech(translation_unavailable[language_choice]).speak();
-                //     }
-                // }
+              case 33:
+                headline = _articleextractor.DataCleaner.cleanText(headline);
+                return _context9.abrupt("return", new _article.Article(publisher, topic, headline, DataParser.textSplitter(headline), randomlink, text, DataParser.textSplitter(text)));
 
-                return _context9.abrupt("return", new _article.Article(publisher, topic, headline, textSplitter(headline), randomlink, text, textSplitter(text)));
-
-              case 85:
+              case 35:
               case "end":
                 return _context9.stop();
             }
@@ -1961,105 +1529,136 @@ var PageParser = /*#__PURE__*/function () {
     value: function extractPageData(theurl) {
       return $.ajax({
         url: theurl
-      }).done(function (data) {}).fail(function (ajaxError) {}); //not convinced this actually returns or throws an error
+      });
     }
   }]);
   return PageParser;
 }();
-/**
- * Designed to split a paragraph of text into sentences.
- * However, sentences longer than 150 characters are split into segments of ~150 characters and pushed
- * one after the other to an array. Once all sentences are split and pushed on, the array is returned
- *
- * PURPOSE
- * The reason for splitting sentences > 150 characters is to prevent the SpeechSynthesis module from
- * randomly cutting out. This only happens when being spoken in a non-English language/dialect and only
- * with utterances of 200-300 words. 150 characters is seen as a safety net for preventing this.
- *
- * EXAMPLE
- * text - "sentence. sentence >150 chars. sentence."
- * return - ['sentence.' 'partial sentence' 'partial sentence.' 'sentence.']
- *
- * @param text - the input paragraph
- * @returns {[]} - the array of sentences
- */
-
 
 exports.PageParser = PageParser;
+var valid_chars = [',', '.', '!', '?', '£', '$', '€', '"', "'", '%', '&', '(', ')', '#', '~', '/', '<', '>', '-', '_', '+', '='];
+exports.valid_chars = valid_chars;
 
-function textSplitter(text) {
-  var arr = [];
-  text = abbreviationConcatenation(text);
-  text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+var DataParser = /*#__PURE__*/function () {
+  function DataParser() {
+    (0, _classCallCheck2["default"])(this, DataParser);
+  }
 
-  if (!text) {
-    var current = text;
-    var segment = current;
+  (0, _createClass2["default"])(DataParser, null, [{
+    key: "textSplitter",
 
-    if (current.length > 150) {
-      while (current.length > 150) {
-        segment = current.substr(0, 150);
-        current = current.substr(150);
+    /**
+     * Designed to split a paragraph of text into sentences.
+     * However, sentences longer than 150 characters are split into segments of ~150 characters and pushed
+     * one after the other to an array. Once all sentences are split and pushed on, the array is returned
+     *
+     * PURPOSE
+     * The reason for splitting sentences > 150 characters is to prevent the SpeechSynthesis module from
+     * randomly cutting out. This only happens when being spoken in a non-English language/dialect and only
+     * with utterances of 200-300 words. 150 characters is seen as a safety net for preventing this.
+     *
+     * EXAMPLE
+     * text - "sentence. sentence >150 chars. sentence."
+     * return - ['sentence.' 'partial sentence' 'partial sentence.' 'sentence.']
+     *
+     * @param text - the input paragraph
+     * @returns {[]} - the array of sentences
+     */
+    value: function textSplitter(text) {
+      if (!text) return undefined;
+      var arr = [];
+      text = DataParser.abbreviationConcatenation(text);
+      text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
 
-        while (isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && isCharacter(current.charAt(1))) {
-          segment += current.charAt(0);
-          current = current.substr(1);
-        }
+      if (!text) {
+        var current = text;
+        var segment = current;
 
-        arr.push(segment);
-      }
+        if (current.length > 150) {
+          while (current.length > 150) {
+            segment = current.substr(0, 150);
+            current = current.substr(150);
 
-      arr.push(current);
-    } else {
-      arr.push(segment);
-    }
-  } else {
-    for (var i = 0; i < text.length; i++) {
-      var _current = text[i];
-      var _segment = _current;
+            while (DataParser.isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && DataParser.isCharacter(current.charAt(1))) {
+              segment += current.charAt(0);
+              current = current.substr(1);
+            }
 
-      if (_current.length > 150) {
-        while (_current.length > 150) {
-          _segment = _current.substr(0, 150);
-          _current = _current.substr(150);
-
-          while (isCharacter(_current.charAt(0)) || [',', '.'].includes(_current.charAt(0)) && isCharacter(_current.charAt(1))) {
-            _segment += _current.charAt(0);
-            _current = _current.substr(1);
+            arr.push(segment);
           }
 
-          arr.push(_segment);
+          arr.push(current);
+        } else {
+          arr.push(segment);
+        }
+      } else {
+        for (var i = 0; i < text.length; i++) {
+          var _current = text[i];
+          var _segment = _current;
+
+          if (_current.length > 150) {
+            while (_current.length > 150) {
+              _segment = _current.substr(0, 150);
+              _current = _current.substr(150);
+
+              while (DataParser.isCharacter(_current.charAt(0)) || [',', '.'].includes(_current.charAt(0)) && DataParser.isCharacter(_current.charAt(1))) {
+                _segment += _current.charAt(0);
+                _current = _current.substr(1);
+              }
+
+              arr.push(_segment);
+            }
+
+            arr.push(_current);
+          } else {
+            arr.push(_segment);
+          }
+        }
+      }
+
+      return arr;
+    }
+  }, {
+    key: "isCharacter",
+    value: function isCharacter(str) {
+      var caseChoice = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'any';
+      if (!str) return false;
+      if (str.length !== 1 || !['any', 'lowercase', 'uppercase'].includes(caseChoice)) return false;
+      if (str === ' ') return false;
+      if (valid_chars.includes(str)) return true;
+
+      try {
+        var num = parseInt(str);
+        if (!isNaN(num) && caseChoice === 'any') return true;
+      } catch (TypeError) {}
+
+      if (caseChoice === 'uppercase') return str >= 'A' && str <= 'Z';else if (caseChoice === 'lowercase') return str >= 'a' && str <= 'z';else return str >= 'A' && str <= 'Z' || str >= 'a' && str <= 'z';
+    }
+  }, {
+    key: "abbreviationConcatenation",
+    value: function abbreviationConcatenation(str) {
+      var newText = "";
+
+      for (var i = 0; i < str.length - 1; i++) {
+        var current = str.charAt(i);
+
+        if (i >= 1) {
+          var previous = str.charAt(i - 1);
+          var next = str.charAt(i + 1);
+          if (DataParser.isCharacter(previous, 'uppercase') && current === '.' && DataParser.isCharacter(next, 'uppercase')) i++;else if (i >= 3) {
+            var previousprevious = str.charAt(i - 2);
+            if (previousprevious === '.' && DataParser.isCharacter(previous, 'uppercase') && current === '.' && !DataParser.isCharacter(next)) i++;
+          }
         }
 
-        arr.push(_current);
-      } else {
-        arr.push(_segment);
+        newText += str.charAt(i);
       }
+
+      newText += str.charAt(str.length - 1);
+      return newText;
     }
-  }
+  }]);
+  return DataParser;
+}();
 
-  return arr;
-}
-
-function isCharacter(str) {
-  var caseChoice = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'any';
-  if (caseChoice === 'lowercase') return str.length === 1 && str.match(/[a-z0-9]/i);
-  if (caseChoice === 'uppercase') return str.length === 1 && str.match(/[A-Z0-9]/i);
-  return str.length === 1 && str.match(/[a-zA-Z0-9]/i);
-}
-
-function abbreviationConcatenation(str) {
-  var newText = "";
-
-  for (var i = 0; i < str.length - 1; i++) {
-    var current = str.charAt(i);
-    var next = str.charAt(i + 1);
-
-    if (current === '.' && isCharacter(next, 'uppercase')) {} else {
-      newText += current;
-    }
-  }
-
-  newText += str.charAt(str.length - 1);
-  return newText;
-}
+exports.DataParser = DataParser;

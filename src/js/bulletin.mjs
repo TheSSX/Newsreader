@@ -5,7 +5,8 @@ import {Speech} from "./speech.mjs";
 import {languages, translation_unavailable} from "./language_config.js";
 import {Translator} from "./translator.mjs";
 
-let articles, remaining;
+let articles = [];
+let remaining = 0;
 
 /**
  Class for object to query random sourcelinks for each topic
@@ -47,6 +48,10 @@ export class Bulletin
         // window.speechSynthesis.speak(utterance);
         // return true;
 
+        //News.com.au does not have UK news
+        if (Bulletin.checkNewsAUUK(sources, topics))
+            return false;
+
         articles = [];
         remaining = Object.keys(topics).length;
 
@@ -60,19 +65,8 @@ export class Bulletin
                 continue;
             }
 
-            //News.com.au does not have UK news.
-            if (topic === "uk" && source === "News.com.au")
+            while (!sources[source])
             {
-                if (checkNewsAUUK(sources, topics))
-                    continue
-            }
-
-            while (topic === "uk" && source === "News.com.au")
-            {
-                source = Object.keys(sourcelinks)[Math.floor(Math.random() * Object.keys(sourcelinks).length)];
-            }
-
-            while (!sources[source]) {
                 source = Object.keys(sourcelinks)[Math.floor(Math.random() * Object.keys(sourcelinks).length)];
             }
 
@@ -85,28 +79,23 @@ export class Bulletin
                     articles.push(article);
                     remaining--;
 
-                    if (remaining === 0)
+                    if (remaining <= 0)
                     {
-                        const utterance = new SpeechSynthesisUtterance("");
-                        utterance.onend = async function () {
-                            let nextArticle = articles.shift();
-                            if (nextArticle === undefined)
-                            {
-                                chrome.runtime.sendMessage({greeting: "stop"});
-                                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                        let nextArticle = articles.shift();
+                        if (nextArticle === undefined)
+                        {
+                            chrome.runtime.sendMessage({greeting: "stop"});
+                            chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                            return false;
+                        }
+
+                        Bulletin.checkSentences(nextArticle).then(newArticle => {
+                            Bulletin.checkTranslation(newArticle).then(result => {
+                                nextArticle = result;
+                                Bulletin.readArticles(nextArticle, articles);
                                 return true;
-                            }
-
-                            Bulletin.checkSentences(nextArticle).then(newArticle => {
-                                Bulletin.checkTranslation(newArticle).then(result => {
-                                    nextArticle = result;
-                                    Bulletin.readArticles(nextArticle, articles);
-                                });
                             });
-                        };
-
-                        window.speechSynthesis.speak(utterance);
-                        return true;
+                        });
                     }
                 })
                 .catch(function () {
@@ -132,28 +121,23 @@ export class Bulletin
                 articles.push(article);
                 remaining--;
 
-                if (remaining === 0)
+                if (remaining <= 0)
                 {
-                    const utterance = new SpeechSynthesisUtterance("");
-                    utterance.onend = async function () {
-                        let nextArticle = articles.shift();
-                        if (nextArticle === undefined)
-                        {
-                            chrome.runtime.sendMessage({greeting: "stop"});
-                            chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                    let nextArticle = articles.shift();
+                    if (nextArticle === undefined)
+                    {
+                        chrome.runtime.sendMessage({greeting: "stop"});
+                        chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                        return false;
+                    }
+
+                    Bulletin.checkSentences(nextArticle).then(newArticle => {
+                        Bulletin.checkTranslation(newArticle).then(result => {
+                            nextArticle = result;
+                            Bulletin.readArticles(nextArticle, articles);
                             return true;
-                        }
-
-                        Bulletin.checkSentences(nextArticle).then(newArticle => {
-                            Bulletin.checkTranslation(newArticle).then(result => {
-                                nextArticle = result;
-                                Bulletin.readArticles(nextArticle, articles);
-                            });
                         });
-                    };
-
-                    window.speechSynthesis.speak(utterance);
-                    return true;
+                    });
                 }
             })
             .catch(function () {
@@ -166,28 +150,23 @@ export class Bulletin
             {
                 remaining--;
 
-                if (remaining === 0)
+                if (remaining <= 0)
                 {
-                    const utterance = new SpeechSynthesisUtterance("");
-                    utterance.onend = async function () {
-                        let nextArticle = articles.shift();
-                        if (nextArticle === undefined)
-                        {
-                            chrome.runtime.sendMessage({greeting: "stop"});
-                            chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                    let nextArticle = articles.shift();
+                    if (nextArticle === undefined)
+                    {
+                        chrome.runtime.sendMessage({greeting: "stop"});
+                        chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                        return false;
+                    }
+
+                    Bulletin.checkSentences(nextArticle).then(newArticle => {
+                        Bulletin.checkTranslation(newArticle).then(result => {
+                            nextArticle = result;
+                            Bulletin.readArticles(nextArticle, articles);
                             return true;
-                        }
-
-                        Bulletin.checkSentences(nextArticle).then(newArticle => {
-                            Bulletin.checkTranslation(newArticle).then(result => {
-                                nextArticle = result;
-                                Bulletin.readArticles(nextArticle, articles);
-                            });
                         });
-                    };
-
-                    window.speechSynthesis.speak(utterance);
-                    return true;
+                    });
                 }
             }
             else
@@ -212,7 +191,7 @@ export class Bulletin
             message = {
                 "headline": current.allheadline,
                 "publisher": current.publisher,
-                "topic": capitalizeFirstLetter(current.topic)
+                "topic": Bulletin.capitalizeFirstLetter(current.topic)
             };
         }
         else
@@ -220,7 +199,7 @@ export class Bulletin
             message = {
                 "headline": current.headline,
                 "publisher": current.publisher,
-                "topic": capitalizeFirstLetter(current.topic)
+                "topic": Bulletin.capitalizeFirstLetter(current.topic)
             };
         }
 
@@ -298,8 +277,11 @@ export class Bulletin
 
     static async getTranslatedArticle(article, language_choice)
     {
-        //return new Article("This is " + language_choice, "This is " + article.topic, "", "", "hello", ["translated text"], language_choice);
         const publishertranslatedata = await Translator.translate(article.publisher, languages[language_choice]);
+
+        if (publishertranslatedata === undefined)
+            return undefined;
+
         const topictranslatedata = await Translator.translate(article.topic, languages[language_choice]);
 
         let headline = [];
@@ -321,7 +303,7 @@ export class Bulletin
         }
 
         //If translation API not available
-        if (publishertranslatedata === undefined || topictranslatedata === undefined || article.headline.length !== headline.length || article.text.length !== text.length)
+        if (topictranslatedata === undefined || article.headline.length !== headline.length || article.text.length !== text.length)
         {
             return undefined;
         }
@@ -337,37 +319,34 @@ export class Bulletin
             return new Article(publisher, topic, article.headline, headline, article.link, article.alltext, text, language_choice);
         }
     }
-}
 
-//Thanks to user Steve Harrison on Stack Overflow
-//Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
-function capitalizeFirstLetter(string) {
-    try
+    static checkNewsAUUK(sources, topics)
     {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-    catch(TypeError)
-    {
-        return string;
-    }
-}
-
-export function checkNewsAUUK(sources, topics)
-{
-    if (!sources['News.com.au'] || !topics['uk'])
-        return false;
-
-    for (let i=0; i<Object.keys(sources).length; i++)
-    {
-        if (sources[Object.keys(sources)[i]] && Object.keys(sources)[i] !== 'News.com.au')
+        if (!sources['News.com.au'] || !topics['uk'])
             return false;
+
+        for (let i=0; i<Object.keys(sources).length; i++)
+        {
+            if (sources[Object.keys(sources)[i]] && Object.keys(sources)[i] !== 'News.com.au')
+                return false;
+        }
+
+        for (let i=0; i<Object.keys(topics).length; i++)
+        {
+            if (topics[Object.keys(topics)[i]] && Object.keys(topics)[i] !== 'uk')
+                return false;
+        }
+
+        return true;
     }
 
-    for (let i=0; i<Object.keys(topics).length; i++)
-    {
-        if (topics[Object.keys(topics)[i]] && Object.keys(topics)[i] !== 'uk')
-            return false;
+    //Thanks to user Steve Harrison on Stack Overflow
+    //Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
+    static capitalizeFirstLetter(string) {
+        try {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        } catch (TypeError) {
+            return string;
+        }
     }
-
-    return true;
 }

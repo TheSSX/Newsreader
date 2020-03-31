@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Summarise = void 0;
+exports.Summarise = exports.apikey = exports.smmryurl = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -17,13 +17,17 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 
 var _preferences = require("./preferences.js");
 
+var _pageparser = require("../../dist/js/pageparser");
+
 /**
  * Class to summarise articles. Communicates with the SMMRY API or, failing that, attempts to
  * summarise the article itself.
  * Contains config info for querying the SMMRY API
  */
 var smmryurl = "https://api.smmry.com/";
+exports.smmryurl = smmryurl;
 var apikey = "D7F33A666C";
+exports.apikey = apikey;
 
 var Summarise = /*#__PURE__*/function () {
   function Summarise() {
@@ -52,7 +56,7 @@ var Summarise = /*#__PURE__*/function () {
                 url = this.constructsmmryurl(articleurl, sentences);
                 _context.prev = 2;
                 _context.next = 5;
-                return this.contactsmmry(url);
+                return _pageparser.PageParser.extractPageData(url);
 
               case 5:
                 return _context.abrupt("return", _context.sent);
@@ -86,20 +90,8 @@ var Summarise = /*#__PURE__*/function () {
   }, {
     key: "constructsmmryurl",
     value: function constructsmmryurl(articleurl, sentences) {
+      if (!articleurl || !sentences) return undefined;
       return "".concat(smmryurl, "&SM_API_KEY=").concat(apikey, "&SM_LENGTH=").concat(sentences, "&SM_QUESTION_AVOID&SM_EXCLAMATION_AVOID&SM_URL=").concat(articleurl);
-    }
-    /**
-     * Queries SMMRY and returns JSON data
-     * @param url - the GET request to SMMRY
-     * @returns {*} - actually returns the JSON response from SMMRY
-     */
-
-  }, {
-    key: "contactsmmry",
-    value: function contactsmmry(url) {
-      return $.ajax({
-        url: url
-      }).done(function (data) {}).fail(function (ajaxError) {});
     }
   }]);
   return Summarise;

@@ -191,7 +191,6 @@ export class ArticleExtractor
 
         articletext = DataCleaner.cleanText(articletext);
 
-        //TODO maybe not the best idea. Could be hyphen in the text somewhere
         if (articletext.split(' - ')[1])
         {
             articletext = articletext.split(' - ')[1];
@@ -242,10 +241,6 @@ export class ArticleExtractor
         return DataCleaner.cleanText(articletext);
     }
 
-    //TODO this isn't actually getting the headline most of the time. Fix
-    //Uncaught (in promise) TypeError: Cannot read property 'split' of undefined
-    //     at Function.extractAPHeadline (articleextractor.mjs:306)
-    //     at Function.extractAP (pageparser.mjs:733)
     static extractAPHeadline(data)
     {
         if (data.split('<div class="CardHeadline">')[1])
@@ -272,9 +267,15 @@ export class ArticleExtractor
         let articletext = "";
         let counter = 0;
 
-        //TODO add in the various return undefined's here
-        data = data.split('<div class="Article" data-key="article">')[1];
-        data = data.split('<div class="bellow-article">')[0];
+        if (data.split('<div class="Article" data-key="article">')[1])
+            data = data.split('<div class="Article" data-key="article">')[1];
+        else
+            return undefined;
+
+        if (data.split('<div class="bellow-article">')[0])
+            data = data.split('<div class="bellow-article">')[0];
+        else
+            return undefined;
 
         while (counter < data.length - 3)
         {

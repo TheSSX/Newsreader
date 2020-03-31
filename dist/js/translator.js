@@ -17,6 +17,8 @@ var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/creat
 
 var _yandex = require("./yandex.js");
 
+var _pageparser = require("../../dist/js/pageparser");
+
 /**
  Class for translating articles via the Yandex free translation service.
  Yandex offers one million free characters translated every day.
@@ -45,7 +47,7 @@ var Translator = /*#__PURE__*/function () {
                 url = this.constructyandexurl(text, targetlang);
                 _context.prev = 1;
                 _context.next = 4;
-                return this.contactyandex(url);
+                return _pageparser.PageParser.extractPageData(url);
 
               case 4:
                 return _context.abrupt("return", _context.sent);
@@ -79,20 +81,8 @@ var Translator = /*#__PURE__*/function () {
   }, {
     key: "constructyandexurl",
     value: function constructyandexurl(text, targetlang) {
+      if (!text || !targetlang) return undefined;
       return "".concat(_yandex.yandexurl, "?key=").concat(_yandex.apikey, "&text=").concat(text, "&lang=").concat(targetlang);
-    }
-    /**
-     * Queries Yandex and returns JSON data
-     * @param url - the URL to query
-     * @returns {*} - the JSON data
-     */
-
-  }, {
-    key: "contactyandex",
-    value: function contactyandex(url) {
-      return $.ajax({
-        url: url
-      }).done(function (data) {}).fail(function (ajaxError) {});
     }
   }]);
   return Translator;

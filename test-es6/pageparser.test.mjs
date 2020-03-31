@@ -1,11 +1,12 @@
-import {describe, it, suite, afterEach} from "mocha";
+import {describe, it, xit, suite, afterEach, before} from "mocha";
 import {expect} from "chai";
-import {stub, restore} from "sinon";
-import {PageParser, textSplitter} from "../dist/js/pageparser.js";
+import {stub, restore, spy} from "sinon";
+import {PageParser, DataParser, valid_chars} from "../dist/js/pageparser.js";
 import {Article} from "../dist/js/article.js";
 import {ArticleExtractor} from "../dist/js/articleextractor.js";
 import {topiclinks, sourcelinks} from "../dist/js/preferences.js";
 import {Summarise} from "../dist/js/summarise.js";
+const jsdom = require('jsdom-global');
 
 const valid_test_smmry_json = {
     'sm_api_title': 'test-headline',
@@ -22,6 +23,11 @@ const invalid_test_smmry_json = {
 const topic = Object.keys(topiclinks)[Math.floor(Math.random() * Object.keys(topiclinks).length)];   //random topic
 
 suite ('PageParser', function () {
+
+    before(function () {
+        jsdom();
+        global.$ = global.jQuery = require('jquery');
+    });
 
     afterEach(function () {
         restore();
@@ -101,10 +107,6 @@ suite ('PageParser', function () {
             //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
             let stub_extractGuardianText = stub(ArticleExtractor, 'extractGuardianText').returns(undefined);
 
-            //Can't figure this out at all
-            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
             let result = await PageParser.extractGuardian(topic, "test");
 
             //First for getting links on topic page, second for getting article page
@@ -122,10 +124,8 @@ suite ('PageParser', function () {
             //Manual article extraction shouldn't have been called
             expect(stub_extractGuardianText.called).to.be.equal(false);
 
-            //expect(stub_callTranslation.called).to.be.equal(false);
-
             //My hacky way of determining if the result is an Article object
-            expect(typeof result).to.be.equal(typeof new Article("test", "test", textSplitter("test"), "test", "test", textSplitter("test"), "test"));
+            expect(typeof result).to.be.equal(typeof new Article("test", "test", DataParser.textSplitter("test"), "test", "test", DataParser.textSplitter("test"), "test"));
 
 
 
@@ -152,8 +152,6 @@ suite ('PageParser', function () {
             expect(summarise_arg).to.be.equal(test_link);
 
             expect(stub_extractGuardianText.called).to.be.equal(true);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -242,10 +240,6 @@ suite ('PageParser', function () {
             //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
             let stub_extractBBCText = stub(ArticleExtractor, 'extractBBCText').returns(undefined);
 
-            //Can't figure this out at all
-            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
             let result = await PageParser.extractBBC(topic, "test");
 
             //First for getting links on topic page, second for getting article page
@@ -262,8 +256,6 @@ suite ('PageParser', function () {
 
             //Manual article extraction shouldn't have been called
             expect(stub_extractBBCText.called).to.be.equal(false);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -293,8 +285,6 @@ suite ('PageParser', function () {
             expect(summarise_arg).to.be.equal(sourcelinks["BBC"] + 'news/' + test_link);
 
             expect(stub_extractBBCText.called).to.be.equal(true);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -382,10 +372,6 @@ suite ('PageParser', function () {
             //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
             let stub_extractReutersText = stub(ArticleExtractor, 'extractReutersText').returns(undefined);
 
-            //Can't figure this out at all
-            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
             let result = await PageParser.extractReuters(topic, "test");
 
             //First for getting links on topic page, second for getting article page
@@ -403,8 +389,6 @@ suite ('PageParser', function () {
 
             //Manual article extraction shouldn't have been called
             expect(stub_extractReutersText.called).to.be.equal(false);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -434,8 +418,6 @@ suite ('PageParser', function () {
             expect(summarise_arg).to.be.oneOf([sourcelinks["Reuters"] + test_link, 'https://uk.reuters.com/' + test_link]);
 
             expect(stub_extractReutersText.called).to.be.equal(true);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -525,10 +507,6 @@ suite ('PageParser', function () {
             //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
             let stub_extractSkyText = stub(ArticleExtractor, 'extractSkyText').returns(undefined);
 
-            //Can't figure this out at all
-            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
             let result = await PageParser.extractSky(topic, "test");
 
             //First for getting links on topic page, second for getting article page
@@ -546,8 +524,6 @@ suite ('PageParser', function () {
 
             //Manual article extraction shouldn't have been called
             expect(stub_extractSkyText.called).to.be.equal(false);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -578,8 +554,6 @@ suite ('PageParser', function () {
             expect(summarise_arg).to.be.oneOf([sourcelinks["Sky News"] + 'story/' +  test_link, 'https://www.skysports.com/' + test_link]);
 
             expect(stub_extractSkyText.called).to.be.equal(true);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -669,10 +643,6 @@ suite ('PageParser', function () {
             let stub_extractAPHeadline = stub(ArticleExtractor, 'extractAPHeadline').returns(undefined);
             let stub_extractAPText = stub(ArticleExtractor, 'extractAPText').returns(undefined);
 
-            //Can't figure this out at all
-            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
             let result = await PageParser.extractAP(topic, "test");
 
             //First for getting links on topic page, second for getting article page
@@ -690,8 +660,6 @@ suite ('PageParser', function () {
             //Manual article extraction shouldn't have been called
             expect(stub_extractAPHeadline.called).to.be.equal(false);
             expect(stub_extractAPText.called).to.be.equal(false);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -724,8 +692,6 @@ suite ('PageParser', function () {
 
             expect(stub_extractAPHeadline.called).to.be.equal(true);
             expect(stub_extractAPText.called).to.be.equal(true);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -818,10 +784,6 @@ suite ('PageParser', function () {
             //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
             let stub_extractEveningStandardText = stub(ArticleExtractor, 'extractEveningStandardText').returns(undefined);
 
-            //Can't figure this out at all
-            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
             let result = await PageParser.extractEveningStandard(topic, "test");
 
             //First for getting links on topic page, second for getting article page
@@ -838,8 +800,6 @@ suite ('PageParser', function () {
 
             //Manual article extraction shouldn't have been called
             expect(stub_extractEveningStandardText.called).to.be.equal(false);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -869,8 +829,6 @@ suite ('PageParser', function () {
             expect(summarise_arg).to.be.equal(sourcelinks["Evening Standard"] + test_link);
 
             expect(stub_extractEveningStandardText.called).to.be.equal(true);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -959,10 +917,6 @@ suite ('PageParser', function () {
             //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
             let stub_extractIndependentText = stub(ArticleExtractor, 'extractIndependentText').returns(undefined);
 
-            //Can't figure this out at all
-            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
             let result = await PageParser.extractIndependent(topic, "test");
 
             //First for getting links on topic page, second for getting article page
@@ -979,8 +933,6 @@ suite ('PageParser', function () {
 
             //Manual article extraction shouldn't have been called
             expect(stub_extractIndependentText.called).to.be.equal(false);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -1010,8 +962,6 @@ suite ('PageParser', function () {
             expect(summarise_arg).to.be.equal(sourcelinks["The Independent"] + 'news/' + test_link);
 
             expect(stub_extractIndependentText.called).to.be.equal(true);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -1099,10 +1049,6 @@ suite ('PageParser', function () {
             //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
             let stub_extractITVText = stub(ArticleExtractor, 'extractITVText').returns(undefined);
 
-            //Can't figure this out at all
-            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
             let result = await PageParser.extractITV(topic, "test");
 
             //First for getting links on topic page, second for getting article page
@@ -1120,8 +1066,6 @@ suite ('PageParser', function () {
             //Manual article extraction shouldn't have been called
             expect(stub_extractITVText.called).to.be.equal(false);
 
-            //expect(stub_callTranslation.called).to.be.equal(false);
-
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
 
@@ -1131,7 +1075,7 @@ suite ('PageParser', function () {
             stub_summarise.restore();
             stub_extractITVText.restore();
 
-            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<title>Test headline - ITV News</title><p>Test</p><a href="/news/' + test_link + '"></a><p>Test</p>');
+            stub_extractPageData = stub(PageParser, 'extractPageData').returns('<h1 class="update__title update__title--large">Test headline</h1><p>Test</p><a href="/news/' + test_link + '"></a><p>Test</p>');
             stub_summarise = stub(Summarise, 'summarise').returns(undefined);
             stub_extractITVText = stub(ArticleExtractor, 'extractITVText').returns("Test article");
 
@@ -1151,8 +1095,6 @@ suite ('PageParser', function () {
 
             expect(stub_extractITVText.called).to.be.equal(true);
 
-            //expect(stub_callTranslation.called).to.be.equal(false);
-
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
             expect(result.allheadline).to.be.equal('Test headline');
@@ -1170,7 +1112,7 @@ suite ('PageParser', function () {
 
             let result = await PageParser.extractITV(topic, test_link);
             expect(stub_extractPageData.calledOnce).to.be.equal(true);
-            const argument = stub_extractPageData.getCall(-1).args[0];
+            let argument = stub_extractPageData.getCall(-1).args[0];
             expect(argument).to.be.equal(test_link);
             expect(result).to.be.equal(undefined);
 
@@ -1239,10 +1181,6 @@ suite ('PageParser', function () {
             //Shouldn't call this function but stubbing to reduce execution time and to test zero calls
             let stub_extractNewsAUText = stub(ArticleExtractor, 'extractNewsAUText').returns(undefined);
 
-            //Can't figure this out at all
-            //TypeError: (0 , _sinon.stub)(...).resolves is not a function
-            //const stub_callTranslation = stub(callTranslation).resolves(undefined);
-
             let result = await PageParser.extractNewsAU(topic, "test");
 
             //First for getting links on topic page, second for getting article page
@@ -1259,8 +1197,6 @@ suite ('PageParser', function () {
 
             //Manual article extraction shouldn't have been called
             expect(stub_extractNewsAUText.called).to.be.equal(false);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -1290,8 +1226,6 @@ suite ('PageParser', function () {
             expect(summarise_arg).to.be.equal(test_link);
 
             expect(stub_extractNewsAUText.called).to.be.equal(true);
-
-            //expect(stub_callTranslation.called).to.be.equal(false);
 
             //My hacky way of determining if the result is an Article object
             expect(typeof result).to.be.equal(typeof new Article("test", "test", "test", "test", "test", "test", "test"));
@@ -1364,49 +1298,154 @@ suite ('PageParser', function () {
         });
     });
 
-    // describe('extractPageData', function () {
-    //
-    //     it('Should return results from the web server', function () {
-    //
-    //         const server = createFakeServer();
-    //         server.respondWith("GET", "*",
-    //             [200, { "Content-Type": "application/json" },
-    //                 '[{ "id": 12, "comment": "Hey there" }]']);
-    //         const stub_ajax = stub($, 'ajax').resolves({ data: 'test data' });
-    //
-    //         PageParser.extractPageData("test").then((data) => {
-    //             server.respond();
-    //             console.log("Data is " + data);
-    //             expect(stub_ajax.called).to.be.equal(true);
-    //         });
-    //     });
-    // });
+    describe('extractPageData', function () {
+
+        it('Should return webpage data from the specified URL', async function () {
+            let url = 'https://www.example.com';
+            let response = "test";
+            let stub_ajax = stub($, 'ajax').returns(response);
+
+            let result = await PageParser.extractPageData(url);
+            expect(stub_ajax.called).to.be.equal(true);
+            expect(result).to.be.equal(response);
+        });
+    });
 });
 
-// describe('callTranslation', function () {
-//
-//     afterEach(function () {
-//         restore();
-//     });
-//
-//     it('Should return translated data', async function () {
-//         const stub_translate = stub(Translator, 'translate').resolves({'code': 200, 'text': 'translation'});
-//         const result = await callTranslation("test", "test", "test", "test");
-//         expect(stub_translate.callCount).to.be.equal(4);
-//         expect(result).to.be.deep.equal(['translation', 'translation', 'translation', 'translation']);
-//     });
-//
-//     it('Should return nothing if an error occurred', async function () {
-//         let stub_translate = stub(Translator, 'translate').resolves({'code': 500});
-//         let result = await callTranslation("test", "test", "test", "test");
-//         expect(stub_translate.callCount).to.be.equal(4);
-//         expect(result).to.be.equal(undefined);
-//
-//         restore();
-//
-//         stub_translate = stub(Translator, 'translate').resolves(undefined);
-//         result = await callTranslation("test", "test", "test", "test");
-//         expect(stub_translate.callCount).to.be.equal(4);
-//         expect(result).to.be.equal(undefined);
-//     });
-// });
+suite('DataParser', function () {
+
+    afterEach(function () {
+        restore();
+    });
+
+    describe('textSplitter', function () {
+
+        it('Should split up input text into an array of sentences', function () {
+            const text1 = "This is a sentence.";
+            const text2 = "This is a sentence. Here is another sentence.";
+            const text3 = "This is a sentence. Here is another sentence! Here's another?";
+            const text4 = "Here is a very long sentence greater than 150 characters to test if the algorithm can split it up and push it all onto the array in separate chunks instead of in one go. Then another sentence to make sure it's still working!";
+            const text5 = "Here is a sentence with no punctuation";
+            const text6 = "Here is a sentence with abbreviations: The U.S. army and the C.I.A. were involved, as well as the F.B.I and N.A.S.A.";
+            const text7 = "12.5 gallons were produced.";
+
+            let spy_abbreviationConcatenation = spy(DataParser, 'abbreviationConcatenation');
+
+            let result = DataParser.textSplitter(text1);
+            expect(result).to.be.deep.equal([text1]);
+            expect(spy_abbreviationConcatenation.called).to.be.equal(true);
+
+            restore();
+
+            spy_abbreviationConcatenation = spy(DataParser, 'abbreviationConcatenation');
+            result = DataParser.textSplitter(text2);
+            expect(result.length).to.be.equal(2);
+            expect(spy_abbreviationConcatenation.called).to.be.equal(true);
+
+            restore();
+
+            spy_abbreviationConcatenation = spy(DataParser, 'abbreviationConcatenation');
+            result = DataParser.textSplitter(text3);
+            expect(result.length).to.be.equal(3);
+            expect(spy_abbreviationConcatenation.called).to.be.equal(true);
+
+            restore();
+
+            spy_abbreviationConcatenation = spy(DataParser, 'abbreviationConcatenation');
+            result = DataParser.textSplitter(text4);
+            expect(result.length).to.be.equal(3);
+            expect(spy_abbreviationConcatenation.called).to.be.equal(true);
+
+            restore();
+
+            spy_abbreviationConcatenation = spy(DataParser, 'abbreviationConcatenation');
+            result = DataParser.textSplitter(text5);
+            expect(result).to.be.deep.equal([text5]);
+            expect(spy_abbreviationConcatenation.called).to.be.equal(true);
+
+            restore();
+
+            spy_abbreviationConcatenation = spy(DataParser, 'abbreviationConcatenation');
+            result = DataParser.textSplitter(text6);
+            expect(result).to.be.deep.equal(['Here is a sentence with abbreviations: The US army and the CIA were involved, as well as the FBI and NASA.']);
+            expect(spy_abbreviationConcatenation.called).to.be.equal(true);
+
+            restore();
+
+            spy_abbreviationConcatenation = spy(DataParser, 'abbreviationConcatenation');
+            result = DataParser.textSplitter(text7);
+            expect(result.length).to.be.equal(1);
+            expect(spy_abbreviationConcatenation.called).to.be.equal(true);
+        });
+
+        it('Should return undefined if not a valid string', function () {
+            let text = undefined;
+            let spy_abbreviationConcatenation = spy(DataParser, 'abbreviationConcatenation');
+            expect(DataParser.textSplitter(text)).to.be.equal(undefined);
+            expect(spy_abbreviationConcatenation.called).to.be.equal(false);
+
+            restore();
+
+            text = "";
+            spy_abbreviationConcatenation = spy(DataParser, 'abbreviationConcatenation');
+            expect(DataParser.textSplitter(text)).to.be.equal(undefined);
+            expect(spy_abbreviationConcatenation.called).to.be.equal(false);
+        });
+    });
+
+    describe('isCharacter', function () {
+
+        it('Should return true on valid characters', function () {
+            for (let i=0; i<valid_chars.length; i++)
+                expect(DataParser.isCharacter(valid_chars[i])).to.be.equal(true);
+
+            for (let i=0; i<=9; i++)
+                expect(DataParser.isCharacter(i.toString())).to.be.equal(true);
+
+            for (let i=0; i<26; i++)
+            {
+                const lower = (i+10).toString(36).toLowerCase();
+                const upper = (i+10).toString(36).toUpperCase();
+                expect(DataParser.isCharacter(lower)).to.be.equal(true);
+                expect(DataParser.isCharacter(lower, 'lowercase')).to.be.equal(true);
+                expect(DataParser.isCharacter(upper)).to.be.equal(true);
+                expect(DataParser.isCharacter(upper, 'uppercase')).to.be.equal(true);
+            }
+        });
+
+        it('Should return false on invalid characters', function () {
+            expect(DataParser.isCharacter("10")).to.be.equal(false);
+            expect(DataParser.isCharacter("1", 'lowercase')).to.be.equal(false);
+            expect(DataParser.isCharacter("1", 'uppercase')).to.be.equal(false);
+            expect(DataParser.isCharacter("")).to.be.equal(false);
+            expect(DataParser.isCharacter(undefined)).to.be.equal(false);
+            expect(DataParser.isCharacter("test")).to.be.equal(false);
+
+            for (let i=0; i<26; i++)
+            {
+                const lower = (i+10).toString(36).toLowerCase();
+                const upper = (i+10).toString(36).toUpperCase();
+                expect(DataParser.isCharacter(lower, 'uppercase')).to.be.equal(false);
+                expect(DataParser.isCharacter(upper, 'lowercase')).to.be.equal(false);
+            }
+        });
+    });
+
+    describe('abbreviationConcatenation', function () {
+
+        it('Should correctly concatenate abbreviations', function () {
+            const text = "Here is a sentence with abbreviations: The U.S. army and the C.I.A. were involved, as well as the F.B.I and N.A.S.A.";
+            expect(DataParser.abbreviationConcatenation(text)).to.be.equal("Here is a sentence with abbreviations: The US army and the CIA were involved, as well as the FBI and NASA.");
+        });
+
+        it('Should ignore regular sentences and decimal points', function () {
+            const text1 = "Here is a regular sentence. Nothing special.";
+            const text2 = "12.5 gallons were produced.";
+            const text3 = "Version 2.5.4 is due to be released.";
+
+            expect(DataParser.abbreviationConcatenation(text1)).to.be.equal(text1);
+            expect(DataParser.abbreviationConcatenation(text2)).to.be.equal(text2);
+            expect(DataParser.abbreviationConcatenation(text3)).to.be.equal(text3);
+        });
+    });
+});
