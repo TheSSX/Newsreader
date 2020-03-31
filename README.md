@@ -92,15 +92,17 @@ News publications were included based on their overall fact-check record and bia
 Newsreader was written in modular Javascript, transpiled to ES5 Javascript for tests. 
 Every time the user presses Play, a new bulletin is started. For each topic selected, Newsreader uses AJAX to query a random selected news source and pick a random article dedicated to that news topic. The article is then summarised down to the selected number of sentences and read aloud through Chrome's built-in text-to-speech in the user's chosen language.
 
-### Summarisation
+#### Summarisation
 
 Summarisation of news articles is achieved thanks to [the SMMRY API!](https://smmry.com/)
 SMMRY uses a special algorithm that processes natural language to summarise large articles down to a selected number of sentences. This helps to remove the waffle of articles and extract the main points of the text. 
 
-### Translation
+#### Translation
 
 Translation of news articles is achieved thanks to [the Yandex API!](https://translate.yandex.com/)
 Yandex offers a selection of 97 languages to translate texts of any length. Ten of the most popular ones were selected for Newsreader.
+
+------------
 
 ### Building and testing
 
