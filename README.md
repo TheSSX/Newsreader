@@ -4,10 +4,6 @@
 
 <img src="https://github.com/TheSSX/Newsreader/tree/master/icons/icon128.png" width="128">
 
-[TOCM]
-
-[TOC]
-
 Newsreader is a Google Chrome extension that reads a summarised version of the latest news articles through text-to-speech technology! Customise your 5-minute bulletin from a selection of 9 news topics from 9 news publications. Newsreader works in the background, so you can continue surfing the web while listening to the latest news. Make sure your speakers are switched on!
 
 Newsreader was developed as a final-year Honours' Project by Sam Glendenning of the University of Dundee. 
@@ -15,7 +11,6 @@ Newsreader was developed as a final-year Honours' Project by Sam Glendenning of 
 ------------
 
 ### Functionality
-![](https://github.com/TheSSX/Newsreader/tree/testing/screenshots/screen1.png)
 <img src="https://github.com/TheSSX/Newsreader/tree/master/screenshots/screen1.png" width="300">
 
 1. Click the orange Newsreader icon in the top right of the Chrome browser, to the right of the address bar.
@@ -78,15 +73,15 @@ Newsreader was developed as a final-year Honours' Project by Sam Glendenning of 
 
 #### News Publications
 
-- The Guardian (UK) (Left-wing)
-- BBC (UK) (Left-wing)
-- The Independent (UK) (Left-wing)
-- Reuters (UK) (Neutral)
-- Associated Press (USA) (Neutral)
-- Sky News (UK) (Neutral)
-- News.com.au (Australia) (Right-wing)
-- ITV News (UK) (Right-wing)
-- London Evening Standard (UK) (Right-wing)
+- [The Guardian](https://www.theguardian.com/) (UK) (Left-wing)
+- [BBC](https://www.bbc.com/news) (UK) (Left-wing)
+- [The Independent](https://www.independent.co.uk/) (UK) (Left-wing)
+- [Reuters](https://www.reuters.com/) (UK) (Neutral)
+- [Associated Press](https://apnews.com/) (USA) (Neutral)
+- [Sky News](https://news.sky.com/) (UK) (Neutral)
+- [News.com.au](https://www.news.com.au/) (Australia) (Right-wing)
+- [ITV News](https://www.itv.com/news/) (UK) (Right-wing)
+- [London Evening Standard](https://www.standard.co.uk/) (UK) (Right-wing)
 
 News publications were included based on their overall fact-check record and bias to give a balance to the stories and articles read by Newsreader. This is to help make the news bulletins as clean and factual as possible.
 
