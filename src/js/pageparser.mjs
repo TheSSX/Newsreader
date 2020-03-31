@@ -3,6 +3,27 @@ import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
 import {sourcelinks} from "./preferences.js";
 import {Summarise} from "./summarise.mjs";
 
+export const abbreviations = {
+  'Gov.': 'Governor',
+  'Mr.': 'Mister',
+  'Mrs.': 'Mrs',
+  'Ms.': 'Miss',
+  'Snr.': 'Senior',
+  'Jr.': 'Junior',
+    'Dr.': 'Doctor',
+    'approx.' : 'approximately',
+    'no.': 'number',
+    'vs.': 'versus',
+    'Rd.': 'Road',
+    'St.': 'Saint',
+    'VP.': 'Vice-President',
+    'Co.': 'Company',
+    'Ltd.': 'Limited',
+    'Inc.': 'Incorporated',
+    'Rep.': 'Republican',
+    'Dem.': 'Democrat'
+};
+
 /**
  Class for object to parse source article pages
  */
@@ -1150,7 +1171,7 @@ export class DataParser
             return undefined;
 
         let arr = [];
-    
+
         text = DataParser.abbreviationConcatenation(text);
         text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
         if (!text)
@@ -1268,6 +1289,14 @@ export class DataParser
         }
     
         newText += str.charAt(str.length-1);
+
+        for (let i=0; i<Object.keys(abbreviations).length; i++)
+        {
+            const abbr = Object.keys(abbreviations)[i];
+            const replacement = abbreviations[abbr];
+            newText = newText.replace(abbr, replacement);
+        }
+
         return newText;
     }
 }
