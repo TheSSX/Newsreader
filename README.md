@@ -15,7 +15,7 @@ Newsreader was developed as a final-year Honours' Project by Sam Glendenning of 
 ------------
 
 ### Functionality
-![](https://github.com/TheSSX/Newsreader/tree/master/screenshots/screen1.png)
+![](https://github.com/TheSSX/Newsreader/tree/testing/screenshots/screen1.png)
 <img src="https://github.com/TheSSX/Newsreader/tree/master/screenshots/screen1.png" width="300">
 
 1. Click the orange Newsreader icon in the top right of the Chrome browser, to the right of the address bar.
