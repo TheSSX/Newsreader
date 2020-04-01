@@ -40,7 +40,7 @@ export class Article
         if (this.language === "English")
         {
             let headline = DataParser.abbreviationConcatenation(this.allheadline);
-            headline = this.allheadline.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+            headline = headline.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
             if (headline)
                 for (let i=0; i<headline.length; i++)
                 {
@@ -50,7 +50,7 @@ export class Article
                 new Speech(this.allheadline, this.language).speak();
 
             let text = DataParser.abbreviationConcatenation(this.alltext);
-            text = this.alltext.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
+            text = text.replace(/([.?!])\s*(?=[A-Za-z])/g, "$1|").split("|");
             if (text)
                 for (let i=0; i<this.sentences; i++)
                 {
