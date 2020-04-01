@@ -1,6 +1,6 @@
 # Newsreader
 
-[![TheSSX](https://circleci.com/gh/TheSSX/Newsreader.svg?style=shield&circle-token=38ac7c107864b63c9a55ed5216fb098854fae00a)](https://app.circleci.com/pipelines/github/TheSSX/Newsreader)
+[![TheSSX](https://circleci.com/gh/TheSSX/Newsreader.svg?style=shield)](https://app.circleci.com/pipelines/github/TheSSX/Newsreader)
 
 <img src="https://github.com/TheSSX/Newsreader/blob/master/icons/icon128.png" width="128">
 
@@ -122,3 +122,7 @@ Open a terminal and navigate to the project root directory. Type:
 ```
 npm test
 ```
+
+------------
+### Issues
+If you come across any bugs or ideas while using Newsreader, please [raise an issue!](https://github.com/TheSSX/Newsreader/issues)
