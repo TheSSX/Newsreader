@@ -1,7 +1,7 @@
 import {describe, it, xit, suite, afterEach, before} from "mocha";
 import {expect} from "chai";
 import {stub, restore, spy} from "sinon";
-import {PageParser, DataParser, valid_chars} from "../dist/js/pageparser.js";
+import {PageParser, DataParser, valid_chars, abbreviations} from "../dist/js/pageparser.js";
 import {Article} from "../dist/js/article.js";
 import {ArticleExtractor} from "../dist/js/articleextractor.js";
 import {topiclinks, sourcelinks} from "../dist/js/preferences.js";
@@ -1446,6 +1446,18 @@ suite('DataParser', function () {
             expect(DataParser.abbreviationConcatenation(text1)).to.be.equal(text1);
             expect(DataParser.abbreviationConcatenation(text2)).to.be.equal(text2);
             expect(DataParser.abbreviationConcatenation(text3)).to.be.equal(text3);
+        });
+
+        it('Should replace shortened words with their longer ones', function () {
+
+            for (let i=0; i<Object.keys(abbreviations).length; i++)
+            {
+                const abbr = Object.keys(abbreviations)[i];
+                const text = "foo " + abbr + " bar";
+                const expected = "foo " + abbreviations[abbr] + " bar";
+
+                expect(DataParser.abbreviationConcatenation(text)).to.be.equal(expected);
+            }
         });
     });
 });

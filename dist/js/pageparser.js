@@ -5,7 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DataParser = exports.valid_chars = exports.PageParser = void 0;
+exports.DataParser = exports.valid_chars = exports.PageParser = exports.abbreviations = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -23,9 +23,32 @@ var _preferences = require("./preferences.js");
 
 var _summarise = require("../../dist/js/summarise");
 
+var abbreviations = {
+  'Gov.': 'Governor',
+  'Mr.': 'Mister',
+  'Mrs.': 'Mrs',
+  'Ms.': 'Miss',
+  'Snr.': 'Senior',
+  'Jr.': 'Junior',
+  'Dr.': 'Doctor',
+  'approx.': 'approximately',
+  'no.': 'number',
+  'vs.': 'versus',
+  'Rd.': 'Road',
+  'St.': 'Saint',
+  'VP.': 'Vice-President',
+  'Co.': 'Company',
+  'Ltd.': 'Limited',
+  'Inc.': 'Incorporated',
+  'Rep.': 'Republican',
+  'Dem.': 'Democrat'
+};
 /**
  Class for object to parse source article pages
  */
+
+exports.abbreviations = abbreviations;
+
 var PageParser = /*#__PURE__*/function () {
   function PageParser() {
     (0, _classCallCheck2["default"])(this, PageParser);
@@ -1655,6 +1678,14 @@ var DataParser = /*#__PURE__*/function () {
       }
 
       newText += str.charAt(str.length - 1);
+
+      for (var _i12 = 0; _i12 < Object.keys(abbreviations).length; _i12++) {
+        var abbr = Object.keys(abbreviations)[_i12];
+
+        var replacement = abbreviations[abbr];
+        newText = newText.replace(abbr, replacement);
+      }
+
       return newText;
     }
   }]);

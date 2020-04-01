@@ -1526,5 +1526,13 @@ var topic = Object.keys(_preferences.topiclinks)[Math.floor(Math.random() * Obje
       (0, _chai.expect)(_pageparser.DataParser.abbreviationConcatenation(text2)).to.be.equal(text2);
       (0, _chai.expect)(_pageparser.DataParser.abbreviationConcatenation(text3)).to.be.equal(text3);
     });
+    (0, _mocha.it)('Should replace shortened words with their longer ones', function () {
+      for (var i = 0; i < Object.keys(_pageparser.abbreviations).length; i++) {
+        var abbr = Object.keys(_pageparser.abbreviations)[i];
+        var text = "foo " + abbr + " bar";
+        var expected = "foo " + _pageparser.abbreviations[abbr] + " bar";
+        (0, _chai.expect)(_pageparser.DataParser.abbreviationConcatenation(text)).to.be.equal(expected);
+      }
+    });
   });
 });

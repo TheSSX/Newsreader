@@ -1,6 +1,6 @@
 # Newsreader
 
-[![TheSSX](https://circleci.com/gh/TheSSX/Newsreader.svg?style=shield&circle-token=38ac7c107864b63c9a55ed5216fb098854fae00a)](https://app.circleci.com/pipelines/github/TheSSX/Newsreader)
+[![TheSSX](https://circleci.com/gh/TheSSX/Newsreader.svg?style=shield)](https://app.circleci.com/pipelines/github/TheSSX/Newsreader)
 
 <img src="https://github.com/TheSSX/Newsreader/blob/master/icons/icon128.png" width="128">
 
@@ -106,7 +106,7 @@ Yandex offers a selection of 97 languages to translate texts of any length. Ten 
 
 ### Building and testing
 
-Building and testing of Newsreader can only be done by cloning this repository (see [alternative installation method](#alternative-method)). Builds and tests are executed in the command line using [Node.js.](https://nodejs.org/) Make sure that is installed globally first. Then type:
+Building and testing of Newsreader can only be done by cloning this repository (see [alternative installation method](#alternative-method)). Builds and tests are executed in the command line using [Node.js.](https://nodejs.org/) Make sure that is installed globally first. Then navigate to the project root directory and type:
 ```
 npm install
 ```
@@ -122,3 +122,7 @@ Open a terminal and navigate to the project root directory. Type:
 ```
 npm test
 ```
+
+------------
+### Issues
+If you come across any bugs or ideas while using Newsreader, please [raise an issue!](https://github.com/TheSSX/Newsreader/issues)
