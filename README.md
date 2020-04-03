@@ -24,7 +24,7 @@ Newsreader was developed as a final-year Honours' Project by Sam Glendenning of 
 
 ##### Main Method
 
-1. Visit [Newsreader on the Chrome Web Store.](https://chrome.google.com/webstore/category/extensions)
+1. Visit [Newsreader on the Chrome Web Store.](https://chrome.google.com/webstore/detail/newsreader/akekhfakaccfkpjgbocjdhhadmdlpfbm/)
 2. Click ``Add to Chrome``
 3. Once the confirmation window appears, click ``Add extension``
 
@@ -100,7 +100,7 @@ SMMRY uses a special algorithm that processes natural language to summarise larg
 #### Translation
 
 Translation of news articles is achieved thanks to [the Yandex API!](https://translate.yandex.com/)
-Yandex offers a selection of 97 languages to translate texts of any length. Ten of the most popular ones were selected for Newsreader.
+Yandex offers a selection of over 100 languages to translate texts of any length. Ten of the most popular ones were selected for Newsreader.
 
 ------------
 
