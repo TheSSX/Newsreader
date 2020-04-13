@@ -59,15 +59,33 @@ ul {
     margin-left: 5.5em;
 }
 
+body {
+    background-color: #FF7F27;
+}
+
 #header {
-    margin-left: 3.25em;
+    margin-left: 2.5em;
+    margin-top: 0.2em;
+    margin-bottom: 0;
+    font-family: "Britannic Bold";
+    text-decoration: underline overline;
+}
+
+#logo {
+    margin-left: 10.5em;
+    width: 48px;
 }
 
 .container {
     width: 26em;
-    margin: auto;
     display: block;
     margin-top: 1em;
+    background-color: #FF7F27;
+}
+
+.secondary-text {
+    margin: 0.3em;
+    font-size: 16px;
 }
 
 #player {
@@ -93,13 +111,23 @@ ul {
 }
 
 .center {
-    /*width:200px;*/
-    /*height:200px;*/
     position: fixed;
     top: 50%;
     left: 50%;
     margin-top: -100px;
     margin-left: -100px;
+}
+
+.options_header {
+    color: black;
+    text-shadow: 0.5px 0 black;
+    font-size: 16px;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+}
+
+#headline {
+    margin-top: 0;
 }
 
 .controls ul li {
@@ -141,13 +169,13 @@ ul {
             linear,
             50% 0%,
             50% 100%,
-            color-stop(0%, #1abc9c),
-            color-stop(100%, #16a085)
+            color-stop(0%, #FFAD00),
+            color-stop(100%, #FF7F27)
     );
-    background-image: -webkit-linear-gradient(top, #1abc9c, #16a085);
-    background-image: -moz-linear-gradient(top, #1abc9c, #16a085);
-    background-image: -o-linear-gradient(top, #1abc9c, #16a085);
-    background-image: linear-gradient(top, #1abc9c, #16a085);
+    background-image: -webkit-linear-gradient(top, #FFAD00, #FF7F27);
+    background-image: -moz-linear-gradient(top, #FFAD00, #FF7F27);
+    background-image: -o-linear-gradient(top, #FFAD00, #FF7F27);
+    background-image: linear-gradient(top, #FFAD00, #FF7F27);
 }
 
 .play {

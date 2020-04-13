@@ -9,26 +9,24 @@
     <link href="https://netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
 </head>
 <body>
+    <img src="../../icons/icon128.png" id="logo">
+    <h1 id="header">NEWSREADER</h1>
 
-<h1 id="header">Newsreader</h1>
-
-<section class="container">
-    <div id="player">
-        <div class="info">
-            <h2 id="headline"></h2>
-            <h3 id="publisher"></h3>
-            <h3 id="topic"></h3>
-        </div>
-            <div class="controls">
-                <ul>
-                    <!--                <li><div class="icon-backward btn"></div></li>-->
-                    <li id="stopBtn"><div class="icon-stop btn"></div></li>
-                    <li id="playPauseBtn" class="play"><div id="playPauseBtnIcon" class="icon-play btn"></div></li>
-                    <!--                <li><div class="icon-forward btn"></div></li>-->
-                </ul>
+    <section class="container">
+        <div id="player">
+            <div class="info">
+                <h2 id="headline"></h2>
+                <h3 id="publisher" class="secondary-text"></h3>
+                <h3 id="topic" class="secondary-text"></h3>
             </div>
-    </div>
-</section>
+                <div class="controls">
+                    <ul>
+                        <li id="stopBtn"><div class="icon-stop btn"></div></li>
+                        <li id="playPauseBtn" class="play"><div id="playPauseBtnIcon" class="icon-play btn"></div></li>
+                    </ul>
+                </div>
+        </div>
+    </section>
 </body>
 <footer>
     <br>
@@ -42,10 +40,10 @@
     </div>
     <br>
     <div id="sources-checkboxes">
-        <h3>Sources</h3>
+        <h3 class="options_header">Sources</h3>
     </div>
     <div id="topics-checkboxes">
-        <h3>Topics</h3>
+        <h3 class="options_header">Topics</h3>
     </div>
 </footer>
 </html>
