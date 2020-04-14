@@ -220,13 +220,14 @@ var Bulletin = /*#__PURE__*/function () {
 
       if (current.language === 'English') {
         message = {
-          "headline": current.allheadline,
+          "headline": '<a href="' + current.link + '">' + current.allheadline,
           "publisher": current.publisher,
-          "topic": Bulletin.capitalizeFirstLetter(current.topic)
+          "topic": Bulletin.capitalizeFirstLetter(current.topic),
+          "link": current.link
         };
       } else {
         message = {
-          "headline": current.headline,
+          "headline": '<a href="' + current.link + '">' + current.headline,
           "publisher": current.publisher,
           "topic": Bulletin.capitalizeFirstLetter(current.topic)
         };

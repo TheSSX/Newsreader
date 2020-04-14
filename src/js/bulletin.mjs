@@ -189,17 +189,17 @@ export class Bulletin
         if (current.language === 'English')
         {
             message = {
-                "headline": current.allheadline,
+                "headline": '<a href="' + current.link + '" target="_blank">' + current.allheadline + '</a>',
                 "publisher": current.publisher,
-                "topic": Bulletin.capitalizeFirstLetter(current.topic)
+                "topic": Bulletin.capitalizeFirstLetter(current.topic),
             };
         }
         else
         {
             message = {
-                "headline": current.headline,
+                "headline": '<a href="' + current.link + '" target="_blank">' + current.headline + '</a>',
                 "publisher": current.publisher,
-                "topic": Bulletin.capitalizeFirstLetter(current.topic)
+                "topic": Bulletin.capitalizeFirstLetter(current.topic),
             };
         }
 
