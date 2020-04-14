@@ -134,7 +134,7 @@ export const topiclinks =
  * User preferences for speech and article size
  */
 export const min_sentences = 2;
-export const max_sentences = 6;
+export const max_sentences = 8;
 export let pitch = 1;
 export let volume = 1;
 export let rate = 1;
