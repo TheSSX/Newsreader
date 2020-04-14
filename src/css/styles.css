@@ -71,6 +71,15 @@ body {
     text-decoration: underline overline;
 }
 
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 #logo {
     margin-left: 10.5em;
     width: 48px;
@@ -128,6 +137,7 @@ body {
 
 #headline {
     margin-top: 0;
+    color: black;
 }
 
 .controls ul li {
