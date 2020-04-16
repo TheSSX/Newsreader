@@ -220,14 +220,13 @@ var Bulletin = /*#__PURE__*/function () {
 
       if (current.language === 'English') {
         message = {
-          "headline": '<a href="' + current.link + '">' + current.allheadline,
+          "headline": '<a href="' + current.link + '" target="_blank">' + current.allheadline + '</a>',
           "publisher": current.publisher,
-          "topic": Bulletin.capitalizeFirstLetter(current.topic),
-          "link": current.link
+          "topic": Bulletin.capitalizeFirstLetter(current.topic)
         };
       } else {
         message = {
-          "headline": '<a href="' + current.link + '">' + current.headline,
+          "headline": '<a href="' + current.link + '" target="_blank">' + current.headline + '</a>',
           "publisher": current.publisher,
           "topic": Bulletin.capitalizeFirstLetter(current.topic)
         };

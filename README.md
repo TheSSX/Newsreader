@@ -60,7 +60,7 @@ Newsreader was developed as a final-year Honours' Project by Sam Glendenning of 
 - Nine selectable news publications to hear from (see the full list below).
 - Nine selectable news topics (see the full topic below).
 - Ten different spoken languages (see the full list below).
-- Summarised news articles between two and six sentences. Remove the waffle and piffle from stories!
+- Summarised news articles between two and eight sentences. Remove the waffle and piffle from stories!
 
 #### Spoken Languages
 
