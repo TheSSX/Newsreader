@@ -2,7 +2,7 @@ import {pitch, rate, volume} from "./preferences.js";
 import {dialects} from "./language_config.js";
 
 /**
- Class for a speech object
+ Class for something to be spoken aloud
  */
 export class Speech
 {
@@ -22,7 +22,7 @@ export class Speech
     }
 
     /**
-     * Reads aloud the object's text string using speechSynthesis
+     * Reads aloud the object's text string using SpeechSynthesis
      */
     speak()
     {

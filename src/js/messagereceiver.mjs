@@ -2,7 +2,7 @@ import {Bulletin} from "./bulletin.mjs";
 import {getSources, getTopics} from "./popup.mjs";
 
 /**
- * Receives messages from popup.mjs
+ * Receives messages and passes them on to the relevant script
  * These messages let us know user function, e.g. playing or pausing a bulletin
  */
 chrome.runtime.onMessage.addListener(

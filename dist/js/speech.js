@@ -16,7 +16,7 @@ var _preferences = require("./preferences.js");
 var _language_config = require("./language_config.js");
 
 /**
- Class for a speech object
+ Class for something to be spoken aloud
  */
 var Speech = /*#__PURE__*/function () {
   /**
@@ -34,7 +34,7 @@ var Speech = /*#__PURE__*/function () {
     this.speech.pitch = _preferences.pitch;
   }
   /**
-   * Reads aloud the object's text string using speechSynthesis
+   * Reads aloud the object's text string using SpeechSynthesis
    */
 
 

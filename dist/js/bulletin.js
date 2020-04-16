@@ -30,7 +30,8 @@ var _translator = require("../../dist/js/translator");
 var articles = [];
 var remaining = 0;
 /**
- Class for object to query random sourcelinks for each topic
+ Class for constructing a bulletin of articles and reading them aloud
+ Sends back messages for current article being read
  */
 
 var Bulletin = /*#__PURE__*/function () {
@@ -46,38 +47,17 @@ var Bulletin = /*#__PURE__*/function () {
      * 1) Pick a random news source to fetch this topc from
      * 2) Attempt to pick a random article on that subject
      * 3) Send that article to the SMMRY API, inputting the number of sentences to summarise down to
-     * 4) For each article, read the publication, topic, title and summarised article
+     * 4) Call the read function, passing the array of articles
+     *
+     * @param sources - the map of sources. A source maps to true if it is selected by the user
+     * @param topics - the map of topics. A topic maps to true if it is selected by the user
      */
     value: function fetchNews(sources, topics) {
-      // articles = [];
-      // remaining = 2;
-      //
-      // articles.push(new Article("We're no strangers to love", "politics", "A full commitment's what I'm thinking of", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
-      // articles.push(new Article("Do you remember", "world", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
-      // articles.push(new Article("Do you remember", "sport", "Love was changing the minds of pretenders", "hello", "Sentence 1. Sentence 2! Sentence 3? Sentence 4. Sentence 5. Sentence 6. Sentence 7!"));
-      //
-      // const utterance = new SpeechSynthesisUtterance("");
-      // utterance.onend = async function () {
-      //     let nextArticle = articles.shift();
-      //     if (nextArticle === undefined) {
-      //         chrome.runtime.sendMessage({greeting: "stop"});
-      //         chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-      //         return true;
-      //     }
-      //
-      //     Bulletin.checkSentences(nextArticle).then(newArticle => {
-      //         Bulletin.checkTranslation(newArticle).then(result => {
-      //             nextArticle = result;
-      //             Bulletin.readArticles(nextArticle, articles);
-      //         });
-      //     });
-      // };
-      // window.speechSynthesis.speak(utterance);
-      // return true;
       //News.com.au does not have UK news
       if (Bulletin.checkNewsAUUK(sources, topics)) return false;
-      articles = [];
-      remaining = Object.keys(topics).length;
+      articles = []; //each fetched article is stored here
+
+      remaining = Object.keys(topics).length; //loop until we have no more articles to fetch
 
       var _loop = function _loop(i) {
         var source = Object.keys(_preferences.sourcelinks)[Math.floor(Math.random() * Object.keys(_preferences.sourcelinks).length)]; // get random source to contact
@@ -85,45 +65,52 @@ var Bulletin = /*#__PURE__*/function () {
         var topic = Object.keys(topics)[i]; // topics are read in a random order every time
 
         if (!topics[topic]) {
+          //if the user has not ticked this topic, skip it
           remaining--;
           return "continue";
         }
 
-        while (!sources[source]) {
+        while (!sources[source]) //loop until we get a source the user selected. Will not loop forever as this has already been checked for
+        {
           source = Object.keys(_preferences.sourcelinks)[Math.floor(Math.random() * Object.keys(_preferences.sourcelinks).length)];
         }
 
-        var topiclink = _preferences.topiclinks[topic][source]; // for the selected source, get the URL to the selected topic page
+        var topiclink = _preferences.topiclinks[topic][source]; // for the selected source, get the URL to the selected topic page from preferences.js
 
         try {
           var data = _pageparser.PageParser.getArticle(source, topic, topiclink); // send source, topic and number of sentences to summarise down to
 
 
-          data.then(function (article) // returned in form of promise with value of article
+          data.then(function (article) // article returned in form of promise
           {
             articles.push(article);
             remaining--;
 
-            if (remaining <= 0) {
-              var nextArticle = articles.shift();
+            if (remaining <= 0) //begin reading articles out
+              {
+                var nextArticle = articles.shift();
 
-              if (nextArticle === undefined) {
-                chrome.runtime.sendMessage({
-                  greeting: "stop"
+                if (nextArticle === undefined) //no articles to play
+                  {
+                    chrome.runtime.sendMessage({
+                      greeting: "stop"
+                    });
+                    chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+                    return false;
+                  }
+
+                Bulletin.checkSentences(nextArticle).then(function (newArticle) {
+                  //change article length if necessary
+                  Bulletin.checkTranslation(newArticle).then(function (result) {
+                    //change article translation if necessary
+                    nextArticle = result;
+                    Bulletin.readArticles(nextArticle, articles);
+                    return true;
+                  });
                 });
-                chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-                return false;
               }
-
-              Bulletin.checkSentences(nextArticle).then(function (newArticle) {
-                Bulletin.checkTranslation(newArticle).then(function (result) {
-                  nextArticle = result;
-                  Bulletin.readArticles(nextArticle, articles);
-                  return true;
-                });
-              });
-            }
           })["catch"](function () {
+            //Error occurred with this source, try again
             Bulletin.retryTopic(topic, 2);
           });
         } catch (TypeError) {
@@ -131,13 +118,19 @@ var Bulletin = /*#__PURE__*/function () {
         }
       };
 
-      for (var i = 0; i < Object.keys(topics).length; i++) // change i< to prevent unnecessary credits being used up
-      {
+      for (var i = 0; i < Object.keys(topics).length; i++) {
         var _ret = _loop(i);
 
         if (_ret === "continue") continue;
       }
     }
+    /**
+     * Retries getting an article with the given topic, up to a maximum of 10 tries before failing gracefully
+     * @param topic - the topic to look for
+     * @param attempt - keeps track of how many attempts we've had so far
+     * @returns {boolean} - true/false if managed to get an article
+     */
+
   }, {
     key: "retryTopic",
     value: function retryTopic(topic, attempt) {
@@ -149,7 +142,7 @@ var Bulletin = /*#__PURE__*/function () {
         var data = _pageparser.PageParser.getArticle(source, topic, topiclink); // send source, topic and number of sentences to summarise to
 
 
-        data.then(function (article) // returned in form of promise with value of article
+        data.then(function (article) // article returned in form of promise
         {
           articles.push(article);
           remaining--;
@@ -205,18 +198,27 @@ var Bulletin = /*#__PURE__*/function () {
         }
       }
     }
+    /**
+     * Reads aloud the articles and calls itself recursively
+     * @param current - the current article to read aloud
+     * @param articles - the list of remaining articles to read aloud
+     * @returns {boolean} - true once finished
+     */
+
   }, {
     key: "readArticles",
     value: function readArticles(current, articles) {
-      if (current === undefined) {
-        chrome.runtime.sendMessage({
-          greeting: "stop"
-        });
-        chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
-        return true;
-      }
+      if (current === undefined) //no more articles left to read
+        {
+          chrome.runtime.sendMessage({
+            greeting: "stop"
+          }); //send message to front end that articles have finished
 
-      var message;
+          chrome.storage.local.remove(['playing', 'paused', 'headline', 'publisher', 'topic']);
+          return true;
+        }
+
+      var message; //contains details of current article to display on front end
 
       if (current.language === 'English') {
         message = {
@@ -230,7 +232,8 @@ var Bulletin = /*#__PURE__*/function () {
           "publisher": current.publisher,
           "topic": Bulletin.capitalizeFirstLetter(current.topic)
         };
-      }
+      } //Store details of current article in storage to allow for persistent popup
+
 
       chrome.storage.local.set({
         "headline": message.headline
@@ -244,7 +247,8 @@ var Bulletin = /*#__PURE__*/function () {
       chrome.runtime.sendMessage({
         greeting: message
       });
-      current.read();
+      current.read(); //read the article
+
       var utterance = new SpeechSynthesisUtterance("");
       utterance.onend = /*#__PURE__*/(0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
         var nextArticle;
@@ -267,7 +271,9 @@ var Bulletin = /*#__PURE__*/function () {
 
               case 5:
                 Bulletin.checkSentences(nextArticle).then(function (newArticle) {
+                  //amend the number of sentences in article if necessary
                   Bulletin.checkTranslation(newArticle).then(function (result) {
+                    //amend the language of the article if necessary
                     nextArticle = result;
                     Bulletin.readArticles(nextArticle, articles);
                   });
@@ -282,6 +288,12 @@ var Bulletin = /*#__PURE__*/function () {
       }));
       window.speechSynthesis.speak(utterance);
     }
+    /**
+     * Reads the current value of sentences user wants from Chrome storage and changes the length of the given article to reflect this
+     * @param article - the article in question
+     * @returns {Promise<unknown>} - the new amended article
+     */
+
   }, {
     key: "checkSentences",
     value: function () {
@@ -290,8 +302,9 @@ var Bulletin = /*#__PURE__*/function () {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                return _context2.abrupt("return", new Promise(function (resolve, reject) {
+                return _context2.abrupt("return", new Promise(function (resolve) {
                   chrome.storage.local.get(['sentences'], function (result) {
+                    //read sentences from storage
                     var sentences = result['sentences'];
 
                     if (sentences) {
@@ -316,6 +329,12 @@ var Bulletin = /*#__PURE__*/function () {
 
       return checkSentences;
     }()
+    /**
+     * Reads the current language the user wants from Chrome storage and translates the article if not English
+     * @param article - the article in question
+     * @returns {Promise<unknown>} - the translated article
+     */
+
   }, {
     key: "checkTranslation",
     value: function () {
@@ -324,7 +343,7 @@ var Bulletin = /*#__PURE__*/function () {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                return _context4.abrupt("return", new Promise(function (resolve, reject) {
+                return _context4.abrupt("return", new Promise(function (resolve) {
                   chrome.storage.local.get(['language'], /*#__PURE__*/function () {
                     var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(result) {
                       var language_choice, translatedArticle;
@@ -332,6 +351,7 @@ var Bulletin = /*#__PURE__*/function () {
                         while (1) {
                           switch (_context3.prev = _context3.next) {
                             case 0:
+                              //read language string
                               language_choice = result['language'];
 
                               if (!language_choice) {
@@ -350,10 +370,11 @@ var Bulletin = /*#__PURE__*/function () {
                             case 5:
                               translatedArticle = _context3.sent;
 
+                              //translate the article
                               if (translatedArticle !== undefined) {
                                 article = translatedArticle;
                               } else {
-                                new _speech.Speech(_language_config.translation_unavailable[language_choice], language_choice).speak();
+                                new _speech.Speech(_language_config.translation_unavailable[language_choice], language_choice).speak(); //translation could not be performed, inform the user of this by speaking 'Translation unavailable' in their selected language
                               }
 
                             case 7:
@@ -387,6 +408,13 @@ var Bulletin = /*#__PURE__*/function () {
 
       return checkTranslation;
     }()
+    /**
+     * Calls the translation class to translate each element of the article
+     * @param article - the article to translate
+     * @param language_choice - the language to translate to
+     * @returns {Promise<undefined|Article>} - the translated article
+     */
+
   }, {
     key: "getTranslatedArticle",
     value: function () {
@@ -416,6 +444,7 @@ var Bulletin = /*#__PURE__*/function () {
 
               case 7:
                 topictranslatedata = _context5.sent;
+                //translate topic
                 headline = [];
                 i = 0;
 
@@ -512,6 +541,13 @@ var Bulletin = /*#__PURE__*/function () {
 
       return getTranslatedArticle;
     }()
+    /**
+     * Checks if News.com.au and UK are the only source and topic selected. Invalid if so, because News.com.au does not support UK news
+     * @param sources - the map of sources. A source maps to true if the user has selected it
+     * @param topics - the map of topics. A topic maps to true if the user has selected it
+     * @returns {boolean} - true if only News.com.au and UK are selected, false otherwise
+     */
+
   }, {
     key: "checkNewsAUUK",
     value: function checkNewsAUUK(sources, topics) {
@@ -528,6 +564,12 @@ var Bulletin = /*#__PURE__*/function () {
       return true;
     } //Thanks to user Steve Harrison on Stack Overflow
     //Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
+
+    /**
+     * Capitalises the first letter of a given string
+     * @param string - the string in question
+     * @returns {string|*} - the capitalised string or the original string if this failed
+     */
 
   }, {
     key: "capitalizeFirstLetter",

@@ -4,11 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.rate = exports.volume = exports.pitch = exports.max_sentences = exports.min_sentences = exports.topiclinks = exports.sourcelinks = void 0;
-
-/**
- * Contains the user preferences, specifically which sources to query, which topics to hear from and the number of
- * sentences they want each article to be summarised down to
- */
 // News sources and their respective homepage links
 var sourcelinks = {
   "The Guardian": "https://www.theguardian.com/",
@@ -134,7 +129,7 @@ var topiclinks = {
   }
 };
 /**
- * User preferences for speech and article size
+ * Non-customisable settings to tinker with the software. Only sentences are in use currently
  */
 
 exports.topiclinks = topiclinks;
