@@ -42,8 +42,8 @@ Newsreader was developed as a final-year Honours' Project by Sam Glendenning of 
 ### Uninstallation
 
 1. Right click on the orange Newsreader icon in the top right of the Chrome browser, to the right of the address bar.
-2. Select "Remove from Chrome...".
-3. Select "Remove" in the popup window.
+2. Select ``Remove from Chrome...``
+3. Select ``Remove`` in the popup window.
 
 ------------
 
