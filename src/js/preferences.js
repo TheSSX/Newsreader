@@ -1,8 +1,3 @@
-/**
- * Contains the user preferences, specifically which sources to query, which topics to hear from and the number of
- * sentences they want each article to be summarised down to
- */
-
 // News sources and their respective homepage links
 export const sourcelinks =
     {
@@ -131,7 +126,7 @@ export const topiclinks =
     };
 
 /**
- * User preferences for speech and article size
+ * Non-customisable settings to tinker with the software. Only sentences are in use currently
  */
 export const min_sentences = 2;
 export const max_sentences = 8;

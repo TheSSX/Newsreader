@@ -1,5 +1,6 @@
 /**
- * The starting script which triggers when the user clicks the extension icon
+ * The script running in the background of the popup window. Calls the relevant scripts for bulletins and also
+ * sets up the popup whenever the user opens it
  */
 
 import {languages} from "./language_config.js";
@@ -9,12 +10,15 @@ import {Bulletin} from "./bulletin.mjs";
 const allsources = Object.keys(sourcelinks);
 const alltopics = Object.keys(topiclinks);
 
-//document.addEventListener("DOMContentLoaded", setUp);
 document.addEventListener('readystatechange', function () {
    if (document.readyState === "complete")
        setUp();
 });
 
+/**
+ * Sets up the popup window when the user opens it. Reads the data it needs for this from Chrome storage
+ * @returns {boolean} - true if successful setup, false otherwise
+ */
 function setUp()
 {
     //Setting up the UI with user preferences
@@ -30,6 +34,7 @@ function setUp()
         const sources = result['sources'];
         const topics = result['topics'];
 
+        //Change the style of the play/pause button depending on if an article is playing or not
         if (currentlyplaying && !currentlypaused) {
             document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
         }
@@ -55,14 +60,19 @@ function setUp()
         stopButton.addEventListener('click', stop);
         return true;
     }
-    else
+    else    //some elements could not be found, setup failed
     {
         return false;
     }
 }
 
+/**
+ * Populates the language selection dropdown element with the offered languages. Also sets the currently selected language with the one read from storage
+ * @param language - the currently selected language
+ */
 function setLanguages(language)
 {
+    //Populate the dropdown
     const languages_dropdown = document.getElementById('languages');
     for (let i = 0; i < Object.keys(languages).length; i++)
     {
@@ -75,21 +85,27 @@ function setLanguages(language)
 
     if (language)
     {
-        languages_dropdown.value = language;
+        languages_dropdown.value = language;    //set the currently selected language
     }
-    else
+    else        //no language currently selected, default to English
     {
         chrome.storage.local.set({'language': Object.keys(languages)[0]});
     }
 
+    //When the user changes the language, save this value to Chrome storage
     languages_dropdown.onchange = function () {
         const newSelection = languages_dropdown[languages_dropdown.selectedIndex].text;
         chrome.storage.local.set({'language': newSelection});
     };
 }
 
+/**
+ * Populates the sentence dropdown with the offered sentences. Also sets the currently selected sentence number
+ * @param sentences - the currently selected sentence number
+ */
 function setSentences(sentences)
 {
+    //Populate the dropdown
     const sentences_dropdown = document.getElementById('sentences');
     for (let i = min_sentences; i <= max_sentences; i++)
     {
@@ -102,22 +118,27 @@ function setSentences(sentences)
 
     if (sentences)
     {
-        sentences_dropdown.value = sentences.toString();
+        sentences_dropdown.value = sentences.toString();        //set the current value
     }
     else
     {
-        chrome.storage.local.set({'sentences': 3});
+        chrome.storage.local.set({'sentences': 3});     //no selection found, default to 3
     }
 
+    //Saves the selection of sentences if the user changes it
     sentences_dropdown.onchange = function () {
         const newSelection = sentences_dropdown[sentences_dropdown.selectedIndex].text;
         chrome.storage.local.set({'sentences': parseInt(newSelection)});
     };
 }
 
+/**
+ * Populates the tickboxes of sources and ticks the ones the user has saved
+ * @param sources - the saved values for these
+ */
 function setSources(sources)
 {
-    if (!sources)
+    if (!sources)       //no saved values, tick all boxes
     {
         sources = {};
 
@@ -144,6 +165,7 @@ function setSources(sources)
             checkbox.checked = true;
         }
 
+        //Amends the true/false selection of each tickbox if the user clicks on any of them
         checkbox.addEventListener('change', (event) => {
             if (event.target.checked) {
                 changeCheckboxValue('sources', checkbox.name, true);
@@ -164,9 +186,13 @@ function setSources(sources)
     }
 }
 
+/**
+ * Populates the tickboxes of topics selected by the user
+ * @param topics - the saved values of topics
+ */
 function setTopics(topics)
 {
-    if (!topics)
+    if (!topics)        //no saved topics found, tick all boxes
     {
         topics = {};
 
@@ -194,6 +220,7 @@ function setTopics(topics)
             checkbox.checked = true;
         }
 
+        //Swaps the value of a tickbox in storage if the user clicks on it
         checkbox.addEventListener('change', (event) => {
             if (event.target.checked) {
                 changeCheckboxValue('topics', checkbox.name, true);
@@ -214,6 +241,12 @@ function setTopics(topics)
     }
 }
 
+/**
+ * Changes the true/false value of the source/topic passed in in storage. Called whenever the user ticks or unticks a box
+ * @param checkbox_name
+ * @param item_name
+ * @param value
+ */
 function changeCheckboxValue(checkbox_name, item_name, value) {
     chrome.storage.local.get([checkbox_name], function (result) {
         let replacement = result[checkbox_name];
@@ -225,6 +258,9 @@ function changeCheckboxValue(checkbox_name, item_name, value) {
     });
 }
 
+/**
+ * Calls the relevant functions when the user clicks the play/pause button. Determines what to do by the current state of the program
+ */
 function playPauseToggle() {
     chrome.storage.local.get(['playing', 'paused'], function(result) {
         let currentlypaused, currentlyplaying;
@@ -238,33 +274,36 @@ function playPauseToggle() {
             return;
         }
 
-        if (!currentlyplaying)
+        if (!currentlyplaying)      //if nothing is playing, play the bulletin
         {
             play();
         }
-        else if (currentlyplaying && !currentlypaused)
+        else if (currentlyplaying && !currentlypaused)      //if something is playing and it isn't paused
         {
             pause();
         }
-        else if (currentlyplaying && currentlypaused)
+        else if (currentlyplaying && currentlypaused)       //if a bulletin is paused
         {
             resume();
         }
     });
 }
 
+/**
+ * Play a new bulletin of news
+ */
 function play()
 {
-    getSources().then(sources => {
-        getTopics().then(topics => {
-            if (Bulletin.checkNewsAUUK(sources, topics))
+    getSources().then(sources => {      //read the user's selection of sources
+        getTopics().then(topics => {    //read the user's selection of topics
+            if (Bulletin.checkNewsAUUK(sources, topics))    //check if News.com.au and UK are the only boxes ticked. Can't get news if so
             {
                 document.getElementById('headline').innerHTML = "News.com.au does not report UK news";
                 return false;
             }
 
             let found = false;
-            for (let i=0; i<Object.keys(sources).length; i++)
+            for (let i=0; i<Object.keys(sources).length; i++)       //verifies that at least one source is ticked
             {
                 if (sources[Object.keys(sources)[i]])
                 {
@@ -273,14 +312,14 @@ function play()
                 }
             }
 
-            if (!found)
+            if (!found)     //No sources ticked
             {
                 document.getElementById('headline').innerHTML = "Select a source + topic";
                 return false;
             }
 
             found = false;
-            for (let i=0; i<Object.keys(topics).length; i++)
+            for (let i=0; i<Object.keys(topics).length; i++)        //Verifies that at least one topic is ticked
             {
                 if (topics[Object.keys(topics)[i]])
                 {
@@ -289,12 +328,13 @@ function play()
                 }
             }
 
-            if (!found)
+            if (!found)     //No topics ticked
             {
                 document.getElementById('headline').innerHTML = "Select a source + topic";
                 return false;
             }
 
+            //Give visual output while bulletin is fetched
             document.getElementById('headline').innerHTML = "Fetching news...";
             document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
             chrome.storage.local.set({"playing": true});
@@ -305,6 +345,9 @@ function play()
     });
 }
 
+/**
+ * Changes pause button to play button and sends message to pause
+ */
 function pause()
 {
     document.getElementById('playPauseBtnIcon').className = "icon-play btn";
@@ -313,6 +356,9 @@ function pause()
     chrome.runtime.sendMessage({greeting: "pause"});
 }
 
+/**
+ * Changes play button to pause button and sends message to resume current bulletin
+ */
 function resume()
 {
     document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
@@ -321,6 +367,9 @@ function resume()
     chrome.runtime.sendMessage({greeting: "resume"});
 }
 
+/**
+ * Resets buttons and removes details of current article
+ */
 function stop() {
     document.getElementById('headline').innerHTML = "";
     document.getElementById('publisher').innerHTML = "";
@@ -332,6 +381,11 @@ function stop() {
 
 //Thanks to user Steve Harrison on Stack Overflow
 //Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
+/**
+ * Capitalises the first letter of an input string
+ * @param string - the input string
+ * @returns {string|*} - the returned string
+ */
 function capitalizeFirstLetter(string) {
     if (string === 'uk' || string === 'Uk')
         return 'UK';
@@ -346,6 +400,10 @@ function capitalizeFirstLetter(string) {
     }
 }
 
+/**
+ * Reads the map of sources from storage and returns them
+ * @returns {Promise<unknown>} - the stored sources
+ */
 export async function getSources()
 {
     return new Promise((resolve, reject) => {
@@ -356,6 +414,10 @@ export async function getSources()
     });
 }
 
+/**
+ * Reads the map of topics from storage and returns them
+ * @returns {Promise<unknown>} - the stored topics
+ */
 export async function getTopics()
 {
     return new Promise((resolve, reject) => {
@@ -366,8 +428,9 @@ export async function getTopics()
     });
 }
 
-//HTML stuff
-
+/**
+ * Message listener to receive messages from bulletin regarding current article or having no more articles to read
+ */
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse)
     {

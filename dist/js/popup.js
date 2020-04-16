@@ -21,14 +21,18 @@ var _preferences = require("./preferences.js");
 var _bulletin = require("../../dist/js/bulletin");
 
 /**
- * The starting script which triggers when the user clicks the extension icon
+ * The script running in the background of the popup window. Calls the relevant scripts for bulletins and also
+ * sets up the popup whenever the user opens it
  */
 var allsources = Object.keys(_preferences.sourcelinks);
-var alltopics = Object.keys(_preferences.topiclinks); //document.addEventListener("DOMContentLoaded", setUp);
-
+var alltopics = Object.keys(_preferences.topiclinks);
 document.addEventListener('readystatechange', function () {
   if (document.readyState === "complete") setUp();
 });
+/**
+ * Sets up the popup window when the user opens it. Reads the data it needs for this from Chrome storage
+ * @returns {boolean} - true if successful setup, false otherwise
+ */
 
 function setUp() {
   //Setting up the UI with user preferences
@@ -41,7 +45,7 @@ function setUp() {
     var language = result['language'];
     var sentences = result['sentences'];
     var sources = result['sources'];
-    var topics = result['topics'];
+    var topics = result['topics']; //Change the style of the play/pause button depending on if an article is playing or not
 
     if (currentlyplaying && !currentlypaused) {
       document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
@@ -63,12 +67,19 @@ function setUp() {
     playPauseButton.addEventListener('click', playPauseToggle);
     stopButton.addEventListener('click', stop);
     return true;
-  } else {
-    return false;
-  }
+  } else //some elements could not be found, setup failed
+    {
+      return false;
+    }
 }
+/**
+ * Populates the language selection dropdown element with the offered languages. Also sets the currently selected language with the one read from storage
+ * @param language - the currently selected language
+ */
+
 
 function setLanguages(language) {
+  //Populate the dropdown
   var languages_dropdown = document.getElementById('languages');
 
   for (var i = 0; i < Object.keys(_language_config.languages).length; i++) {
@@ -80,12 +91,14 @@ function setLanguages(language) {
   }
 
   if (language) {
-    languages_dropdown.value = language;
-  } else {
-    chrome.storage.local.set({
-      'language': Object.keys(_language_config.languages)[0]
-    });
-  }
+    languages_dropdown.value = language; //set the currently selected language
+  } else //no language currently selected, default to English
+    {
+      chrome.storage.local.set({
+        'language': Object.keys(_language_config.languages)[0]
+      });
+    } //When the user changes the language, save this value to Chrome storage
+
 
   languages_dropdown.onchange = function () {
     var newSelection = languages_dropdown[languages_dropdown.selectedIndex].text;
@@ -94,8 +107,14 @@ function setLanguages(language) {
     });
   };
 }
+/**
+ * Populates the sentence dropdown with the offered sentences. Also sets the currently selected sentence number
+ * @param sentences - the currently selected sentence number
+ */
+
 
 function setSentences(sentences) {
+  //Populate the dropdown
   var sentences_dropdown = document.getElementById('sentences');
 
   for (var i = _preferences.min_sentences; i <= _preferences.max_sentences; i++) {
@@ -107,12 +126,13 @@ function setSentences(sentences) {
   }
 
   if (sentences) {
-    sentences_dropdown.value = sentences.toString();
+    sentences_dropdown.value = sentences.toString(); //set the current value
   } else {
     chrome.storage.local.set({
       'sentences': 3
-    });
-  }
+    }); //no selection found, default to 3
+  } //Saves the selection of sentences if the user changes it
+
 
   sentences_dropdown.onchange = function () {
     var newSelection = sentences_dropdown[sentences_dropdown.selectedIndex].text;
@@ -121,19 +141,25 @@ function setSentences(sentences) {
     });
   };
 }
+/**
+ * Populates the tickboxes of sources and ticks the ones the user has saved
+ * @param sources - the saved values for these
+ */
+
 
 function setSources(sources) {
-  if (!sources) {
-    sources = {};
+  if (!sources) //no saved values, tick all boxes
+    {
+      sources = {};
 
-    for (var i = 0; i < allsources.length; i++) {
-      sources[allsources[i]] = true;
+      for (var i = 0; i < allsources.length; i++) {
+        sources[allsources[i]] = true;
+      }
+
+      chrome.storage.local.set({
+        'sources': sources
+      });
     }
-
-    chrome.storage.local.set({
-      'sources': sources
-    });
-  }
 
   var sources_checkboxes = document.getElementById('sources-checkboxes');
 
@@ -146,7 +172,8 @@ function setSources(sources) {
 
     if (sources[name]) {
       checkbox.checked = true;
-    }
+    } //Amends the true/false selection of each tickbox if the user clicks on any of them
+
 
     checkbox.addEventListener('change', function (event) {
       if (event.target.checked) {
@@ -168,20 +195,26 @@ function setSources(sources) {
     _loop(_i);
   }
 }
+/**
+ * Populates the tickboxes of topics selected by the user
+ * @param topics - the saved values of topics
+ */
+
 
 function setTopics(topics) {
-  if (!topics) {
-    topics = {};
+  if (!topics) //no saved topics found, tick all boxes
+    {
+      topics = {};
 
-    for (var i = 0; i < alltopics.length; i++) {
-      var current = alltopics[i];
-      topics[current] = true;
+      for (var i = 0; i < alltopics.length; i++) {
+        var current = alltopics[i];
+        topics[current] = true;
+      }
+
+      chrome.storage.local.set({
+        'topics': topics
+      });
     }
-
-    chrome.storage.local.set({
-      'topics': topics
-    });
-  }
 
   var topics_checkboxes = document.getElementById('topics-checkboxes');
 
@@ -194,7 +227,8 @@ function setTopics(topics) {
 
     if (topics[name]) {
       checkbox.checked = true;
-    }
+    } //Swaps the value of a tickbox in storage if the user clicks on it
+
 
     checkbox.addEventListener('change', function (event) {
       if (event.target.checked) {
@@ -216,6 +250,13 @@ function setTopics(topics) {
     _loop2(_i2);
   }
 }
+/**
+ * Changes the true/false value of the source/topic passed in in storage. Called whenever the user ticks or unticks a box
+ * @param checkbox_name
+ * @param item_name
+ * @param value
+ */
+
 
 function changeCheckboxValue(checkbox_name, item_name, value) {
   chrome.storage.local.get([checkbox_name], function (result) {
@@ -231,6 +272,10 @@ function changeCheckboxValue(checkbox_name, item_name, value) {
       });
   });
 }
+/**
+ * Calls the relevant functions when the user clicks the play/pause button. Determines what to do by the current state of the program
+ */
+
 
 function playPauseToggle() {
   chrome.storage.local.get(['playing', 'paused'], function (result) {
@@ -244,51 +289,66 @@ function playPauseToggle() {
       return;
     }
 
-    if (!currentlyplaying) {
-      play();
-    } else if (currentlyplaying && !currentlypaused) {
-      pause();
-    } else if (currentlyplaying && currentlypaused) {
-      resume();
-    }
+    if (!currentlyplaying) //if nothing is playing, play the bulletin
+      {
+        play();
+      } else if (currentlyplaying && !currentlypaused) //if something is playing and it isn't paused
+      {
+        pause();
+      } else if (currentlyplaying && currentlypaused) //if a bulletin is paused
+      {
+        resume();
+      }
   });
 }
+/**
+ * Play a new bulletin of news
+ */
+
 
 function play() {
   getSources().then(function (sources) {
+    //read the user's selection of sources
     getTopics().then(function (topics) {
-      if (_bulletin.Bulletin.checkNewsAUUK(sources, topics)) {
-        document.getElementById('headline').innerHTML = "News.com.au does not report UK news";
-        return false;
-      }
+      //read the user's selection of topics
+      if (_bulletin.Bulletin.checkNewsAUUK(sources, topics)) //check if News.com.au and UK are the only boxes ticked. Can't get news if so
+        {
+          document.getElementById('headline').innerHTML = "News.com.au does not report UK news";
+          return false;
+        }
 
       var found = false;
 
-      for (var i = 0; i < Object.keys(sources).length; i++) {
+      for (var i = 0; i < Object.keys(sources).length; i++) //verifies that at least one source is ticked
+      {
         if (sources[Object.keys(sources)[i]]) {
           found = true;
           break;
         }
       }
 
-      if (!found) {
-        document.getElementById('headline').innerHTML = "Select a source + topic";
-        return false;
-      }
+      if (!found) //No sources ticked
+        {
+          document.getElementById('headline').innerHTML = "Select a source + topic";
+          return false;
+        }
 
       found = false;
 
-      for (var _i3 = 0; _i3 < Object.keys(topics).length; _i3++) {
+      for (var _i3 = 0; _i3 < Object.keys(topics).length; _i3++) //Verifies that at least one topic is ticked
+      {
         if (topics[Object.keys(topics)[_i3]]) {
           found = true;
           break;
         }
       }
 
-      if (!found) {
-        document.getElementById('headline').innerHTML = "Select a source + topic";
-        return false;
-      }
+      if (!found) //No topics ticked
+        {
+          document.getElementById('headline').innerHTML = "Select a source + topic";
+          return false;
+        } //Give visual output while bulletin is fetched
+
 
       document.getElementById('headline').innerHTML = "Fetching news...";
       document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
@@ -305,6 +365,10 @@ function play() {
     });
   });
 }
+/**
+ * Changes pause button to play button and sends message to pause
+ */
+
 
 function pause() {
   document.getElementById('playPauseBtnIcon').className = "icon-play btn";
@@ -318,6 +382,10 @@ function pause() {
     greeting: "pause"
   });
 }
+/**
+ * Changes play button to pause button and sends message to resume current bulletin
+ */
+
 
 function resume() {
   document.getElementById('playPauseBtnIcon').className = "icon-pause btn";
@@ -331,6 +399,10 @@ function resume() {
     greeting: "resume"
   });
 }
+/**
+ * Resets buttons and removes details of current article
+ */
+
 
 function stop() {
   document.getElementById('headline').innerHTML = "";
@@ -344,6 +416,12 @@ function stop() {
 } //Thanks to user Steve Harrison on Stack Overflow
 //Link: https://stackoverflow.com/questions/1026069/how-do-i-make-the-first-letter-of-a-string-uppercase-in-javascript
 
+/**
+ * Capitalises the first letter of an input string
+ * @param string - the input string
+ * @returns {string|*} - the returned string
+ */
+
 
 function capitalizeFirstLetter(string) {
   if (string === 'uk' || string === 'Uk') return 'UK';
@@ -354,10 +432,20 @@ function capitalizeFirstLetter(string) {
     return string;
   }
 }
+/**
+ * Reads the map of sources from storage and returns them
+ * @returns {Promise<unknown>} - the stored sources
+ */
+
 
 function getSources() {
   return _getSources.apply(this, arguments);
 }
+/**
+ * Reads the map of topics from storage and returns them
+ * @returns {Promise<unknown>} - the stored topics
+ */
+
 
 function _getSources() {
   _getSources = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
@@ -384,7 +472,10 @@ function _getSources() {
 
 function getTopics() {
   return _getTopics.apply(this, arguments);
-} //HTML stuff
+}
+/**
+ * Message listener to receive messages from bulletin regarding current article or having no more articles to read
+ */
 
 
 function _getTopics() {

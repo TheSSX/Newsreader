@@ -1,5 +1,5 @@
 /**
- * Class to clean unwanted data from HTML received from Ajax
+ * Class to clean unwanted data from HTML in articles received from AJAX
  */
 export class DataCleaner
 {

@@ -12,7 +12,7 @@ var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/cl
 var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
 
 /**
- * Class to clean unwanted data from HTML received from Ajax
+ * Class to clean unwanted data from HTML in articles received from AJAX
  */
 var DataCleaner = /*#__PURE__*/function () {
   function DataCleaner() {

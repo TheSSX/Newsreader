@@ -5,7 +5,7 @@ var _bulletin = require("../../dist/js/bulletin");
 var _popup = require("../../dist/js/popup");
 
 /**
- * Receives messages from popup.mjs
+ * Receives messages and passes them on to the relevant script
  * These messages let us know user function, e.g. playing or pausing a bulletin
  */
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {

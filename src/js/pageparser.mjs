@@ -3,6 +3,7 @@ import {ArticleExtractor, DataCleaner} from "./articleextractor.mjs";
 import {sourcelinks} from "./preferences.js";
 import {Summarise} from "./summarise.mjs";
 
+//Used by abbreviationConcatenation to replace awkward abbreviations with their full words. Helps with sentence splitting and TTS
 export const abbreviations = {
   'Gov.': 'Governor',
   'Mr.': 'Mister',
@@ -25,7 +26,7 @@ export const abbreviations = {
 };
 
 /**
- Class for object to parse source article pages
+ Class to fetch articles from different news sources
  */
 export class PageParser
 {
@@ -71,7 +72,6 @@ export class PageParser
      */
     static async extractGuardian(topic, topiclink)
     {
-        //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
         /**
          * GETTING RANDOM LINK FOR TOPIC
          */
@@ -1121,6 +1121,7 @@ export class PageParser
     }
 }
 
+//Used by isCharacter to determine if an input character is valid
 export const valid_chars = [
     ',',
     '.',
@@ -1146,6 +1147,9 @@ export const valid_chars = [
     '='
 ];
 
+/**
+ * Class for parsing data we receive via AJAX
+ */
 export class DataParser
 {
     /**
@@ -1178,7 +1182,7 @@ export class DataParser
         {
             let current = text;
             let segment = current;
-            if (current.length > 150)
+            if (current.length > 150)       //we experience difficulties at sentences of length >200. 150 is a safe number
             {
                 while (current.length > 150)
                 {
@@ -1232,7 +1236,13 @@ export class DataParser
     
         return arr;
     }
-    
+
+    /**
+     * Checks if an input character is valid
+     * @param str - the input character
+     * @param caseChoice - optional, checks if an input character matches a particular case, i.e. lowercase or uppercase
+     * @returns {boolean|boolean} - true if valid, false otherwise
+     */
     static isCharacter(str, caseChoice='any')
     {
         if (!str)
@@ -1262,7 +1272,12 @@ export class DataParser
         else
             return (str >= 'A' && str <= 'Z') || (str >= 'a' && str <= 'z');
     }
-    
+
+    /**
+     * Used to remove the periods in abbreviations. This helps in preventing the sentence splitting from getting confused and also helps with TTS reading abbreviations out
+     * @param str - the input text that may contain abbreviations
+     * @returns {string} - text with formatted abbreviations
+     */
     static abbreviationConcatenation(str)
     {
         let newText = "";

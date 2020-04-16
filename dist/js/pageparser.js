@@ -23,6 +23,7 @@ var _preferences = require("./preferences.js");
 
 var _summarise = require("../../dist/js/summarise");
 
+//Used by abbreviationConcatenation to replace awkward abbreviations with their full words. Helps with sentence splitting and TTS
 var abbreviations = {
   'Gov.': 'Governor',
   'Mr.': 'Mister',
@@ -44,7 +45,7 @@ var abbreviations = {
   'Dem.': 'Democrat'
 };
 /**
- Class for object to parse source article pages
+ Class to fetch articles from different news sources
  */
 
 exports.abbreviations = abbreviations;
@@ -114,8 +115,6 @@ var PageParser = /*#__PURE__*/function () {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                //return new Article("works", topic, "hey", "link", "text", DataParser.textSplitter("text"));
-
                 /**
                  * GETTING RANDOM LINK FOR TOPIC
                  */
@@ -1556,10 +1555,15 @@ var PageParser = /*#__PURE__*/function () {
     }
   }]);
   return PageParser;
-}();
+}(); //Used by isCharacter to determine if an input character is valid
+
 
 exports.PageParser = PageParser;
 var valid_chars = [',', '.', '!', '?', '£', '$', '€', '"', "'", '%', '&', '(', ')', '#', '~', '/', '<', '>', '-', '_', '+', '='];
+/**
+ * Class for parsing data we receive via AJAX
+ */
+
 exports.valid_chars = valid_chars;
 
 var DataParser = /*#__PURE__*/function () {
@@ -1597,21 +1601,22 @@ var DataParser = /*#__PURE__*/function () {
         var current = text;
         var segment = current;
 
-        if (current.length > 150) {
-          while (current.length > 150) {
-            segment = current.substr(0, 150);
-            current = current.substr(150);
+        if (current.length > 150) //we experience difficulties at sentences of length >200. 150 is a safe number
+          {
+            while (current.length > 150) {
+              segment = current.substr(0, 150);
+              current = current.substr(150);
 
-            while (DataParser.isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && DataParser.isCharacter(current.charAt(1))) {
-              segment += current.charAt(0);
-              current = current.substr(1);
+              while (DataParser.isCharacter(current.charAt(0)) || [',', '.'].includes(current.charAt(0)) && DataParser.isCharacter(current.charAt(1))) {
+                segment += current.charAt(0);
+                current = current.substr(1);
+              }
+
+              arr.push(segment);
             }
 
-            arr.push(segment);
-          }
-
-          arr.push(current);
-        } else {
+            arr.push(current);
+          } else {
           arr.push(segment);
         }
       } else {
@@ -1641,6 +1646,13 @@ var DataParser = /*#__PURE__*/function () {
 
       return arr;
     }
+    /**
+     * Checks if an input character is valid
+     * @param str - the input character
+     * @param caseChoice - optional, checks if an input character matches a particular case, i.e. lowercase or uppercase
+     * @returns {boolean|boolean} - true if valid, false otherwise
+     */
+
   }, {
     key: "isCharacter",
     value: function isCharacter(str) {
@@ -1657,6 +1669,12 @@ var DataParser = /*#__PURE__*/function () {
 
       if (caseChoice === 'uppercase') return str >= 'A' && str <= 'Z';else if (caseChoice === 'lowercase') return str >= 'a' && str <= 'z';else return str >= 'A' && str <= 'Z' || str >= 'a' && str <= 'z';
     }
+    /**
+     * Used to remove the periods in abbreviations. This helps in preventing the sentence splitting from getting confused and also helps with TTS reading abbreviations out
+     * @param str - the input text that may contain abbreviations
+     * @returns {string} - text with formatted abbreviations
+     */
+
   }, {
     key: "abbreviationConcatenation",
     value: function abbreviationConcatenation(str) {
