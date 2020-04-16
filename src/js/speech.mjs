@@ -10,6 +10,7 @@ export class Speech
      * Creates an object requiring a text string to speak.
      * Takes user preferences from preferences.js
      * @param text - the string to speak
+     * @param language - the language of the input text
      */
     constructor(text, language)
     {

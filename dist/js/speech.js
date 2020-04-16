@@ -23,6 +23,7 @@ var Speech = /*#__PURE__*/function () {
    * Creates an object requiring a text string to speak.
    * Takes user preferences from preferences.js
    * @param text - the string to speak
+   * @param language - the language of the input text
    */
   function Speech(text, language) {
     (0, _classCallCheck2["default"])(this, Speech);
